@@ -1,6 +1,8 @@
 # LeanPlan Design Stage
 
-Edge: SPEC → DESIGN.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the DESIGN stage — choosing the realization (components, stack, decisions) that satisfies a SPEC. Edge: SPEC → DESIGN.
+
+Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Inputs
 

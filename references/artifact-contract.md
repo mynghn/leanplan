@@ -1,5 +1,9 @@
 # LeanPlan Artifact Contract
 
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the structural rules — feature layout, anchor patterns (`O-<N>`, `INV-<N>`, `Decision-<N>`, `Task: <id>`), traceability, drift guards.
+
+Companion: `philosophy.md` (principles), `<stage>.md` (per-stage procedure).
+
 ## Feature Layout
 
 Feature artifacts live under `docs/features/<KEY>/`.

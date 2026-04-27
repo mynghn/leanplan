@@ -1,6 +1,8 @@
 # LeanPlan Implementation Stage
 
-Edge: TASK → code.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the implementation stage — taking one task card to landed code, with stop-the-line triggers and distillation rules. Edge: TASK → code.
+
+Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Inputs
 

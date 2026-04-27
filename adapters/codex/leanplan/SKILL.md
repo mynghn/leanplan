@@ -5,11 +5,9 @@ description: Use LeanPlan, a portable LLM-aware spec-driven-development framewor
 
 # LeanPlan
 
-Use this skill when the user asks to create, refine, validate, or implement a LeanPlan feature plan.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill is the Codex-side dispatcher across all five stages; the Claude Code runtime exposes the same content via per-stage slash commands.
 
-LeanPlan is a transient, code-facing SDD workflow for one-deployment-sized feature work. It keeps the review surface small and loads deeper rationale only when needed.
-
-Canonical assets (shared between Claude Code and Codex runtimes) live at `~/.local/share/leanplan/`. This skill is the Codex-side adapter; the Claude Code runtime exposes the same content via per-stage slash commands.
+Use this skill when the user asks to create, refine, validate, or implement a LeanPlan feature plan. Canonical assets (shared between Claude Code and Codex runtimes) live at `~/.local/share/leanplan/`.
 
 ## Dispatch
 
@@ -24,9 +22,9 @@ Parse the user's intent and load only the matching reference from the canonical 
 | `impl <KEY> <task-id>` | `~/.local/share/leanplan/references/impl.md` |
 | `validate <feature-path>` | Run `python3 ~/.local/share/leanplan/scripts/validate.py` |
 
-For any artifact-writing stage, also load `~/.local/share/leanplan/references/artifact-contract.md`.
+For any artifact-writing stage, first load `~/.local/share/leanplan/references/philosophy.md` (framework principles) and `~/.local/share/leanplan/references/artifact-contract.md` (structural rules) before the matching stage reference.
 
-The framework doc at `~/.local/share/leanplan/leanplan.md` is for humans evolving the framework; this skill does not load it at runtime.
+The framework doc at `~/.local/share/leanplan/leanplan.md` carries the full coordinate model, validator design, and stop-the-line catalog. Load it only when challenged on framework shape — `philosophy.md` covers the principles needed at runtime.
 
 If the current repo has its own `docs/leanplan.md` (a project-local snapshot), read it as repo-local context only. The canonical references remain authoritative.
 

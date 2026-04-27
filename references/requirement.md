@@ -1,6 +1,8 @@
 # LeanPlan Requirement Stage
 
-Edge: standalone input → REQUIREMENT.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the REQUIREMENT stage — capturing biz WHAT before any tech choice. Edge: standalone input → REQUIREMENT.
+
+Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Inputs
 

@@ -7,10 +7,11 @@ allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Bash(ls *), Bash(
 
 # specify
 
-LeanPlan **REQUIREMENT → SPEC** edge. Runtime adapter — operational rules live in the canonical references.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill drives the SPEC stage (REQUIREMENT → SPEC edge).
 
 Before writing the artifact, load:
 
+- `~/.local/share/leanplan/references/philosophy.md` — framework principles shaping what "good" looks like across all stages.
 - `~/.local/share/leanplan/references/artifact-contract.md` — feature layout, anchor patterns (`O-<N>: <slug>` / `INV-<N>: <slug>`), drift guards, traceability rules including `**GAP**` semantics.
 - `~/.local/share/leanplan/references/specify.md` — stage-specific procedure, "what a SPEC is NOT" test, generic-category tech guard, RESEARCH archive rule.
 

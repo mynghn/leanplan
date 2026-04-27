@@ -7,10 +7,11 @@ allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Bash(ls *), Bash(
 
 # plan
 
-LeanPlan **DESIGN → TASK** edge. Runtime adapter — operational rules live in the canonical references.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill drives the TASK stage (DESIGN → `plan.md` edge).
 
 Before writing the artifact, load:
 
+- `~/.local/share/leanplan/references/philosophy.md` — framework principles shaping what "good" looks like across all stages.
 - `~/.local/share/leanplan/references/artifact-contract.md` — TASK shape (Guidelines, Dependency DAG, Task cards), `Task: <id>` anchor pattern, traceability rules with `**GAP**` ack semantics.
 - `~/.local/share/leanplan/references/plan.md` — stage-specific procedure, track-prefixed task IDs (P/A/D/I), enabler-not-gate dependency wording, bidirectional verification, advisory one-deployment guardrail.
 

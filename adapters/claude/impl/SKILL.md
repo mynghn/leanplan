@@ -7,10 +7,11 @@ allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(git *
 
 # impl
 
-LeanPlan **TASK → code** edge. Runtime adapter — operational rules live in the canonical references.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill drives the implementation stage (one task card → landed code).
 
 Before acting, load:
 
+- `~/.local/share/leanplan/references/philosophy.md` — framework principles shaping what "good" looks like across all stages.
 - `~/.local/share/leanplan/references/artifact-contract.md` — anchor patterns, traceability rules.
 - `~/.local/share/leanplan/references/impl.md` — stage-specific procedure, the 6 stop-the-line triggers, artifact update loop walk-up, distillation hierarchy (types → tests → annotations → commit → PR body → inline), squash-safe PR-body promotion rule.
 

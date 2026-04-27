@@ -1,6 +1,8 @@
 # LeanPlan Specify Stage
 
-Edge: REQUIREMENT → SPEC.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the SPEC stage — turning a REQUIREMENT into a generic-category tech contract. Edge: REQUIREMENT → SPEC.
+
+Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Inputs
 

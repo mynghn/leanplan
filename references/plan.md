@@ -1,6 +1,8 @@
 # LeanPlan Plan Stage
 
-Edge: DESIGN → TASK (`plan.md`).
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the TASK stage — sequencing DESIGN into land-able task cards in `plan.md`. Edge: DESIGN → TASK (`plan.md`).
+
+Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Inputs
 

@@ -7,10 +7,11 @@ allowed-tools: Read, Write, Edit, AskUserQuestion, Bash(mkdir *), Bash(ls *), mc
 
 # requirement
 
-LeanPlan **(standalone) → REQUIREMENT** edge. Runtime adapter — operational rules live in the canonical references.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill drives the REQUIREMENT stage.
 
 Before writing the artifact, load:
 
+- `~/.local/share/leanplan/references/philosophy.md` — framework principles shaping what "good" looks like across all stages.
 - `~/.local/share/leanplan/references/artifact-contract.md` — feature layout, anchor patterns, drift guards, traceability rules.
 - `~/.local/share/leanplan/references/requirement.md` — stage-specific procedure, guardrails, and template.
 

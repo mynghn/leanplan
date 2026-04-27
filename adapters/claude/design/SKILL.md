@@ -7,10 +7,11 @@ allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(ls *)
 
 # design
 
-LeanPlan **SPEC → DESIGN** edge. Runtime adapter — operational rules live in the canonical references.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill drives the DESIGN stage (SPEC → DESIGN edge).
 
 Before writing the artifact, load:
 
+- `~/.local/share/leanplan/references/philosophy.md` — framework principles shaping what "good" looks like across all stages.
 - `~/.local/share/leanplan/references/artifact-contract.md` — DESIGN shape, `Decision-<N>: <slug>` anchor pattern, free-form RATIONALE rule, RESEARCH-as-evidence rule.
 - `~/.local/share/leanplan/references/design.md` — stage-specific procedure, Architecture-first rule, non-trivial-only rationale anchoring, SPEC O/INV coverage check (with TASK-direct realization path for trivial items).
 
