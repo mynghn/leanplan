@@ -50,7 +50,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 | DESIGN | **tech HOW (realization)** — shape of the finished system; components, chosen stack, schemas, boundaries | (LOW, TECH) |
 | DESIGN RATIONALE | **tech WHY** — reasoning behind DESIGN decisions (alternatives, forces, invalidation hints) | archive L1 |
 | RESEARCH | **evidence** — raw investigation underpinning WHY (codebase grep, SOTA articles, industry patterns, org history) | archive L2 |
-| TASK | **execution plan** — time-ordered sequence of land-able work items that realize DESIGN | (LOW, TECH), time-axis |
+| TASK | **execution plan** — time-ordered, *process-framed* sequence of land-able work items that realize DESIGN. Describes the **work** (what to do, in what order, how to verify); never restates the *finished system* (which is DESIGN's job — anchor in, don't paraphrase) | (LOW, TECH), time-axis |
 
 **Orthogonal dimensions the segregation enforces:**
 
@@ -174,6 +174,7 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 | RATIONALE | Non-trivial decisions only. Trivial decisions carry only the one-line "why" inline in DESIGN. |
 | RESEARCH | Evidence and citations only. Interpretations belong in RATIONALE. |
 | TASK | No step-by-step edit instructions ("edit file X at line Y"). Impl agent re-derives against current code. |
+| TASK ↔ DESIGN (process vs. realization) | **Plan cards describe the *work*; DESIGN describes the *finished system*.** Task fields — Goal, Completion, Guidelines — carry process specifics (what outcome the task achieves, how to verify it, in what work-stance). Tech-realization specifics — field-by-field mappings, response/proto shapes, call/orchestration sequences, signatures, code paths, schemas — belong in a DESIGN Decision block. The plan card *anchors* into the Decision (`DESIGN#Decision-N-…`); it does not restate the Decision's content. Symmetric rule: when a downstream task needs to know "what does the system look like in this slice?", the answer must already live in DESIGN — so write it there at design time, not freshly in the task card. *Detection cue*: if a Goal bullet starts answering "after the work lands, the system looks like X" (rather than "this task achieves Y, verified by Z"), push the X to DESIGN. |
 | TASK Guidelines ↔ DESIGN | Guidelines describe the *work stance* (procedure, discipline, temporary mechanisms during the cycle); DESIGN describes the finished *system* (permanent structure and chosen realization). If it describes what exists *after* the work lands → DESIGN. If it describes how the work *proceeds* → Guideline. Compatibility behaviors (externally observable) → SPEC Invariants; testing specifics (what passes) → Completion criteria. |
 
 ## 8. Naming decisions

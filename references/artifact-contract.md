@@ -88,9 +88,9 @@ Use descriptive topic headings. Store evidence only. Interpretation belongs in r
 
 Each task card must include:
 
-- **Goal** — WHAT + HOW (when non-obvious), with inline `SPEC#…` or `DESIGN#…` anchors colocated with the supported sentence
+- **Goal** — *process-framed* statement of WHAT outcome this task achieves + HOW (when the work approach is non-obvious), with inline `SPEC#…` and `DESIGN#…` anchors colocated with the supported sentence. **Anchor — don't restate.** Tech-realization specifics (field mappings, response shapes, signatures, call sequences) belong in the cited DESIGN Decision; the Goal points to them.
 - **Repo** — where the work lives
-- **Completion** — observable verification + method (test / monitor / SLO / one-shot observation)
+- **Completion** — observable verification + method (test / monitor / SLO / one-shot observation). Enumerated scenarios/cases are healthy here — this is process-specific.
 - **Dependencies** — prior task IDs as enablers (not gates)
 - **Guidelines** — only when task-local stance matters
 
@@ -108,8 +108,9 @@ A SPEC O or INV item may be deliberately uncovered (no task verifies it directly
 
 - REQUIREMENT has no implementation choices.
 - SPEC has no chosen stack or internal realization. Generic categories (message queue, event stream, HTTP API) only.
-- DESIGN has no work ordering, no INFRAREQ / DBREQ procedure, no PR stacking — those belong in TASK.
+- DESIGN has no work ordering, no INFRAREQ / DBREQ procedure, no PR stacking — those belong in TASK. DESIGN **does** carry tech-realization specifics (field mappings, response shapes, signatures, call sequences, schemas) so plan tasks can anchor in.
 - TASK has no line-by-line edit script. Implementation agents re-derive against current code at task entry.
+- **TASK fields carry process specifics, not tech-realization specifics.** Plan cards describe the *work* (Goal: what outcome / Completion: how to verify / Guidelines: work-stance). Tech-realization details — proto/response field mappings, controller orchestration sequences, method signatures, code paths, schemas — belong in a DESIGN `Decision-<N>` block. The task card anchors via `DESIGN#Decision-<N>-<slug>`; it does not restate the Decision's content. Symmetric guard with the DESIGN row above. Detection cue: a Goal bullet that answers "after the work lands, the system looks like X" is drift — push X to DESIGN; keep "this task achieves Y, verified by Z" in the card.
 - MUST and MUST NOT are reserved for true invariants.
 - Mermaid is used for diagrams; no ASCII fallback.
 - Frontmatter is discouraged on plan artifacts; the artifact type is implied by filename.

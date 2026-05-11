@@ -35,12 +35,14 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 9. **Self-check** before exit:
    - No work ordering / INFRAREQ / rollout text (those belong in TASK).
    - No top-level `## Schemas` or `## Interfaces` section — schemas live inside their Decisions.
+   - Tech-realization specifics a downstream plan task will need (field mappings, response shapes, signatures, call sequences) are *captured here* — so the plan card can anchor in without restating. Skim each Decision: does it answer "what does the system look like in this slice?" completely?
    - Non-trivial decisions have resolvable rationale anchors in `design-rationale.md`.
    - SPEC Invariants are referenced (not re-stated).
 
 ## Guardrails
 
 - **Chosen realization only.** DESIGN is the time-independent finished-system shape. No work ordering, PR stacking, INFRAREQ procedure, or migration sequence — those belong in TASK.
+- **Tech-realization specifics live here, in full.** Field-by-field mappings, response/proto shapes, method signatures, controller/service call sequences, schemas — capture them inside the relevant `Decision-<N>` block at design time. Downstream plan tasks should be able to anchor in via `DESIGN#Decision-<N>-<slug>` *without restating* the content. If a plan task ends up paraphrasing a Decision because it lacked detail here, the missing detail is a gap in **this** doc — fill it. Symmetric guard with the corresponding rule in `plan.md`.
 - **Architecture is mandatory.** Even a trivial one-component feature gets a diagram — it forces clarity about boundaries.
 - **Trivial vs. non-trivial.** Trivial decisions get a one-line inline why. Non-trivial decisions (real alternatives existed, tradeoffs accepted, invalidation triggers worth recording) anchor to RATIONALE.
 - **No fake decisions.** A choice with no real alternative isn't a decision — fold its content into the diagram or reference the SPEC Invariant it satisfies.
