@@ -15,12 +15,14 @@ Parse the user's intent and load only the matching reference from the canonical 
 
 | Intent | Load |
 |---|---|
-| `requirement <KEY>` | `~/.local/share/leanplan/references/requirement.md` |
+| `requirement <slug-or-title>` | `~/.local/share/leanplan/references/requirement.md` |
 | `specify <KEY>` | `~/.local/share/leanplan/references/specify.md` |
 | `design <KEY>` | `~/.local/share/leanplan/references/design.md` |
 | `plan <KEY>` | `~/.local/share/leanplan/references/plan.md` |
 | `impl <KEY> <task-id>` | `~/.local/share/leanplan/references/impl.md` |
 | `validate <feature-path>` | Run `python3 ~/.local/share/leanplan/scripts/validate.py` |
+
+Throughout, `<KEY>` is the repo-local feature id (`NNNN-slug`, e.g. `0007-anomaly-publisher`) — see `artifact-contract.md` / `leanplan.md` §5. The `requirement` edge *produces* it: `leanplan-new "<slug-or-title>"` allocates the next number and prints the dir path; later edges receive that id as input. External tracker keys (Jira) go in REQUIREMENT `## Upstream`, never the dir name.
 
 For any artifact-writing stage, first load `~/.local/share/leanplan/references/philosophy.md` (framework principles) and `~/.local/share/leanplan/references/artifact-contract.md` (structural rules) before the matching stage reference.
 

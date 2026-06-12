@@ -72,7 +72,7 @@ Each level loads only via explicit trigger (anchor link from the layer above). J
 
 ## 5. Artifact shapes
 
-All artifacts live as siblings at `docs/features/<KEY>/`. Max one-level link depth across artifacts.
+All artifacts live as siblings at `docs/features/<KEY>/`, where `<KEY>` is the repo-local feature id in the form `NNNN-slug` — a zero-padded sequence number (4 digits by default; `$LEANPLAN_ID_WIDTH` overrides) plus a kebab slug, e.g. `0007-anomaly-publisher`. `leanplan-new` allocates the number at feature-creation time (scan existing `docs/features/*` leading numbers, take the highest + 1); non-numeric legacy dirs are skipped and coexist. External tracker references (Jira `PROJ-123`, PRD, Slack) are **not** the identity — they live as metadata in REQUIREMENT's `## Upstream`. Max one-level link depth across artifacts.
 
 ### 5.1 REQUIREMENT — (HIGH, BIZ). Human-review surface.
 
@@ -81,7 +81,7 @@ All artifacts live as siblings at `docs/features/<KEY>/`. Max one-level link dep
 | Problem | yes |
 | Outcome (biz future state + success signal folded in) | yes |
 | Non-goals | conditional — biz-level scope ambiguity |
-| Upstream | conditional — Jira / PRD / Slack refs when they exist |
+| Upstream | conditional — Jira / PRD / Slack refs when they exist (the external tracker key lives **here** as metadata, never in the directory name) |
 
 ### 5.2 SPEC — (HIGH, TECH). Contract.
 
@@ -185,6 +185,7 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 | TASK operational rules (doc-level + task-card) | **Guidelines** | 작업 지침 — operational guidance the doer follows while executing; altitude-distinct from §1 *Philosophy* (framework-level foundational stance) and SPEC *Invariants* (runtime system-level) |
 | Main functional section at REQUIREMENT and SPEC | **Outcome** (mirrored) | makes REQUIREMENT ↔ SPEC WHAT-translation visible |
 | JIT anchor heading patterns | SPEC Outcome items `### O-<N>: <slug>` and Invariants `### INV-<N>: <slug>` (nested under H2 `## Outcome` / `## Invariants` section headers); DESIGN `## Decision-<N>: <slug>`; TASK `## Task: <id>` (track-prefixed like P1 / A1 / D1 / I1). | ID enables stable cross-reference across slug edits; slug carries identity inline so JIT load isn't forced just to see what the reference is. Markdown anchor fragments resolve independent of heading level. |
+| Feature directory id | **`NNNN-slug`** (repo-local), referred to as `<KEY>` in path templates | Repo-local sequence number gives stable cross-feature ordering without coupling to an external tracker; the slug carries human-readable identity inline (spec-kit lineage). Allocated by `leanplan-new` (scan max + 1, zero-pad 4); tracker keys demoted to REQUIREMENT `## Upstream` so the identity is repo-owned, not vendor-owned. The `<KEY>` token is kept in path templates (redefined, not renamed) — a sweep-rename would churn ~70 sites against the principle-4 small-surface value, and the precision win here is the single normative definition, not the placeholder's spelling. |
 
 ## 9. Key design resolutions
 
@@ -198,6 +199,7 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 - **Dependencies are enablers, not gates.** The DAG signals what becomes *possible* when prior tasks land, not rigid order requirements. Impl agent re-evaluates at task entry. Framing borrowed from OpenSpec.
 - **Plan docs as transient artifacts.** Plan docs are in-feature only — they don't accumulate into a living system spec. Code is the long-term source of truth. Rejected OpenSpec's delta-specs + canonical-specs mechanism on this principle: the destination (living spec) is a maintenance burden we don't want.
 - **Artifact update loop (within-cycle).** At *any* successive stage (DESIGN, TASK, or implementation), if a prior artifact is revealed wrong — not just needing refinement — the agent walks up to the **highest affected layer** and updates there: DESIGN for realization errors, SPEC for contract errors, REQUIREMENT for scope changes. Downstream artifacts that referenced the updated layer are re-evaluated (may stay valid, update locally, or trigger re-planning) — never fully re-derived by default. Never patch downstream alone to mask upstream errors; that is silent drift. Scope gate: if the update pushes REQUIREMENT beyond one-deployment size, pause per principle 6. Minor refinements (no invalidation) stay in code per principle 8. Applies within the plan-implement cycle only; post-ship, docs are discarded per principle 7.
+- **Repo-local feature numbering.** Directory identity is `NNNN-slug`, auto-allocated by `leanplan-new` (scan `docs/features/*` max + 1, zero-pad 4). Tracker keys move to REQUIREMENT `## Upstream`. Numbering is allocator-enforced *only* — the validator stays naming-agnostic, so hand-created or legacy dirs coexist un-numbered (like the pre-existing tracker-key dirs); numbering is a convention `leanplan-new` upholds, not a validated invariant. Limitation: numbers are allocated against the local working tree, so parallel feature branches can independently grab the same number — resolve by renumbering one dir before merge. Rejected sweep-renaming the `<KEY>` path token (kept literal, redefined in §5) — the §8 precision value is about authored content, not the placeholder spelling.
 
 ## 10. Plan → code distillation
 

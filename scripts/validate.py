@@ -2,7 +2,7 @@
 """Validate LeanPlan feature artifacts.
 
 Usage:
-  python3 validate.py docs/features/KEY [--stage full] [--json] [--allow-large]
+  python3 validate.py docs/features/0007-anomaly-publisher [--stage full] [--json] [--allow-large]
 """
 
 from __future__ import annotations
