@@ -70,14 +70,15 @@ git clone https://github.com/mynghn/leanplan.git ~/.local/share/leanplan
 ## Quick start
 
 ```bash
-# scaffold a feature dir
-leanplan-new MYKEY-123
+# scaffold a feature dir — allocates the next repo-local number and prints the path
+~/.local/share/leanplan/scripts/leanplan-new "anomaly publisher"
+# -> docs/features/0001-anomaly-publisher
 
 # fill in artifacts (use the skills, or edit by hand)
 # ...
 
-# validate
-python3 ~/.local/share/leanplan/scripts/validate.py docs/features/MYKEY-123
+# validate (use the path leanplan-new printed)
+python3 ~/.local/share/leanplan/scripts/validate.py docs/features/0001-anomaly-publisher
 
 # run the validator's own self-test
 ~/.local/share/leanplan/scripts/leanplan-selftest

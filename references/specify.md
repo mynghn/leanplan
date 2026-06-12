@@ -6,7 +6,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Inputs
 
-- `<cwd>/docs/features/<KEY>/requirement.md` (required). If absent, stop and tell the user to run `/requirement <KEY>` (or `requirement <KEY>` for Codex) first.
+- `<cwd>/docs/features/<KEY>/requirement.md` (required). If absent, stop and tell the user to run `/requirement <feature-title>` (or `requirement <feature-title>` for Codex) first — it allocates the `<KEY>` (`NNNN-slug`) dir and prints its path.
 - `<cwd>/docs/features/<KEY>/research.md` (optional, for context reuse).
 
 ## Outputs

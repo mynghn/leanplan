@@ -6,7 +6,7 @@ Companion: `philosophy.md` (principles), `<stage>.md` (per-stage procedure).
 
 ## Feature Layout
 
-Feature artifacts live under `docs/features/<KEY>/`.
+Feature artifacts live under `docs/features/<KEY>/`, where `<KEY>` is the repo-local feature id in the form `NNNN-slug` (zero-padded sequence number + kebab slug, e.g. `0007-anomaly-publisher`), allocated by `leanplan-new` (scan max + 1). External tracker keys (Jira, PRD, Slack) are recorded as REQUIREMENT `## Upstream` metadata, not in the directory name.
 
 Surface artifacts:
 
@@ -56,7 +56,7 @@ Citation forms:
 - `## Problem`
 - `## Outcome`
 - `## Non-goals` only when biz scope is ambiguous
-- `## Upstream` only when Jira, PRD, Slack, or similar sources exist
+- `## Upstream` only when Jira, PRD, Slack, or similar sources exist — the external tracker key (e.g. Jira `PROJ-123`) is recorded here as metadata, never as the directory identity
 
 ### SPEC
 
