@@ -6,8 +6,8 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Inputs
 
-- Feature intent: a short business problem or solution title (free-form phrase), or an existing `NNNN-slug` feature id to revise.
-- Optional upstream context: Jira issue, PRD, Slack thread. When present it supplies the biz *problem* — but it is **not** the feature identity; record refs under `## Upstream`.
+- Feature intent: a short business problem or solution title (free-form phrase), a tracker key to anchor on (e.g. Jira `NEWCS-3595`), or an existing feature id to revise.
+- Optional upstream context: Jira issue, PRD, Slack thread. When present it supplies the biz *problem*. It may also become the feature id (tracker-key form) — but when it is *not* the id, record refs under `## Upstream`.
 
 ## Output
 
@@ -15,8 +15,12 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Procedure
 
-1. **Allocate the feature.** Parse `$ARGUMENTS`. If it already matches an existing `NNNN-slug` id (a dir under `docs/features/`), you are revising — operate on `docs/features/<that-id>/` directly. Otherwise treat `$ARGUMENTS` as a biz-intent / title phrase, confirm a short kebab slug with the user (slugs are permanent in the dir name), then run `~/.local/share/leanplan/scripts/leanplan-new "<slug-or-title>"`. It allocates the next repo-local number, creates the directory, and prints the resolved `docs/features/<NNNN-slug>` path on stdout — **capture that path** and use it for every subsequent write. If `leanplan-new` exits non-zero, stop (don't write). If `$ARGUMENTS` looks like a Jira-style key (`[A-Z]+-\d+`), do **not** use it as the directory name — fetch the issue for upstream context (step 2) and record the key under `## Upstream`.
-2. **Load upstream** (when a Jira key, PRD link, or Slack thread is supplied): harvest the biz *problem*, not the requested implementation — upstream often arrives mixed with solution suggestions; strip them. Capture the tracker key / links under `## Upstream` as metadata — optional context, never the directory identity.
+1. **Allocate the feature.** Parse `$ARGUMENTS` and pick the id form, then let `leanplan-new` create the dir (it is the single allocator — never `mkdir` yourself). It prints the resolved `docs/features/<id>` path on stdout — **capture that path** and use it for every subsequent write; if it exits non-zero, stop (don't write).
+   - **Revising** — if `$ARGUMENTS` already names an existing dir under `docs/features/` (any form), operate on `docs/features/<that-id>/` directly; skip allocation.
+   - **Tracker key** — if `$ARGUMENTS` is a Jira-style key (`[A-Z]+-\d+`) and the user wants the feature anchored to it, run `leanplan-new "<KEY>"`; the dir is the bare key (no slug). Still fetch the issue for biz context (step 2). If instead the key is only context (not the identity), treat it as upstream and allocate by title below.
+   - **Date** — if the user wants a date-keyed feature, confirm a short kebab slug, then run `leanplan-new --date "<slug-or-title>"` (today's `YYMMDD`; pass `--date=YYMMDD` to override).
+   - **Sequence** (default) — otherwise treat `$ARGUMENTS` as a biz-intent / title phrase, confirm a short kebab slug with the user (slugs are permanent in the dir name), then run `leanplan-new "<slug-or-title>"` for the next repo-local `NNNN-slug`.
+2. **Load upstream** (when a Jira key, PRD link, or Slack thread is supplied): harvest the biz *problem*, not the requested implementation — upstream often arrives mixed with solution suggestions; strip them. Capture under `## Upstream` any tracker key / links that are metadata — when the feature id itself is a tracker key, that key is the identity, so record only supplementary refs here.
 3. **Draft interactively**. Misframed Problem is the single largest source of downstream rework. Confirm framing with the user before writing:
    - **Problem** — what biz pain or opportunity drives this? Who feels it? What is currently broken, missing, or constrained?
    - **Outcome** — biz future state + observable success signal. Prefer **user-story bullets** for user-visible behaviors using the form `**short title** — one-line summary. follow-up detail when needed.` Group system-level policies / cross-cutting invariants (price parity, state-machine rules, regional constraints) under a separate sub-group rather than forcing them into user-story shape — not every outcome is a user story. Fold the success signal into the same section (don't split into a separate "Success metric" section).
@@ -64,11 +68,11 @@ System policies: <only when cross-cutting invariants exist; otherwise drop this 
 - <only when scope edges are ambiguous>
 
 ## Upstream
-- <Jira / PRD / Slack refs when they exist — tracker key recorded here as metadata, never the dir name>
+- <Jira / PRD / Slack refs when they exist — metadata; record here when they are not the feature id itself>
 ```
 
 The user-stories / system-policies split is a default shape, not a contract. Drop a group when it's empty; collapse to flat bullets when the feature is small enough that grouping adds noise.
 
 ## Hand-off
 
-Tell the user: next edge is `/specify <KEY>` (Claude) or `specify <KEY>` (Codex), where `<KEY>` is the repo-local id `leanplan-new` allocated (e.g. `0007-anomaly-publisher`). Iterating on REQUIREMENT first is fine — `specify` re-derives from REQUIREMENT each invocation.
+Tell the user: next edge is `/specify <KEY>` (Claude) or `specify <KEY>` (Codex), where `<KEY>` is the id `leanplan-new` allocated (e.g. `0007-anomaly-publisher`, `NEWCS-3595`, or `260616-anomaly-publisher`). Iterating on REQUIREMENT first is fine — `specify` re-derives from REQUIREMENT each invocation.
