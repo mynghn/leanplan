@@ -104,6 +104,16 @@ Each task card must include:
 
 A SPEC O or INV item may be deliberately uncovered (no task verifies it directly) when the team has accepted the gap. Annotate it on a line containing `**GAP**` inside `plan.md` (typically in a forward-coverage table). The validator treats such items as acknowledged — not coverage errors. Use sparingly and document the acceptance rationale next to the marker.
 
+## Prose Style
+
+Applies to every artifact, in any authoring language. Write-time guidance, not validator-enforced.
+
+- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support. The artifact should be graspable from headings and lead lines alone.
+- **Lists over dense paragraphs.** When content enumerates parallel points, conditions, or steps, use bullet or ordered lists. Reserve flowing prose for a single causal chain.
+- **Short, declarative sentences.** Break run-ons; promote a buried qualifier to its own clause or bullet rather than nesting it in parentheses.
+
+Why: this serves the small-surface and LLM-aware principles — buried ledes and dense blocks get rubber-stamped by reviewers and dilute agent attention. Stage-specific shapes (e.g. REQUIREMENT user-story bullets, `requirement.md`) are instances of this rule, not exceptions.
+
 ## Drift Guards
 
 - REQUIREMENT has no implementation choices.
