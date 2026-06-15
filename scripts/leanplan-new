@@ -1,33 +1,90 @@
 #!/usr/bin/env bash
-# leanplan-new: allocate a repo-local feature number and scaffold its artifact stubs.
+# leanplan-new: allocate a feature id and scaffold its artifact stubs.
 #
-# Usage: leanplan-new <slug-or-title>
-# Allocates the next repo-local feature id (scan docs/features/ for the highest
-# leading number, +1, zero-padded — width via $LEANPLAN_ID_WIDTH, default 4),
-# normalizes the arg to a kebab slug, and creates
-#   <cwd>/docs/features/<NNNN-slug>/{requirement,spec,design,design-rationale,plan}.md.
+# Usage:
+#   leanplan-new <slug-or-title>          # sequence id:    NNNN-slug     (e.g. 0007-anomaly-publisher)
+#   leanplan-new <PROJ-123>               # tracker key:    PROJ-123      (bare, e.g. a Jira issue key)
+#   leanplan-new --date <slug-or-title>   # date id:        YYMMDD-slug   (e.g. 260616-anomaly-publisher)
+#   leanplan-new --date=YYMMDD <title>    # date id with an explicit date instead of today
+#
+# The feature id comes in three forms; leanplan-new picks one as follows:
+#   1. --date present                     -> date id:     <YYMMDD>-<slug>  (YYMMDD = today, or --date=NNNNNN)
+#   2. arg matches [A-Z][A-Z0-9]*-[0-9]+  -> tracker key: the arg verbatim, BARE (no slug; already unique)
+#   3. otherwise                          -> sequence id: <NNNN>-<slug>    (scan docs/features/ for the highest
+#                                            WIDTH-digit number, +1, zero-padded — width via $LEANPLAN_ID_WIDTH,
+#                                            default 4)
+# Forms 1 and 3 normalize the title arg to a kebab slug; form 2 uses the key as-is.
+# Creates <cwd>/docs/features/<id>/{requirement,spec,design,design-rationale,plan}.md.
 # Stubs contain section headers + guidance comments — no pseudo-items — so a fresh
 # scaffold passes all validators cleanly. The corresponding /requirement, /specify,
 # /design, /plan skills fill in real content.
 #
-# Prints the allocated relative dir path (docs/features/<NNNN-slug>) to STDOUT as
-# the only stdout output, so a caller can capture it: dir=$(leanplan-new "$title").
+# Prints the allocated relative dir path (docs/features/<id>) to STDOUT as the only
+# stdout output, so a caller can capture it: dir=$(leanplan-new "$title").
 # Human-facing messages go to stderr. Exit codes: 0 success; 1 bad input
-# (missing/empty arg or bad LEANPLAN_ID_WIDTH); 2 feature dir already exists.
+# (missing/empty arg, bad LEANPLAN_ID_WIDTH, bad --date value); 2 feature dir already exists.
 
 set -euo pipefail
 
-RAW="${1:?usage: leanplan-new <slug-or-title>}"
 FEATURES_ROOT="docs/features"
 
 # Normalize to a kebab slug. The [a-z0-9-] charset is LOAD-BEARING, not cosmetic:
 # it collapses '/' and '.' to '-', so a slug can never introduce a path separator
 # and escape docs/features/. Do not relax it without re-adding an explicit
-# `case "$SLUG" in */*|*..*) reject` guard.
-SLUG=$(printf '%s' "$RAW" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')
-if [ -z "$SLUG" ]; then
-    echo "error: '$RAW' has no slug-able characters — provide letters or digits" >&2
+# `case "$SLUG" in */*|*..*) reject` guard. (The tracker-key form is exempt — it
+# is independently constrained to [A-Z0-9-] by its detection regex below.)
+slugify() {
+    printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
+# --- parse args: optional --date[=YYMMDD] flag plus one positional (title or key) ---
+DATE_MODE=0
+DATE_VALUE=""
+RAW=""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --date)
+            DATE_MODE=1
+            # Optional explicit YYMMDD as the next token, so `--date 260616 "title"` works.
+            # A non-6-digit next token is the title, leaving DATE_VALUE empty (= today).
+            if [ $# -ge 2 ] && printf '%s' "$2" | grep -qE '^[0-9]{6}$'; then
+                DATE_VALUE="$2"
+                shift
+            fi
+            ;;
+        --date=*)
+            DATE_MODE=1
+            DATE_VALUE="${1#--date=}"
+            ;;
+        --)
+            shift
+            if [ $# -gt 0 ] && [ -z "$RAW" ]; then RAW="$1"; fi
+            break
+            ;;
+        -*)
+            echo "error: unknown option: $1 (supported: --date[=YYMMDD])" >&2
+            exit 1
+            ;;
+        *)
+            if [ -z "$RAW" ]; then RAW="$1"; fi
+            ;;
+    esac
+    shift
+done
+
+if [ -z "$RAW" ] && [ "$DATE_MODE" -eq 0 ]; then
+    echo "usage: leanplan-new <slug-or-title> | <PROJ-123> | --date[=YYMMDD] <slug-or-title>" >&2
     exit 1
+fi
+
+if [ "$DATE_MODE" -eq 1 ] && [ -n "$DATE_VALUE" ]; then
+    case "$DATE_VALUE" in
+        *[!0-9]*) echo "error: --date value must be YYMMDD (6 digits): $DATE_VALUE" >&2; exit 1 ;;
+    esac
+    if [ "${#DATE_VALUE}" -ne 6 ]; then
+        echo "error: --date value must be YYMMDD (6 digits): $DATE_VALUE" >&2
+        exit 1
+    fi
 fi
 
 WIDTH="${LEANPLAN_ID_WIDTH:-4}"
@@ -35,34 +92,70 @@ case "$WIDTH" in
     ''|*[!0-9]*) echo "error: LEANPLAN_ID_WIDTH must be a positive integer" >&2; exit 1 ;;
 esac
 
-# If the arg already names an existing feature dir (e.g. someone passed an existing
-# "0007-foo" id), refuse rather than re-number it into docs/features/00NN-0007-foo.
-if [ -d "$FEATURES_ROOT/$SLUG" ]; then
-    echo "error: $FEATURES_ROOT/$SLUG already exists — pass a new title, or edit that feature directly" >&2
-    exit 2
+# --- resolve the feature id by form ---
+if [ "$DATE_MODE" -eq 1 ]; then
+    # Form 1: date id — <YYMMDD>-<slug>. The slug is kept (unlike the tracker-key form)
+    # because a bare date collides whenever two features start the same day.
+    if [ -z "$RAW" ]; then
+        echo "error: --date needs a title for the slug (date ids are <YYMMDD>-<slug>)" >&2
+        exit 1
+    fi
+    SLUG=$(slugify "$RAW")
+    if [ -z "$SLUG" ]; then
+        echo "error: '$RAW' has no slug-able characters — provide letters or digits" >&2
+        exit 1
+    fi
+    if [ -n "$DATE_VALUE" ]; then
+        DATE="$DATE_VALUE"
+    else
+        DATE=$(date +%y%m%d)
+    fi
+    FEATURE_ID="$DATE-$SLUG"
+elif printf '%s' "$RAW" | grep -qE '^[A-Z][A-Z0-9]*-[0-9]+$'; then
+    # Form 2: explicit tracker key (e.g. Jira NEWCS-3595) — used verbatim and BARE.
+    # No slug: the key is globally unique and human-legible on its own. It already
+    # matches [A-Z0-9-] so it is path-safe (no '/' or '..'); do NOT slugify (that would
+    # lowercase it). The same key may also be noted under REQUIREMENT ## Upstream.
+    FEATURE_ID="$RAW"
+else
+    # Form 3: repo-local sequence id — <NNNN>-<slug> (the default).
+    SLUG=$(slugify "$RAW")
+    if [ -z "$SLUG" ]; then
+        echo "error: '$RAW' has no slug-able characters — provide letters or digits" >&2
+        exit 1
+    fi
+    # If the arg already names an existing feature dir (e.g. someone passed an existing
+    # "0007-foo" id), refuse rather than re-number it into docs/features/00NN-0007-foo.
+    if [ -d "$FEATURES_ROOT/$SLUG" ]; then
+        echo "error: $FEATURES_ROOT/$SLUG already exists — pass a new title, or edit that feature directly" >&2
+        exit 2
+    fi
+    # Scan existing feature dirs for the highest leading number, counting ONLY ids whose
+    # number is exactly WIDTH digits — the zero-padded shape this allocator produces.
+    # That width gate is load-bearing: it excludes 6-digit YYMMDD date ids, which would
+    # otherwise parse as gigantic sequence numbers (260616) and poison allocation.
+    # Tracker-key dirs and other legacy dirs are likewise skipped and coexist. Numbers
+    # are monotonic: gaps are never refilled (0001,0003 -> next 0004). (Limitation: ids
+    # past 10^WIDTH-1, or a mid-project LEANPLAN_ID_WIDTH change, fall outside the gate —
+    # both out of scope for one-deployment-sized feature work.)
+    max=0
+    if [ -d "$FEATURES_ROOT" ]; then
+        for d in "$FEATURES_ROOT"/*/; do
+            [ -d "$d" ] || continue                 # guards the no-match glob without `shopt -s nullglob`
+            base=$(basename "$d")
+            num=${base%%-*}
+            case "$base" in "$num"-*) : ;; *) continue ;; esac   # require <num>-<rest> shape
+            case "$num" in *[!0-9]*) continue ;; esac            # leading segment must be all digits
+            [ "${#num}" -eq "$WIDTH" ] || continue               # ...and exactly WIDTH wide (excludes dates)
+            val=$((10#$num))                         # 10# forces base-10 so 0008/0009 aren't parsed as octal
+            [ "$val" -gt "$max" ] && max=$val
+        done
+    fi
+    next=$((max + 1))
+    NNNN=$(printf "%0${WIDTH}d" "$next")             # only ever feed the already-decimal $next to printf
+    FEATURE_ID="$NNNN-$SLUG"
 fi
 
-# Scan existing feature dirs for the highest leading number. Only NNNN-slug-shaped
-# dirs count; non-numeric legacy dirs (Jira-key dirs, fixtures) are skipped and
-# coexist. Numbers are monotonic: gaps are never refilled (0001,0003 -> next 0004).
-max=0
-if [ -d "$FEATURES_ROOT" ]; then
-    for d in "$FEATURES_ROOT"/*/; do
-        [ -d "$d" ] || continue                 # guards the no-match glob without `shopt -s nullglob`
-        base=$(basename "$d")
-        case "$base" in
-            [0-9]*-*)                            # require NNNN-slug shape (skips bare "12" and legacy MYKEY-123)
-                num=${base%%-*}
-                case "$num" in *[!0-9]*) continue ;; esac
-                val=$((10#$num))                 # 10# forces base-10 so 0008/0009 aren't parsed as octal
-                [ "$val" -gt "$max" ] && max=$val ;;
-        esac
-    done
-fi
-
-next=$((max + 1))
-NNNN=$(printf "%0${WIDTH}d" "$next")             # only ever feed the already-decimal $next to printf
-FEATURE_ID="$NNNN-$SLUG"
 DIR="$FEATURES_ROOT/$FEATURE_ID"
 
 if [ -e "$DIR" ]; then
@@ -91,7 +184,8 @@ cat > "$DIR/requirement.md" <<EOF
 
 ## Upstream
 
-<!-- only when Jira / PRD / Slack refs exist; the external tracker key lives HERE as metadata, never in the directory name -->
+<!-- only when Jira / PRD / Slack refs exist. These are metadata, not identity — even
+when the feature id itself is a tracker key (Jira-key form), note the URL / related refs here. -->
 EOF
 
 cat > "$DIR/spec.md" <<EOF

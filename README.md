@@ -70,9 +70,11 @@ git clone https://github.com/mynghn/leanplan.git ~/.local/share/leanplan
 ## Quick start
 
 ```bash
-# scaffold a feature dir — allocates the next repo-local number and prints the path
-~/.local/share/leanplan/scripts/leanplan-new "anomaly publisher"
-# -> docs/features/0001-anomaly-publisher
+# scaffold a feature dir — allocates a feature id and prints the path.
+# Three id forms are supported:
+~/.local/share/leanplan/scripts/leanplan-new "anomaly publisher"   # -> docs/features/0001-anomaly-publisher  (repo-local sequence, default)
+~/.local/share/leanplan/scripts/leanplan-new NEWCS-3595           # -> docs/features/NEWCS-3595              (bare tracker key, e.g. Jira)
+~/.local/share/leanplan/scripts/leanplan-new --date "anomaly publisher"  # -> docs/features/260616-anomaly-publisher  (date, today's YYMMDD)
 
 # fill in artifacts (use the skills, or edit by hand)
 # ...

@@ -6,7 +6,7 @@ Companion: `philosophy.md` (principles), `<stage>.md` (per-stage procedure).
 
 ## Feature Layout
 
-Feature artifacts live under `docs/features/<KEY>/`, where `<KEY>` is the repo-local feature id in the form `NNNN-slug` (zero-padded sequence number + kebab slug, e.g. `0007-anomaly-publisher`), allocated by `leanplan-new` (scan max + 1). External tracker keys (Jira, PRD, Slack) are recorded as REQUIREMENT `## Upstream` metadata, not in the directory name.
+Feature artifacts live under `docs/features/<KEY>/`, where `<KEY>` is the feature id allocated by `leanplan-new` in one of three forms: `NNNN-slug` (repo-local sequence number + kebab slug, e.g. `0007-anomaly-publisher`, the default); a bare tracker key (e.g. Jira `NEWCS-3595`) when the feature is anchored to a tracker item; or `YYMMDD-slug` (date, e.g. `260616-anomaly-publisher`). Tracker / PRD / Slack refs that are *not* the id are recorded as REQUIREMENT `## Upstream` metadata.
 
 Surface artifacts:
 
