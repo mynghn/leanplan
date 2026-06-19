@@ -137,7 +137,7 @@ Schemas and interfaces fold into individual Decisions. External boundaries shown
 
 | Field | Required? | Content |
 |---|---|---|
-| Goal | yes | description of what to do — WHAT + HOW (when non-obvious) — with inline SPEC AC and DESIGN decision anchors colocated with the content they support (e.g., `Add anomaly publisher per SPEC#AC-1-detected-anomaly-published-within-5s, realized via outbox pattern per DESIGN#Decision-3-outbox-based-publisher`). Anchors carry ID + slug so the slug names the reference at-a-glance; agent JIT-loads full content when needed. Card is self-sufficient at cut-off boundary (sentence survives even if anchor target is discarded). |
+| Goal | yes | description of what to do — WHAT + HOW (when non-obvious) — with inline SPEC O / INV and DESIGN decision anchors colocated with the content they support (e.g., `Add anomaly publisher per SPEC#O-1-detected-anomaly-published, realized via outbox pattern per DESIGN#Decision-3-outbox-based-publisher`). Anchors carry ID + slug so the slug names the reference at-a-glance; agent JIT-loads full content when needed. Card is self-sufficient at cut-off boundary (sentence survives even if anchor target is discarded). |
 | Repo | yes | where the work lives |
 | Completion criteria | yes | observable verification + method inline when non-obvious. Continuous Invariants → ongoing mechanism (SLO / monitor / CI gate); episodic Outcomes → one-shot test. dev/prod split for infra/DB. |
 | Dependencies | yes | prior task IDs as **enablers** (what's unblocked when they land), not rigid gates. Impl agent re-evaluates at task entry. Truly-external notes only when needed. |
@@ -151,11 +151,12 @@ TASK is a navigation graph, not an execution script.
 
 | Rule | Purpose |
 |---|---|
-| Grep-friendly anchored headings (`## AC-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`) | Enable anchor-based JIT linking across artifacts; the grep-able ID+slug is a literal lexical handle agents/humans locate by exact match, not latent inference. (CE: jit-loading, literal-vs-latent-matching) |
+| Grep-friendly anchored headings (`## O-<N>: <slug>`, `## INV-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`) | Enable anchor-based JIT linking across artifacts; the grep-able ID+slug is a literal lexical handle agents/humans locate by exact match, not latent inference. (CE: jit-loading, literal-vs-latent-matching) |
 | Sibling layout at `docs/features/<KEY>/`, one-level link depth max | Prevent nested partial-read failures |
 | Declarative present tense; MUST / MUST NOT reserved for true invariants | Language signals re-reasoning invitation vs. commands |
 | Conclusion-first prose; prefer bullet / ordered lists over dense paragraphs | Reviewer grasps the artifact from headings + lead lines (review fidelity); agent attends to front-loaded claims over buried ledes. Write-time guidance, not validator-enforced; stage shapes (REQUIREMENT user-stories) are instances. See `artifact-contract.md` → Prose Style. (CE: lost-in-the-middle, distractor-sensitivity) |
 | Edge-placement in long artifacts: past the >100-line ToC threshold, re-anchor critical invariants near the tail and order high-stakes DAG cards at the edges | U-shaped recall favors the edges over the middle, so the highest-stakes items sit where attention is strongest; the >100-line trigger reuses the §6 ToC threshold (a LeanPlan-local heuristic, not a cutoff the concept states). Write-time guidance, not validator-enforced. (CE: lost-in-the-middle) |
+| Surface budget: keep REQUIREMENT / SPEC / DESIGN / TASK tight; push depth to RATIONALE / RESEARCH or split an oversized feature. Soft per-stage *prose*-line caps are advisory — Mermaid/code/blank lines excluded, so diagrams never read as bloat (the values live once in `artifact-contract.md` → Surface Budget, enforced by `validate.py`) | Surface artifacts are designed for review fidelity, not completeness — a lean surface is reviewed carefully, a verbose one rubber-stamped, and over-specific detail leaks into impl. *Direction, not a hard cap*: an advisory backstop for pathological bloat, mirroring the DAG-size guardrail (`validate.py` warns, `--strict` escalates, `--allow-large` suppresses). Archive is **lossless** — moving content off the surface keeps it JIT-loadable. (CE: context-rot, effective-vs-advertised-context, distractor-sensitivity) |
 | Mermaid for diagrams (no ASCII fallback) | Clean diffs; agents edit reliably; GitHub renders natively |
 | Verification mapping (bidirectional) — every SPEC Outcome item (O) and Invariant (INV) maps to ≥ 1 TASK completion criterion; every TASK cites ≥ 1 SPEC O, INV, DESIGN Decision, or doc Guideline as its reason | Catches both unverified requirements (SPEC → TASK gap) and orphan implementation work (TASK without plan justification) |
 
@@ -172,7 +173,7 @@ TASK is a navigation graph, not an execution script.
 
 Documents carry durable state. Skills and prompts carry stage behavior.
 
-**Loading order (adapter-authoring).** Order loaded context stable → volatile: universal references first, then the stage skill, then the JIT artifact slice, then live code — so the durable prefix stays cache-warm and only late, volatile content shifts. Adapter authors order skill-prompt content the same way. Write-time / adapter guidance, not validator-enforced. (CE: prefix-cache-economics)
+**Loading order (adapter-authoring).** Order loaded context stable → volatile so the durable prefix stays cache-warm and only late, volatile content shifts. Within a stage, the stable prefix is the content *always* loaded — the adapter + its stage reference — byte-identical across re-invocations *of that stage* (re-running `/design` reuses it); then the JIT artifact slice; then live code. The cross-stage shared prefix is intentionally just the one framework-identity line, so that part of the cache win is small-but-free, not a major lever. The *conditionally* loaded universals (`philosophy.md`, full `artifact-contract.md`) are a deliberate exception: **JIT wins over prefix-warmth** — they load only on challenge, and eagerly loading them to warm the cache would violate jit-loading for content most calls never touch. So "stable first" governs the always-present prefix; it does not promote the conditional universals out of their JIT slot. Adapter authors order skill-prompt content the same way. Write-time / adapter guidance, not validator-enforced. (CE: prefix-cache-economics, jit-loading)
 
 ## 7. Drift guards (skill-prompt enforced at write time)
 
@@ -257,7 +258,7 @@ PR body is particularly durable — visible in GitHub history even after squash,
 
 At task close-out, impl agent:
 
-1. Reviews the task's plan references (SPEC AC, DESIGN decisions, RATIONALE entries).
+1. Reviews the task's plan references (SPEC O / INV, DESIGN decisions, RATIONALE entries).
 2. Identifies WHYs not already encoded in code / tests / types.
 3. Migrates each to the strongest persistence form available.
 4. Verifies plan artifact contributions are no longer load-bearing (can be discarded).

@@ -30,6 +30,18 @@ OPTIONAL_FILES = {
 
 STAGE_ORDER = ("requirement", "spec", "design", "plan")
 
+# Surface-budget soft caps, in PROSE lines (fenced code/diagrams and blank lines
+# excluded — see _prose_line_count). The grounding is distractor/review-fidelity
+# density, which is a prose property; a big Mermaid diagram or inline schema is
+# legit reference detail, not bloat, so it must not trip the cap. Advisory
+# backstop for pathological bloat, NOT a budget to fill — a well-formed
+# one-deployment artifact sits far under these. Mirrors the DAG-size guardrail:
+# warn by default, --strict escalates to error, --allow-large suppresses.
+# Direction, not a hard cap; tune per repo. Source of truth:
+# references/artifact-contract.md → "Surface Budget" — this dict mirrors that
+# list; keep the two in sync.
+SURFACE_SOFT_CAP = {"requirement": 90, "spec": 110, "design": 160, "plan": 220}
+
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
 ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision)-(\d+):\s+([a-z0-9][a-z0-9-]*))\s*$", re.MULTILINE)
 TASK_RE = re.compile(r"^(#{2,4})\s+Task:\s+([A-Za-z][A-Za-z0-9-]*)\s*$", re.MULTILINE)
@@ -71,6 +83,7 @@ class Validator:
         self._load_files()
         self._check_required_files()
         self._check_common()
+        self._check_surface_size()
 
         if self._includes("requirement"):
             self._check_requirement()
@@ -110,6 +123,45 @@ class Validator:
             self._check_duplicate_anchors(filename, text)
             self._check_citations(filename, text)
             self._check_must_usage(filename, text)
+
+    def _prose_line_count(self, text: str) -> int:
+        # Review-surface prose only: exclude fenced code/diagram blocks (Mermaid,
+        # schemas, code samples are legit reference detail, not attention-diluting
+        # prose) and blank lines (whitespace aids review; don't penalize it).
+        # Toggle in/out of a fence on any ``` or ~~~ line so unclosed, tilde,
+        # indented, or info-stringed fences are all handled (a paired-regex
+        # substitution would miss those and miscount their bodies as prose).
+        count = 0
+        in_fence = False
+        for line in text.splitlines():
+            if re.match(r"^\s*(```|~~~)", line):
+                in_fence = not in_fence
+                continue
+            if not in_fence and line.strip():
+                count += 1
+        return count
+
+    def _check_surface_size(self) -> None:
+        # Surface-budget guardrail (advisory). --allow-large suppresses entirely;
+        # --strict escalates a breach to error. Direction, not a hard cap.
+        if self.allow_large:
+            return
+        for stage in STAGE_ORDER:
+            if not self._includes(stage) or stage not in self.texts:
+                continue
+            cap = SURFACE_SOFT_CAP[stage]
+            lines = self._prose_line_count(self.texts[stage])
+            if lines <= cap:
+                continue
+            msg = (
+                f"{SURFACE_FILES[stage]} has {lines} prose lines (> {cap} soft cap; "
+                "diagrams/code excluded); small-surface guardrail — tighten the prose, "
+                "move depth to RATIONALE/RESEARCH, or split the feature"
+            )
+            if self.strict:
+                self._error(SURFACE_FILES[stage], msg)
+            else:
+                self._warn(SURFACE_FILES[stage], msg)
 
     def _check_requirement(self) -> None:
         text = self.texts.get("requirement", "")
@@ -274,7 +326,10 @@ class Validator:
                 self._error("design-rationale.md", f"DESIGN links to missing rationale block: {target}")
 
     def _task_has_reason(self, body: str) -> bool:
-        if re.search(r"\b(SPEC#(?:AC|INV)-\d+-[a-z0-9-]+|DESIGN#Decision-\d+-[a-z0-9-]+)", body):
+        # O / INV / Decision are the live anchor vocabulary (§9 dropped "AC").
+        # Must match CITATION_RE's kinds so an Outcome-only task — permitted by
+        # the contract, common for trivial-realization features — is accepted.
+        if re.search(r"\b(SPEC#(?:O|INV)-\d+-[a-z0-9-]+|DESIGN#Decision-\d+-[a-z0-9-]+)", body):
             return True
         return bool(re.search(r"\*\*Guidelines\*\*:\s*\S|^## Guidelines\b", body, re.MULTILINE))
 
@@ -374,7 +429,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Validate through the selected stage",
     )
     parser.add_argument("--json", action="store_true", help="Emit JSON")
-    parser.add_argument("--allow-large", action="store_true", help="Allow more than 16 tasks")
+    parser.add_argument(
+        "--allow-large",
+        action="store_true",
+        help="Suppress size guardrails: allow >16 tasks and over-cap surface artifacts",
+    )
     parser.add_argument(
         "--strict",
         action="store_true",

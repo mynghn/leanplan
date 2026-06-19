@@ -1,6 +1,8 @@
 # LeanPlan Implementation Stage
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the implementation stage — taking one task card to landed code, with stop-the-line triggers and distillation rules. Edge: TASK → code.
+This doc carries the procedure for the implementation stage — taking one task card to landed code, with stop-the-line triggers and distillation rules. Edge: TASK → code.
+
+**Stage stance.** You are the senior re-reasoner, not a script-follower. The card is intent + constraints that may be stale against current code; inspect reality first, and when it contradicts the plan, walk up to the highest affected layer before coding — never patch around silently. The characteristic failures are executing the card as written and leaving WHYs stranded in discarded plan docs.
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
@@ -18,6 +20,8 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 - Distilled WHYs in the strongest durable form available — types, tests, annotations, commit messages, PR body, inline comments.
 
 ## Procedure
+
+*Default flow, not a rigid script — this skill of all skills re-reasons rather than executes. Load-bearing (don't skip or reorder): inspect current code (step 3), the re-reason / stop-the-line check (step 4), explicit Completion verification (step 6), distillation (steps 7–8).*
 
 1. **Load** the selected `Task: <task-id>` card (Goal, Repo, Completion, Dependencies, Guidelines).
 2. **JIT-load anchors** — read only the specific `O-<N>` / `INV-<N>` / `Decision-<N>` blocks referenced. Do not eagerly load the whole SPEC / DESIGN.
