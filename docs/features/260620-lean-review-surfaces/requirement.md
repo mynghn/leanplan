@@ -20,7 +20,7 @@ User stories:
 
 System policies:
 
-- **Functional identity preserved** — only legibility and de-duplication change. Each artifact's anchors, traceability, and stage role stay intact; it remains a valid interim SDD doc.
+- **Functional identity preserved** — only legibility and de-duplication change; each artifact must stay a valid, trustworthy interim SDD doc rather than lose its identity.
 - **Leanness is the test** — every change must reduce a reviewer's and an agent's reading load. Verbosity is the arch-enemy, and the fix is applied to LeanPlan's own docs too.
 
 Confirmed when: a human reviews any surface at skim depth and gets its bottom line, and a search for any cross-cutting property finds a single prose statement plus bare references elsewhere — zero re-paraphrases.

@@ -2,7 +2,7 @@
 
 ## Architecture
 
-The contract gains **one de-dup rule** — each fact has a single prose home; every other mention is an anchor — applied to every seam below. REQUIREMENT holds a cross-cutting property's biz *why*; SPEC owns its observable form (the canonical `O`/`INV` home); DESIGN and TASK cite anchors. Independently, all four surfaces are held to **conclusion-first legibility** so each is graspable from headings + lead lines. Both are guidance/contract edits to existing reference docs — no new tooling, no change to the anchor scheme or traceability.
+Two contract edits land below — a de-dup rule (`Decision-1`) and conclusion-first legibility (`Decision-2`). REQUIREMENT holds a cross-cutting property's biz *why*, SPEC owns its observable form (the canonical `O`/`INV` home), DESIGN and TASK cite anchors. Both are guidance/contract edits to existing reference docs — no new tooling, no change to the anchor scheme or traceability.
 
 ```mermaid
 flowchart LR
@@ -10,7 +10,7 @@ flowchart LR
   S -->|"cite anchor"| D["DESIGN<br/>chosen HOW"]
   S -->|"cite anchor"| T["TASK<br/>work nav"]
   D -->|"cite anchor"| T
-  AC["artifact-contract.md<br/>one prose home per fact —<br/>every other mention = an anchor"]
+  AC["artifact-contract.md<br/>one-prose-home rule"]
   AC -.-> R
   AC -.-> S
   AC -.-> D
@@ -21,7 +21,7 @@ flowchart LR
 Generalize the existing DESIGN→SPEC "no duplicate Invariants" guard into a contract-wide rule: **a fact is authored as prose once, in its owning artifact; every other occurrence is an anchor reference.** Realizes SPEC#O-2-one-canonical-home-per-fact. See rationale at [design-rationale.md#Decision-1-one-prose-home-per-fact].
 
 Ownership + the seams it resolves:
-- **REQ↔SPEC (altitude split).** REQUIREMENT system-policy = biz *intent* (why a cross-cutting property matters); SPEC `O`/`INV` = its observable form (canonical home). A SPEC INV realizing a policy cites it — never re-paraphrases.
+- **REQ↔SPEC (altitude split).** REQUIREMENT system-policy = biz *intent* (why a cross-cutting property matters); SPEC `O`/`INV` = its observable form (canonical home). A SPEC INV realizing a policy states the observable form and leaves the biz intent to REQUIREMENT — never re-paraphrasing.
 - **Symmetric guard.** "Cite the anchor, don't restate" binds REQ→SPEC and TASK→SPEC, not only DESIGN→SPEC.
 - **Within TASK.** Forward coverage has one home: inline `Completion` citations are canonical; a forward-coverage table, if kept, is a derived `**GAP**`-acknowledgment view — not a re-authored mapping.
 - **Within DESIGN.** The Architecture caption owns boundaries/flow only; `Decision` blocks own realization claims — the caption does not restate a Decision.
@@ -29,7 +29,7 @@ Ownership + the seams it resolves:
 Realization (where the rule lands):
 - `artifact-contract.md` — add the general rule; sharpen the Stage Ownership rows (REQUIREMENT = biz intent for policies; SPEC `O`/`INV` = observable canonical home).
 - `requirement.md` — redefine the System-policies sub-group as biz intent; drop its SPEC-vocabulary overlap; note the observable form lives in SPEC.
-- `specify.md` — state SPEC `O`/`INV` is the canonical home; an INV realizing a REQ policy cites it.
+- `specify.md` — state SPEC `O`/`INV` is the canonical home; an INV realizing a REQ policy states the observable form and leaves the biz intent to REQUIREMENT.
 - `design.md`, `plan.md` — generalize the guard wording; add the within-DESIGN and within-TASK clauses above.
 
 ## Decision-2: conclusion-first-on-prose-shaped-fields
