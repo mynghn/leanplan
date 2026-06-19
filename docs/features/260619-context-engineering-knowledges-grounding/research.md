@@ -16,6 +16,7 @@ Source: `~/.local/share/context-engineering-knowledge-base/` (skill copy at `~/.
 Verified against `references/*.md`, `leanplan.md`, the adapter SKILLs, and the 15 entries.
 
 - JIT loading (philosophy P1; `leanplan.md` §1.2 / §4) → `jit-loading`.
+- No flat task scripting (philosophy P2; `leanplan.md` §1.3) → `jit-loading`, `distractor-sensitivity`, `context-rot`. A frozen step-by-step script rots against current code into a stale distractor; re-deriving at task entry JIT-loads current reality.
 - Small surface / attention discipline (philosophy P3; §6 prose rule) → `lost-in-the-middle`, `distractor-sensitivity`.
 - Archive verbose reasoning (philosophy P4; §4 surface/archive) → `jit-loading`, `context-as-working-set`.
 - Persist-by-migration-to-code (philosophy P7; §10) → `structured-note-taking`.

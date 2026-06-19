@@ -8,7 +8,7 @@
 
 1. **LLM-aware by construction.** Framework shape reflects how LLM agents consume and produce documents. Everything follows from this.
 2. **JIT loading, not initial heavy dump.** Minimal plan-doc length is the target; deep context lives in separately-loaded archives. (CE: jit-loading)
-3. **No flat task scripting.** Implementation agents reason at implement-time; plan docs provide intent + constraints, not step-by-step recipes.
+3. **No flat task scripting.** Implementation agents reason at implement-time; plan docs provide intent + constraints, not step-by-step recipes. (CE: jit-loading, distractor-sensitivity)
 4. **Small surface for human reviewability.** Verbose docs get rubber-stamped; rubber-stamped docs leak over-specific instructions to implementation; agents get confused. Less surface = higher review fidelity. (CE: lost-in-the-middle, distractor-sensitivity)
 5. **Archive verbose reasoning separately.** Detailed investigation and rationale are preserved, but hidden from primary review surface. Accessed JIT by both humans and agents. (CE: jit-loading, context-as-working-set)
 6. **Target one-deployment scope.** Trivial changes skip the ceremony. Oversized work is split before entry.
