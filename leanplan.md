@@ -7,13 +7,14 @@
 ## 1. Philosophy
 
 1. **LLM-aware by construction.** Framework shape reflects how LLM agents consume and produce documents. Everything follows from this.
-2. **JIT loading, not initial heavy dump.** Minimal plan-doc length is the target; deep context lives in separately-loaded archives.
+2. **JIT loading, not initial heavy dump.** Minimal plan-doc length is the target; deep context lives in separately-loaded archives. (CE: jit-loading)
 3. **No flat task scripting.** Implementation agents reason at implement-time; plan docs provide intent + constraints, not step-by-step recipes.
-4. **Small surface for human reviewability.** Verbose docs get rubber-stamped; rubber-stamped docs leak over-specific instructions to implementation; agents get confused. Less surface = higher review fidelity.
-5. **Archive verbose reasoning separately.** Detailed investigation and rationale are preserved, but hidden from primary review surface. Accessed JIT by both humans and agents.
+4. **Small surface for human reviewability.** Verbose docs get rubber-stamped; rubber-stamped docs leak over-specific instructions to implementation; agents get confused. Less surface = higher review fidelity. (CE: lost-in-the-middle, distractor-sensitivity)
+5. **Archive verbose reasoning separately.** Detailed investigation and rationale are preserved, but hidden from primary review surface. Accessed JIT by both humans and agents. (CE: jit-loading, context-as-working-set)
 6. **Target one-deployment scope.** Trivial changes skip the ceremony. Oversized work is split before entry.
 7. **Plan docs are in-feature artifacts only.** Their role is review surface + agent navigation during the plan-implement cycle. They do not aspire to long-surviving source-of-truth status — code is truth going forward. Evolving plan docs into a canonical system spec would add drift risk vs. code, perpetual maintenance burden, and cognitive load from competing sources of truth.
-8. **Persist by migration to code, not by doc evolution.** At implementation time, impl agent distills non-obvious WHYs from plan artifacts into the code itself — types, tests, annotations, commit messages, or inline comments. Plan docs become discardable once migrated. Distillation happens against final code reality, not predicted at plan-write time.
+8. **Persist by migration to code, not by doc evolution.** At implementation time, impl agent distills non-obvious WHYs from plan artifacts into the code itself — types, tests, annotations, commit messages, or inline comments. Plan docs become discardable once migrated. Distillation happens against final code reality, not predicted at plan-write time. (CE: structured-note-taking)
+9. **Session-boundary discipline.** Keep the planning spine (requirement→spec→design→plan) continuous in one warm session; make the hard hand-off to a fresh session at the plan→impl boundary; isolate breadth-heavy sub-tasks into sub-agents; light-compact at major pivots. Cross-session impl survival rests on harness task-state + git, not a new per-feature state artifact. (CE: explore-execute-boundary, compaction-vs-eviction, explore-then-compact-handoff, context-isolation)
 
 ## 2. Stages & coordinate model
 
@@ -68,7 +69,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 | Archive L1 | DESIGN RATIONALE | when challenging a DESIGN decision |
 | Archive L2 | RESEARCH | when L1 is insufficient — need raw evidence |
 
-Each level loads only via explicit trigger (anchor link from the layer above). JIT by construction.
+Each level loads only via explicit trigger (anchor link from the layer above). JIT by construction. (CE: jit-loading, context-as-working-set)
 
 ## 5. Artifact shapes
 
@@ -153,7 +154,8 @@ TASK is a navigation graph, not an execution script.
 | Grep-friendly anchored headings (`## AC-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`) | Enable anchor-based JIT linking across artifacts |
 | Sibling layout at `docs/features/<KEY>/`, one-level link depth max | Prevent nested partial-read failures |
 | Declarative present tense; MUST / MUST NOT reserved for true invariants | Language signals re-reasoning invitation vs. commands |
-| Conclusion-first prose; prefer bullet / ordered lists over dense paragraphs | Reviewer grasps the artifact from headings + lead lines (review fidelity); agent attends to front-loaded claims over buried ledes. Write-time guidance, not validator-enforced; stage shapes (REQUIREMENT user-stories) are instances. See `artifact-contract.md` → Prose Style. |
+| Conclusion-first prose; prefer bullet / ordered lists over dense paragraphs | Reviewer grasps the artifact from headings + lead lines (review fidelity); agent attends to front-loaded claims over buried ledes. Write-time guidance, not validator-enforced; stage shapes (REQUIREMENT user-stories) are instances. See `artifact-contract.md` → Prose Style. (CE: lost-in-the-middle, distractor-sensitivity) |
+| Edge-placement in long artifacts: past the >100-line ToC threshold, re-anchor critical invariants near the tail and order high-stakes DAG cards at the edges | U-shaped recall favors the edges over the middle, so the highest-stakes items sit where attention is strongest; the >100-line trigger reuses the §6 ToC threshold (a LeanPlan-local heuristic, not a cutoff the concept states). Write-time guidance, not validator-enforced. (CE: lost-in-the-middle) |
 | Mermaid for diagrams (no ASCII fallback) | Clean diffs; agents edit reliably; GitHub renders natively |
 | Verification mapping (bidirectional) — every SPEC Outcome item (O) and Invariant (INV) maps to ≥ 1 TASK completion criterion; every TASK cites ≥ 1 SPEC O, INV, DESIGN Decision, or doc Guideline as its reason | Catches both unverified requirements (SPEC → TASK gap) and orphan implementation work (TASK without plan justification) |
 
@@ -169,6 +171,8 @@ TASK is a navigation graph, not an execution script.
 | One-deployment guardrail | advisory in default mode — TASK-time DAG-size check warns at >12 tasks and >16 tasks; `--strict` (or `LEANPLAN_STRICT=1`) escalates to error; `--allow-large` overrides. Earlier-stage heuristics (SPEC O count, DESIGN component count) are deferred — see open items. |
 
 Documents carry durable state. Skills and prompts carry stage behavior.
+
+**Loading order (adapter-authoring).** Order loaded context stable → volatile: universal references first, then the stage skill, then the JIT artifact slice, then live code — so the durable prefix stays cache-warm and only late, volatile content shifts. Adapter authors order skill-prompt content the same way. Write-time / adapter guidance, not validator-enforced. (CE: prefix-cache-economics)
 
 ## 7. Drift guards (skill-prompt enforced at write time)
 
@@ -211,7 +215,7 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 
 ## 10. Plan → code distillation
 
-Persist-worthy insights migrate from plan artifacts into code at implementation time (principle 8). Plan docs become discardable once this migration completes.
+Persist-worthy insights migrate from plan artifacts into code at implementation time (principle 8). Plan docs become discardable once this migration completes. (CE: structured-note-taking)
 
 ### Hierarchy of persistence
 
@@ -307,9 +311,11 @@ Claude Code / Codex already provide: cross-session memory, parallel sub-agents, 
 - **Skills** (framework shape as prompts) — Phase 1
 - **Validators** (drift regex, anchor integrity, SPEC → TASK coverage) — Phase 2
 - **Lifecycle glue** (slash commands binding skills + validators) — Phase 2–3
-- **Progress state files** (per-feature YAML, git-persisted) — Phase 2–3
+- **Progress state files** (per-feature YAML, git-persisted) — Phase 2–3 — *informational only*; cross-session impl survival rests on harness task-state + git, not a per-feature session-state artifact (session-boundary principle, §1.9; principle 7)
 - **Domain glue** (INFRAREQ / DBREQ via Jira MCP, submodule handling) — Phase 3
 - **CLI wrapper** (thin shell over the above) — Phase 3+
+
+**Session management** is the worked example of this split. The **session-boundary discipline** (§1.9, `philosophy.md` P8) names the *behavior* — keep the planning spine warm, hard-cut to a fresh frame at plan→impl, isolate noisy sub-tasks, light-compact at pivots — portably, naming no command. Where a harness supplies grounded session-management *mechanisms*, they realize it: on Claude Code, `/handoff <goal>` at the plan→impl cut (a goal-scoped fresh-session brief) and `/compact-focus` at in-session pivots, both grounded in the same CE concepts (`explore-execute-boundary`, `compaction-vs-eviction`, `explore-then-compact-handoff`, `prefix-cache-economics`). A bare install — no such commands, no external KB — performs the boundary by hand; the principle never depends on them.
 
 ### Beyond safety nets — long-term harness ambitions (Phase 4+)
 
