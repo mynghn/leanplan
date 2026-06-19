@@ -55,6 +55,9 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
   - ❌ a RATIONALE entry for the trivial one — forces a form where one line suffices.
   - ❌ burying the non-trivial tradeoff as a one-liner — the road-not-taken is the highest-loss-risk WHY under eviction; it needs RATIONALE → PR body, not a clause.
 - **No fake decisions.** A choice with no real alternative isn't a decision — fold its content into the diagram or reference the SPEC Invariant it satisfies.
+- **Conclusion-first Decision body.** Line 1 is the choice itself; parallel facets (schema, rejected alternatives' one-liners, invalidation cue) go in lists below — the body is graspable from its lead line alone (`artifact-contract.md` → Prose Style).
+  - ✅ *"Publish directly to Kafka from the handler — lowest-latency path satisfying `SPEC#INV-1-publish-latency-p99-under-5s`."* then `- schema: …` · `- rejected: outbox relay (adds a poll hop).`
+  - ❌ *"Because the handler already holds a producer and an outbox adds operational weight while `SPEC#INV-1-publish-latency-p99-under-5s` still has to hold, we chose to publish directly…"* — the choice lands only after three clauses of preamble.
 - **One prose home — cite, don't restate.** DESIGN references an upstream SPEC `O` / `INV` by anchor (e.g. `satisfies SPEC#INV-3-non-blocking-handover`) instead of re-stating it. Within DESIGN, the Architecture caption owns boundaries and flow only; it doesn't restate a `Decision`, and the `Decision` blocks own realization claims (`artifact-contract.md` → One Prose Home Per Fact).
 - **RATIONALE is free-form.** No prescribed inner sections. Capture reasoning, don't fill a form.
 - **RESEARCH is evidence-only.** Interpretations belong in RATIONALE.

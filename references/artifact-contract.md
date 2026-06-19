@@ -121,7 +121,7 @@ Each stage doc carries its seam's operational instance; the per-artifact Drift G
 
 Applies to every artifact, in any authoring language. Write-time guidance, not validator-enforced.
 
-- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support. The artifact should be graspable from headings and lead lines alone.
+- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support. The artifact should be graspable from headings and lead lines alone. The two prose-shaped fields most prone to collapsing into a blob — the DESIGN `Decision` body and the TASK `Goal` — get a worked good/bad example in `design.md` / `plan.md`.
 - **Lists over dense paragraphs.** When content enumerates parallel points, conditions, or steps, use bullet or ordered lists. Reserve flowing prose for a single causal chain.
 - **Short, declarative sentences.** Break run-ons; promote a buried qualifier to its own clause or bullet rather than nesting it in parentheses.
 
