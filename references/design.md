@@ -49,6 +49,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 - **No duplicate Invariants.** If SPEC says "must be non-blocking", DESIGN doesn't re-state it. Reference the SPEC anchor (e.g. `satisfies SPEC#INV-3-non-blocking-handover`).
 - **RATIONALE is free-form.** No prescribed inner sections. Capture reasoning, don't fill a form.
 - **RESEARCH is evidence-only.** Interpretations belong in RATIONALE.
+- **Isolate breadth-heavy investigation.** When code investigation (a wide cross-module / SOTA scan) would swamp the working window, run it in a sub-agent that returns only the distilled findings — a RESEARCH entry or the conclusions — keeping the raw trail out. Guidance, not mandate — when breadth exceeds the window. (CE: context-isolation, explore-then-compact-handoff)
 
 ## Hand-off
 

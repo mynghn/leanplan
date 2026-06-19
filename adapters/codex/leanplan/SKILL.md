@@ -24,7 +24,7 @@ Parse the user's intent and load only the matching reference from the canonical 
 
 Throughout, `<KEY>` is the feature id in one of three forms — `NNNN-slug` sequence (e.g. `0007-anomaly-publisher`, the default), a bare tracker key (e.g. Jira `NEWCS-3595`), or `YYMMDD-slug` date (e.g. `260616-anomaly-publisher`) — see `artifact-contract.md` / `leanplan.md` §5. The `requirement` edge *produces* it: `leanplan-new "<slug-or-title>"` / `leanplan-new "<PROJ-123>"` / `leanplan-new --date "<slug-or-title>"` allocates the id and prints the dir path; later edges receive that id as input. A tracker key that is *not* the id goes in REQUIREMENT `## Upstream`.
 
-For any artifact-writing stage, first load `~/.local/share/leanplan/references/philosophy.md` (framework principles) and `~/.local/share/leanplan/references/artifact-contract.md` (structural rules) before the matching stage reference.
+For any artifact-writing stage, default-load only the matching stage reference. Load `~/.local/share/leanplan/references/artifact-contract.md` (structural rules) on demand — before writing or editing an artifact's structure or anchors — and `~/.local/share/leanplan/references/philosophy.md` (framework principles) when a principle's intent or grounding is in question, not up front (CE: jit-loading).
 
 The framework doc at `~/.local/share/leanplan/leanplan.md` carries the full coordinate model, validator design, and stop-the-line catalog. Load it only when challenged on framework shape — `philosophy.md` covers the principles needed at runtime.
 
