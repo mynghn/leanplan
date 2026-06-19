@@ -114,6 +114,16 @@ Applies to every artifact, in any authoring language. Write-time guidance, not v
 
 Why: this serves the small-surface and LLM-aware principles — buried ledes and dense blocks get rubber-stamped by reviewers and dilute agent attention. Stage-specific shapes (e.g. REQUIREMENT user-story bullets, `requirement.md`) are instances of this rule, not exceptions.
 
+## Surface Budget
+
+The surface artifacts (REQUIREMENT, SPEC, DESIGN, TASK) are designed for **review fidelity, not completeness** — a lean surface is reviewed carefully; a verbose one gets rubber-stamped, and its over-specific detail leaks into implementation. Keep each surface tight; push depth into the archives (RATIONALE, RESEARCH) or split an oversized feature.
+
+- **Direction, not a hard cap.** Tightness is the target; the caps below are an advisory backstop for *pathological* bloat, not a budget to fill. A well-formed one-deployment artifact normally sits far under them.
+- **Soft per-stage line caps** (advisory — `validate.py` warns above them, `--strict` escalates to error, `--allow-large` suppresses, mirroring the DAG-size guardrail): REQUIREMENT ~120, SPEC ~150, DESIGN ~220, TASK ~280. This list is the source of truth; `validate.py`'s `SURFACE_SOFT_CAP` mirrors it — keep the two in sync. A breach is a prompt to ask *"what belongs in an archive, or should this feature split?"* — not an automatic failure.
+- **Archive is lossless.** Moving reasoning to RATIONALE or evidence to RESEARCH removes it from the *review surface*, not from existence — it stays JIT-loadable on challenge. **Lean ≠ information loss.** This is the contract that lets the surface stay small without the team fearing lost context.
+
+Grounded in the small-surface and LLM-aware principles (`philosophy.md` P3). The "lean surface is reviewed better" claim rests on the well-established code-review finding that defect detection drops sharply past a few hundred lines; that lean LeanPlan surfaces specifically review better is a deliberate, not-yet-measured bet. (CE: context-rot, effective-vs-advertised-context, distractor-sensitivity)
+
 ## Drift Guards
 
 - REQUIREMENT has no implementation choices.

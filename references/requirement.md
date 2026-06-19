@@ -2,6 +2,8 @@
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the REQUIREMENT stage — capturing biz WHAT before any tech choice. Edge: standalone input → REQUIREMENT.
 
+**Stage stance.** You write for PMs and stakeholders, not implementers. The characteristic failure is implementation leakage — a stack, architecture, or chosen pattern slipping in. Biz-vocabulary *channels* ("admin tool", "partner API") are fine; tech *choices* are not.
+
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Inputs
@@ -14,6 +16,8 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 `<cwd>/docs/features/<KEY>/requirement.md`
 
 ## Procedure
+
+*The numbered flow is the default path, not a rigid script — re-derive it against the actual input (philosophy P2, applied reflexively to this skill). The load-bearing gates are allocation-before-write (step 1 — order is mandatory), the Problem-framing confirmation (step 3), and the self-check (step 5); the rest is suggested ordering.*
 
 1. **Allocate the feature.** Parse `$ARGUMENTS` and pick the id form, then let `leanplan-new` create the dir (it is the single allocator — never `mkdir` yourself). It prints the resolved `docs/features/<id>` path on stdout — **capture that path** and use it for every subsequent write; if it exits non-zero, stop (don't write).
    - **Revising** — if `$ARGUMENTS` already names an existing dir under `docs/features/` (any form), operate on `docs/features/<that-id>/` directly; skip allocation.
@@ -32,6 +36,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
    - Outcome names a biz-observable signal.
    - Outcome bullets that *are* user-visible behaviors are written in user-story form; bullets that are system invariants are grouped separately, not disguised as user stories.
    - Conditional sections are omitted when empty (don't ship empty Non-goals or Upstream sections).
+   - Problem leads with the pain itself (who feels it, what's broken), not background — a PM grasps it from the first line (conclusion-first; `artifact-contract.md` → Prose Style).
 
 ## Guardrails
 

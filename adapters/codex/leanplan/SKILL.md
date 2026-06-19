@@ -22,7 +22,7 @@ Parse the user's intent and load only the matching reference from the canonical 
 | `impl <KEY> <task-id>` | `~/.local/share/leanplan/references/impl.md` |
 | `validate <feature-path>` | Run `python3 ~/.local/share/leanplan/scripts/validate.py` |
 
-Throughout, `<KEY>` is the feature id in one of three forms — `NNNN-slug` sequence (e.g. `0007-anomaly-publisher`, the default), a bare tracker key (e.g. Jira `NEWCS-3595`), or `YYMMDD-slug` date (e.g. `260616-anomaly-publisher`) — see `artifact-contract.md` / `leanplan.md` §5. The `requirement` edge *produces* it: `leanplan-new "<slug-or-title>"` / `leanplan-new "<PROJ-123>"` / `leanplan-new --date "<slug-or-title>"` allocates the id and prints the dir path; later edges receive that id as input. A tracker key that is *not* the id goes in REQUIREMENT `## Upstream`.
+Throughout, `<KEY>` is the feature id. Its three forms (sequence / tracker-key / date), the `leanplan-new` allocation, and the `## Upstream` rule are defined in `artifact-contract.md` / `leanplan.md` §5 and produced by the `requirement` edge — load them there rather than restating here.
 
 For any artifact-writing stage, default-load only the matching stage reference. Load `~/.local/share/leanplan/references/artifact-contract.md` (structural rules) on demand — before writing or editing an artifact's structure or anchors — and `~/.local/share/leanplan/references/philosophy.md` (framework principles) when a principle's intent or grounding is in question, not up front (CE: jit-loading).
 
@@ -41,7 +41,7 @@ Flags:
 - `--stage requirement|spec|design|plan|full` — partial check while iterating.
 - `--json` — machine-readable output.
 - `--strict` (or `LEANPLAN_STRICT=1`) — escalates the one-deployment guardrail to error and makes any warning exit non-zero. Suitable for CI / pre-commit.
-- `--allow-large` — explicit override for legitimately oversized DAGs.
+- `--allow-large` — suppress the size guardrails (oversized DAGs and over-cap surface artifacts).
 
 A SPEC O / INV item annotated on a line containing `**GAP**` (typically in plan.md's forward-coverage table) is treated as deliberately uncovered — see the artifact contract.
 

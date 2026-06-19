@@ -30,6 +30,14 @@ OPTIONAL_FILES = {
 
 STAGE_ORDER = ("requirement", "spec", "design", "plan")
 
+# Surface-budget soft caps (lines). Advisory backstop for pathological bloat,
+# NOT a budget to fill — a well-formed one-deployment artifact sits far under
+# these. Mirrors the DAG-size guardrail: warn by default, --strict escalates to
+# error, --allow-large suppresses. Direction, not a hard cap; tune per repo.
+# Source of truth: references/artifact-contract.md → "Surface Budget" — this
+# dict mirrors that list; keep the two in sync.
+SURFACE_SOFT_CAP = {"requirement": 120, "spec": 150, "design": 220, "plan": 280}
+
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
 ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision)-(\d+):\s+([a-z0-9][a-z0-9-]*))\s*$", re.MULTILINE)
 TASK_RE = re.compile(r"^(#{2,4})\s+Task:\s+([A-Za-z][A-Za-z0-9-]*)\s*$", re.MULTILINE)
@@ -71,6 +79,7 @@ class Validator:
         self._load_files()
         self._check_required_files()
         self._check_common()
+        self._check_surface_size()
 
         if self._includes("requirement"):
             self._check_requirement()
@@ -110,6 +119,27 @@ class Validator:
             self._check_duplicate_anchors(filename, text)
             self._check_citations(filename, text)
             self._check_must_usage(filename, text)
+
+    def _check_surface_size(self) -> None:
+        # Surface-budget guardrail (advisory). --allow-large suppresses entirely;
+        # --strict escalates a breach to error. Direction, not a hard cap.
+        if self.allow_large:
+            return
+        for stage in STAGE_ORDER:
+            if not self._includes(stage) or stage not in self.texts:
+                continue
+            cap = SURFACE_SOFT_CAP[stage]
+            lines = len(self.texts[stage].splitlines())
+            if lines <= cap:
+                continue
+            msg = (
+                f"{SURFACE_FILES[stage]} is {lines} lines (> {cap} soft cap); "
+                "small-surface guardrail — push depth to RATIONALE/RESEARCH or split the feature"
+            )
+            if self.strict:
+                self._error(SURFACE_FILES[stage], msg)
+            else:
+                self._warn(SURFACE_FILES[stage], msg)
 
     def _check_requirement(self) -> None:
         text = self.texts.get("requirement", "")
@@ -374,7 +404,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Validate through the selected stage",
     )
     parser.add_argument("--json", action="store_true", help="Emit JSON")
-    parser.add_argument("--allow-large", action="store_true", help="Allow more than 16 tasks")
+    parser.add_argument(
+        "--allow-large",
+        action="store_true",
+        help="Suppress size guardrails: allow >16 tasks and over-cap surface artifacts",
+    )
     parser.add_argument(
         "--strict",
         action="store_true",

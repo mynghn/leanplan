@@ -91,6 +91,13 @@ inject_task_step_drift() {
     printf '\n- edit file src/app.ts at line 42 to add config\n' >> "$1/$f"
 }
 
+inject_surface_bloat() {
+    # Pad spec.md well past its ~150-line soft cap with filler lines, to trip the
+    # surface-budget guardrail (advisory; escalates to error under --strict).
+    local i
+    for i in $(seq 1 200); do printf '<!-- filler %d -->\n' "$i" >> "$1/spec.md"; done
+}
+
 # Validate.py exit semantics:
 #   0 = clean (no errors; warnings allowed in default mode)
 #   1 = at least one error (or any warning under --strict)
@@ -99,6 +106,7 @@ assert_case "broken anchor"                   1 "broken citation"               
 assert_case "coverage hole"                   1 "is not covered by any task"            inject_coverage_hole
 assert_case "requirement drift (--strict)"    1 "implementation choice in REQUIREMENT"  inject_req_drift          "--strict"
 assert_case "task step drift (--strict)"      1 "looks like line-level scripting"       inject_task_step_drift    "--strict"
+assert_case "surface bloat (--strict)"        1 "soft cap"                               inject_surface_bloat      "--strict"
 
 printf '\nselftest: %d passed, %d failed\n' "$pass" "$fail"
 exit "$fail"

@@ -2,6 +2,8 @@
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the TASK stage — sequencing DESIGN into land-able task cards in `plan.md`. Edge: DESIGN → TASK (`plan.md`).
 
+**Stage stance.** A task card describes the *work* — what it achieves, how to verify it, in what stance — never the *finished system* (that is DESIGN; anchor in, don't restate). The two characteristic failures are restating DESIGN content in a Goal and flattening intent into a line-level edit script.
+
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Inputs
@@ -15,6 +17,8 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 `<cwd>/docs/features/<KEY>/plan.md`
 
 ## Procedure
+
+*The numbered flow is the default path, not a rigid script — re-derive it against the actual DESIGN (philosophy P2, applied reflexively to this skill). The load-bearing gates are the bidirectional verification (step 6), the one-deployment guardrail (step 7), and the self-check (step 8); the rest is suggested ordering.*
 
 1. **Load** artifact contract + SPEC + DESIGN.
 2. **Compose doc-level Guidelines (conditional)** — only when feature-wide work-stance rules genuinely apply (base branch, canary sequence, cross-team coordination). Skip otherwise.
@@ -36,6 +40,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
    - Every Completion is observable (you could write the verification).
    - Task cards are self-sufficient at cut-off (sentences complete without the anchor target).
    - DAG renders.
+   - For a plan past ~100 lines, high-stakes / blocking cards sit at the edges (top and tail), not buried mid-file, and critical feature-level Guidelines are re-anchored near the tail (edge-placement; `leanplan.md` §6, `artifact-contract.md` → Prose Style).
 
 ## Guardrails
 
