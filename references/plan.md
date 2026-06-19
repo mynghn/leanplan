@@ -1,6 +1,6 @@
 # LeanPlan Plan Stage
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the TASK stage — sequencing DESIGN into land-able task cards in `plan.md`. Edge: DESIGN → TASK (`plan.md`).
+This doc carries the procedure for the TASK stage — sequencing DESIGN into land-able task cards in `plan.md`. Edge: DESIGN → TASK (`plan.md`).
 
 **Stage stance.** A task card describes the *work* — what it achieves, how to verify it, in what stance — never the *finished system* (that is DESIGN; anchor in, don't restate). The two characteristic failures are restating DESIGN content in a Goal and flattening intent into a line-level edit script.
 
@@ -18,7 +18,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Procedure
 
-*The numbered flow is the default path, not a rigid script — re-derive it against the actual DESIGN (philosophy P2, applied reflexively to this skill). The load-bearing gates are the bidirectional verification (step 6), the one-deployment guardrail (step 7), and the self-check (step 8); the rest is suggested ordering.*
+*Default flow, not a rigid script — re-derive it against the actual DESIGN. Load-bearing (don't skip or reorder): the bidirectional verification (step 6), the one-deployment guardrail (step 7), the self-check (step 8).*
 
 1. **Load** artifact contract + SPEC + DESIGN.
 2. **Compose doc-level Guidelines (conditional)** — only when feature-wide work-stance rules genuinely apply (base branch, canary sequence, cross-team coordination). Skip otherwise.
@@ -54,6 +54,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 - **External blockers become first-class tasks.** INFRAREQ / DBREQ filings, cross-team coordination — those are tasks in the DAG, not hidden "waiting" states.
 - **Anchors carry ID + slug (identity, not restatement).** `SPEC#O-1-detected-anomaly-published-within-5s` — ID stable; slug names the reference at-a-glance. Don't paraphrase the item's content in the task card; rely on the anchor + JIT load when needed.
 - **`**GAP**` ack is rare.** Use it only for deliberately-deferred coverage with a documented acceptance rationale.
+- **Isolate breadth-heavy verification.** On a large feature (near the task guardrail), the bidirectional sweep holds full SPEC + DESIGN + every task card in the window at once — a breadth-heavy aggregation that degrades. Run it in a sub-agent that returns only the gap lists (uncovered SPEC items + orphan tasks), keeping the full-corpus read out of the planning window. Guidance, not mandate — when breadth exceeds the window. (CE: context-isolation, explore-then-compact-handoff)
 
 ## Template
 

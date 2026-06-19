@@ -1,8 +1,8 @@
 # LeanPlan Specify Stage
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the SPEC stage — turning a REQUIREMENT into a generic-category tech contract. Edge: REQUIREMENT → SPEC.
+This doc carries the procedure for the SPEC stage — turning a REQUIREMENT into a generic-category tech contract. Edge: REQUIREMENT → SPEC.
 
-**Stage stance.** The characteristic failure here is **realization leakage** — naming *how* the system is built instead of *what* it externally exposes. Resist it on every line; the "what a SPEC is NOT" test below is your instrument.
+**Stage stance.** State what the system externally exposes — observable behavior only; an implementation swap must not change a single line you write. The attractor to resist is realization leakage (naming *how* it's built); the "what a SPEC is NOT" test below is your instrument.
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
@@ -18,7 +18,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Procedure
 
-*The numbered flow is the default path, not a rigid script — re-derive it against the actual REQUIREMENT (philosophy P2, applied reflexively to this skill). The load-bearing gates are the SPEC test (step 4) and the self-check (step 8); the rest is suggested ordering.*
+*Default flow, not a rigid script — re-derive it against the actual REQUIREMENT. Load-bearing (don't skip or reorder): the SPEC test (step 4) and the self-check (step 8).*
 
 1. **Load REQUIREMENT** + the artifact contract (`artifact-contract.md`).
 2. **Derive Outcome items**: for each biz outcome in REQUIREMENT, ask what externally-observable behavior signals it. Write as `O-<N>: <slug>` under `## Outcome`. One item per behavior; don't fold two into one.
@@ -39,7 +39,11 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 - **O/INV split — episodic vs. continuous.**
   - Episode-triggered ("when X, Y happens") → `O-<N>: <slug>` under **Outcome**. Verifiable by a one-shot test.
   - Continuous property ("p99 < 5s", "non-blocking", "idempotent", "within compliance boundary X") → `INV-<N>: <slug>` under **Invariants**. Verified downstream by SLO / monitor / CI gate.
-  - *Worked split.* One requirement — "anomalies are surfaced fast and we never lose one" — fans into **one O and two INVs**: ✅ `O-1: anomaly-published-on-detection` (*when* an anomaly is detected, an event is published — one-shot testable); ✅ `INV-1: publish-latency-p99-under-5s` (continuous, SLO-verified); ✅ `INV-2: every-detected-anomaly-eventually-published` (continuous integrity, monitor-verified). ❌ folding the latency or the no-loss facet *into* the O ("an anomaly is published within 5s and never dropped") — that buries two continuous properties inside an episodic item and they lose their downstream SLO/monitor home.
+  - *Worked split* — one requirement ("anomalies are surfaced fast and we never lose one") fans into one O + two INVs:
+    - ✅ `O-1: anomaly-published-on-detection` — *when* detected, an event is published (episodic; one-shot test).
+    - ✅ `INV-1: publish-latency-p99-under-5s` — continuous; SLO-verified.
+    - ✅ `INV-2: every-detected-anomaly-eventually-published` — continuous integrity; monitor-verified.
+    - ❌ folding latency/no-loss *into* the O ("published within 5s and never dropped") — buries two continuous properties in an episodic item; they lose their SLO/monitor home.
 - **What a SPEC is NOT** test: implementation can change without observable change → cut or push to DESIGN.
 - **Generic-category tech only.** Specific stack names → DESIGN.
 - **No false optionality.** If a property has no real alternative realization, it's an Invariant, not a DESIGN choice. Don't fake optionality.

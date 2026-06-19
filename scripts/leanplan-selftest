@@ -98,6 +98,29 @@ inject_surface_bloat() {
     for i in $(seq 1 200); do printf '<!-- filler %d -->\n' "$i" >> "$1/spec.md"; done
 }
 
+inject_outcome_only_task() {
+    # Append a task whose ONLY reason citation is a SPEC#O- anchor (no INV, no
+    # DESIGN). Regression guard for the reverse-coverage matcher: it must accept
+    # Outcome-only tasks (the contract permits them; trivial-realization features
+    # rely on them). Previously the matcher keyed on the dropped 'AC' token and
+    # rejected this, masked only because every fixture task also cited INV/DESIGN.
+    local f
+    f=$(task_file "$1")
+    cat >> "$1/$f" <<'TASK'
+
+## Task: S9
+
+**Goal**: Outcome-only task — realizes the published contract per `SPEC#O-1-single-invocation-sync`.
+
+**Repo**: leanplan
+
+**Completion**:
+- Observable proof per `SPEC#O-1-single-invocation-sync`.
+
+**Dependencies**: none
+TASK
+}
+
 # Validate.py exit semantics:
 #   0 = clean (no errors; warnings allowed in default mode)
 #   1 = at least one error (or any warning under --strict)
@@ -107,6 +130,7 @@ assert_case "coverage hole"                   1 "is not covered by any task"    
 assert_case "requirement drift (--strict)"    1 "implementation choice in REQUIREMENT"  inject_req_drift          "--strict"
 assert_case "task step drift (--strict)"      1 "looks like line-level scripting"       inject_task_step_drift    "--strict"
 assert_case "surface bloat (--strict)"        1 "soft cap"                               inject_surface_bloat      "--strict"
+assert_case "outcome-only task reason"        0 "validation passed"                     inject_outcome_only_task  "--strict"
 
 printf '\nselftest: %d passed, %d failed\n' "$pass" "$fail"
 exit "$fail"

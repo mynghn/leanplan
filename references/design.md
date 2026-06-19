@@ -1,8 +1,8 @@
 # LeanPlan Design Stage
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the DESIGN stage — choosing the realization (components, stack, decisions) that satisfies a SPEC. Edge: SPEC → DESIGN.
+This doc carries the procedure for the DESIGN stage — choosing the realization (components, stack, decisions) that satisfies a SPEC. Edge: SPEC → DESIGN.
 
-**Stage stance.** Two characteristic failures bracket DESIGN: *under-capture* (a realization detail a downstream task will need is missing here, so the task paraphrases instead of anchoring) and *over-reach* (work ordering, rollout, INFRAREQ — that is TASK). Capture the finished-system shape in full; stop the moment it turns into *work*.
+**Stage stance.** Capture the finished-system shape in full — every realization detail a downstream task will need (field mappings, schemas, signatures, call sequences) lives here, so tasks anchor instead of paraphrase. Stop the moment it turns into *work* (ordering, rollout, INFRAREQ → TASK). The two attractors to resist are under-capture and over-reach.
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
@@ -20,7 +20,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Procedure
 
-*The numbered flow is the default path, not a rigid script — re-derive it against the actual SPEC and current code (philosophy P2, applied reflexively to this skill). The load-bearing gates are the coverage check (step 7) and the self-check (step 9); the rest is suggested ordering.*
+*Default flow, not a rigid script — re-derive it against the actual SPEC and current code. Load-bearing (don't skip or reorder): inspect current code before choosing (step 2), the coverage check (step 7), the self-check (step 9).*
 
 1. **Load SPEC** + artifact contract + any existing `research.md`.
 2. **Inspect current code** before choosing architecture. Reality is authoritative — don't pick components without seeing what already exists.
@@ -49,7 +49,11 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 - **Chosen realization only.** DESIGN is the time-independent finished-system shape. No work ordering, PR stacking, INFRAREQ procedure, or migration sequence — those belong in TASK.
 - **Tech-realization specifics live here, in full.** Field-by-field mappings, response/proto shapes, method signatures, controller/service call sequences, schemas — capture them inside the relevant `Decision-<N>` block at design time. Downstream plan tasks should be able to anchor in via `DESIGN#Decision-<N>-<slug>` *without restating* the content. If a plan task ends up paraphrasing a Decision because it lacked detail here, the missing detail is a gap in **this** doc — fill it. Symmetric guard with the corresponding rule in `plan.md`.
 - **Architecture is mandatory.** Even a trivial one-component feature gets a diagram — it forces clarity about boundaries.
-- **Trivial vs. non-trivial.** Trivial decisions get a one-line inline why. Non-trivial decisions (real alternatives existed, tradeoffs accepted, invalidation triggers worth recording) anchor to RATIONALE. *Worked example.* ✅ trivial: "publish via the existing outbox table — already the repo's standard for transactional events" (no live alternative, one line, no RATIONALE entry). ✅ non-trivial: "outbox over direct-Kafka-publish — `Decision-3`, anchored to RATIONALE" (a real alternative was weighed: at-least-once + transactional atomicity vs. lower latency; invalidation trigger worth recording). ❌ a RATIONALE entry for the trivial one (forces a form where one line suffices) — and ❌ burying the non-trivial tradeoff as a one-liner (the road-not-taken is the highest-loss-risk WHY under eviction; it needs RATIONALE → PR body, not a clause).
+- **Trivial vs. non-trivial.** Trivial decisions get a one-line inline why; non-trivial decisions (a real alternative was weighed, a tradeoff accepted, an invalidation trigger worth recording) anchor to RATIONALE.
+  - ✅ trivial — "store the new flag on the existing `accounts` row — the repo's standard for per-account state" (no live alternative → one line, no RATIONALE).
+  - ✅ non-trivial — "read-through cache over direct-DB read for the hot lookup → `Decision-3` + RATIONALE" (alternative weighed: staleness window vs. DB load; invalidation trigger worth recording).
+  - ❌ a RATIONALE entry for the trivial one — forces a form where one line suffices.
+  - ❌ burying the non-trivial tradeoff as a one-liner — the road-not-taken is the highest-loss-risk WHY under eviction; it needs RATIONALE → PR body, not a clause.
 - **No fake decisions.** A choice with no real alternative isn't a decision — fold its content into the diagram or reference the SPEC Invariant it satisfies.
 - **No duplicate Invariants.** If SPEC says "must be non-blocking", DESIGN doesn't re-state it. Reference the SPEC anchor (e.g. `satisfies SPEC#INV-3-non-blocking-handover`).
 - **RATIONALE is free-form.** No prescribed inner sections. Capture reasoning, don't fill a form.

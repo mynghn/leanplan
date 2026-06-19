@@ -1,8 +1,8 @@
 # LeanPlan Requirement Stage
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the procedure for the REQUIREMENT stage — capturing biz WHAT before any tech choice. Edge: standalone input → REQUIREMENT.
+This doc carries the procedure for the REQUIREMENT stage — capturing biz WHAT before any tech choice. Edge: standalone input → REQUIREMENT.
 
-**Stage stance.** You write for PMs and stakeholders, not implementers. The characteristic failure is implementation leakage — a stack, architecture, or chosen pattern slipping in. Biz-vocabulary *channels* ("admin tool", "partner API") are fine; tech *choices* are not.
+**Stage stance.** Capture the business WHAT in language a PM reads — the outcome and the pain behind it, in biz vocabulary. Biz-native *channels* ("admin tool", "partner API") are fine; the attractor to resist is implementation leakage — a chosen stack, architecture, or pattern (that belongs in SPEC / DESIGN).
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
@@ -17,7 +17,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 ## Procedure
 
-*The numbered flow is the default path, not a rigid script — re-derive it against the actual input (philosophy P2, applied reflexively to this skill). The load-bearing gates are allocation-before-write (step 1 — order is mandatory), the Problem-framing confirmation (step 3), and the self-check (step 5); the rest is suggested ordering.*
+*Default flow, not a rigid script — re-derive it against the actual input. Load-bearing (don't skip or reorder): allocate-before-write (step 1), the Problem-framing confirmation (step 3), the self-check (step 5).*
 
 1. **Allocate the feature.** Parse `$ARGUMENTS` and pick the id form, then let `leanplan-new` create the dir (it is the single allocator — never `mkdir` yourself). It prints the resolved `docs/features/<id>` path on stdout — **capture that path** and use it for every subsequent write; if it exits non-zero, stop (don't write).
    - **Revising** — if `$ARGUMENTS` already names an existing dir under `docs/features/` (any form), operate on `docs/features/<that-id>/` directly; skip allocation.
