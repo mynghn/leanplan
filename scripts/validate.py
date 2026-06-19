@@ -128,8 +128,18 @@ class Validator:
         # Review-surface prose only: exclude fenced code/diagram blocks (Mermaid,
         # schemas, code samples are legit reference detail, not attention-diluting
         # prose) and blank lines (whitespace aids review; don't penalize it).
-        nofence = CODE_FENCE_RE.sub("", text)
-        return sum(1 for line in nofence.splitlines() if line.strip())
+        # Toggle in/out of a fence on any ``` or ~~~ line so unclosed, tilde,
+        # indented, or info-stringed fences are all handled (a paired-regex
+        # substitution would miss those and miscount their bodies as prose).
+        count = 0
+        in_fence = False
+        for line in text.splitlines():
+            if re.match(r"^\s*(```|~~~)", line):
+                in_fence = not in_fence
+                continue
+            if not in_fence and line.strip():
+                count += 1
+        return count
 
     def _check_surface_size(self) -> None:
         # Surface-budget guardrail (advisory). --allow-large suppresses entirely;
