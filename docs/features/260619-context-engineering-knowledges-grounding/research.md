@@ -20,6 +20,7 @@ Verified against `references/*.md`, `leanplan.md`, the adapter SKILLs, and the 1
 - Small surface / attention discipline (philosophy P3; §6 prose rule) → `lost-in-the-middle`, `distractor-sensitivity`.
 - Archive verbose reasoning (philosophy P4; §4 surface/archive) → `jit-loading`, `context-as-working-set`.
 - Persist-by-migration-to-code (philosophy P7; §10) → `structured-note-taking`.
+- Grep-friendly anchored headings / ID+slug (`leanplan.md` §6; §8 / §9) → `jit-loading`, `literal-vs-latent-matching`. The anchor is the JIT-resolvable pointer; the grep-able exact slug is a literal lexical handle, not a latent-inference lookup.
 - Isolation (not yet present) → `context-isolation`, `explore-then-compact-handoff`.
 - Stable→volatile load order (not yet present) → `prefix-cache-economics` (entry states "order stable-to-volatile").
 - Edge-placement in long artifacts (not yet present) → `lost-in-the-middle`. The "~100-line" trigger is a LeanPlan-local heuristic (reuses the §6 ToC>100 threshold); the concept itself states no line cutoff.

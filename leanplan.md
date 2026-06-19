@@ -14,7 +14,7 @@
 6. **Target one-deployment scope.** Trivial changes skip the ceremony. Oversized work is split before entry.
 7. **Plan docs are in-feature artifacts only.** Their role is review surface + agent navigation during the plan-implement cycle. They do not aspire to long-surviving source-of-truth status — code is truth going forward. Evolving plan docs into a canonical system spec would add drift risk vs. code, perpetual maintenance burden, and cognitive load from competing sources of truth.
 8. **Persist by migration to code, not by doc evolution.** At implementation time, impl agent distills non-obvious WHYs from plan artifacts into the code itself — types, tests, annotations, commit messages, or inline comments. Plan docs become discardable once migrated. Distillation happens against final code reality, not predicted at plan-write time. (CE: structured-note-taking)
-9. **Session-boundary discipline.** Keep the planning spine (requirement→spec→design→plan) continuous in one warm session; make the hard hand-off to a fresh session at the plan→impl boundary; isolate breadth-heavy sub-tasks into sub-agents; light-compact at major pivots. Cross-session impl survival rests on harness task-state + git, not a new per-feature state artifact. (CE: explore-execute-boundary, compaction-vs-eviction, explore-then-compact-handoff, context-isolation)
+9. **Session-boundary discipline.** Keep the planning spine (requirement→spec→design→plan) continuous in one warm session; make the hard hand-off to a fresh session at the plan→impl boundary; isolate breadth-heavy sub-tasks into sub-agents; light-compact at major pivots. Cross-session impl survival rests on harness task-state + git, not a new per-feature state artifact. (CE: explore-execute-boundary, compaction-vs-eviction, explore-then-compact-handoff, context-isolation, prefix-cache-economics)
 
 ## 2. Stages & coordinate model
 
@@ -151,7 +151,7 @@ TASK is a navigation graph, not an execution script.
 
 | Rule | Purpose |
 |---|---|
-| Grep-friendly anchored headings (`## AC-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`) | Enable anchor-based JIT linking across artifacts |
+| Grep-friendly anchored headings (`## AC-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`) | Enable anchor-based JIT linking across artifacts; the grep-able ID+slug is a literal lexical handle agents/humans locate by exact match, not latent inference. (CE: jit-loading, literal-vs-latent-matching) |
 | Sibling layout at `docs/features/<KEY>/`, one-level link depth max | Prevent nested partial-read failures |
 | Declarative present tense; MUST / MUST NOT reserved for true invariants | Language signals re-reasoning invitation vs. commands |
 | Conclusion-first prose; prefer bullet / ordered lists over dense paragraphs | Reviewer grasps the artifact from headings + lead lines (review fidelity); agent attends to front-loaded claims over buried ledes. Write-time guidance, not validator-enforced; stage shapes (REQUIREMENT user-stories) are instances. See `artifact-contract.md` → Prose Style. (CE: lost-in-the-middle, distractor-sensitivity) |
