@@ -12,7 +12,7 @@
 ```mermaid
 flowchart LR
     subgraph A [Archive]
-        A1[A1: vendor 14 nodes] --> A2[A2: author mapping]
+        A1[A1: vendor 15 nodes] --> A2[A2: author mapping]
     end
     subgraph S [Surface]
         S1[S1: name-hook existing rules]
@@ -42,10 +42,10 @@ Tracks: **A** archive (vendored grounding), **S** surface (name-hooks on the hot
 
 ## Task: A1
 
-- **Goal**: Vendor the 14 CE concepts as distilled nodes at `references/context-engineering/<slug>.md`, one per concept — the node layer of `DESIGN#Decision-1-two-layer-vendored-archive` with the provenance of `DESIGN#Decision-8-dated-provenance-and-optional-refresh`. Distill each from its source entry (`research.md` → CE knowledge base) into prescription + the failure mode it counters, not a transcript; keep its `Related` edges so the closure is self-contained.
+- **Goal**: Vendor the 15 CE concepts as distilled nodes at `references/context-engineering/<slug>.md`, one per concept — the node layer of `DESIGN#Decision-1-two-layer-vendored-archive` with the provenance of `DESIGN#Decision-8-dated-provenance-and-optional-refresh`. Distill each from its source entry (`research.md` → CE knowledge base) into prescription + the failure mode it counters, not a transcript; keep its `Related` edges so the closure is self-contained.
 - **Repo**: `mynghn/leanplan` — `references/context-engineering/`.
 - **Completion**:
-  - 14 nodes exist, slugs matching the KB set listed in `research.md` → CE knowledge base.
+  - 15 nodes exist, slugs matching the KB set listed in `research.md` → CE knowledge base.
   - Each carries frontmatter `source: ce-kb:<slug>` + `last_refreshed: <ISO date>` — verifies `SPEC#INV-2-provenance-is-dated-and-visible`.
   - Every `Related: [[slug]]` edge resolves to a sibling node (no dangling) — supports `SPEC#INV-1-portable-self-contained`.
   - Each node defines the concept + cites its source(s) — supports `SPEC#O-2-principle-resolves-to-grounded-definition`.

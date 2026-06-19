@@ -1,19 +1,19 @@
 # 260619-context-engineering-knowledges-grounding — RESEARCH
 
-Evidence only. Interpretations live in DESIGN RATIONALE. Gathered 2026-06-19 via a cold audit (LeanPlan internals + the 14 KB entries; two breadth-heavy scans run in isolated sub-agents, conclusions distilled here).
+Evidence only. Interpretations live in DESIGN RATIONALE. Gathered 2026-06-19 via a cold audit (LeanPlan internals + the then-14 KB entries; two breadth-heavy scans run in isolated sub-agents, conclusions distilled here). Re-measured 2026-06-20 at vendoring — the KB had grown to 15 (see CE knowledge base below).
 
 ## CE knowledge base — structure and edge graph
 
 Source: `~/.local/share/context-engineering-knowledge-base/` (skill copy at `~/.claude/skills/context-engineering-knowledge-base`). NOT `~/.local/share/context-engineering-kb/` (that path does not exist).
 
-- 14 entries + `INDEX.md`. Slugs: `attention-sinks`, `compaction-vs-eviction`, `context-as-working-set`, `context-isolation`, `context-rot`, `distractor-sensitivity`, `effective-vs-advertised-context`, `explore-then-compact-handoff`, `jit-loading`, `literal-vs-latent-matching`, `lost-in-the-middle`, `prefix-cache-economics`, `structured-note-taking`, `three-axes-of-context-degradation`.
-- Entry frontmatter fields: `name`, `description`, `last_refreshed` (ISO date; all 14 dated 2026-06-19), `sources` (list of `title — author/venue — URL`). Body carries `Related: [[slug]]` edges. `INDEX.md` has no frontmatter (heading + `- [slug](knowledge/slug.md) — desc` bullets).
+- 15 entries + `INDEX.md` (14 at the 2026-06-19 audit; `explore-execute-boundary` was added to the KB after the audit — see closure note below). Slugs: `attention-sinks`, `compaction-vs-eviction`, `context-as-working-set`, `context-isolation`, `context-rot`, `distractor-sensitivity`, `effective-vs-advertised-context`, `explore-execute-boundary`, `explore-then-compact-handoff`, `jit-loading`, `literal-vs-latent-matching`, `lost-in-the-middle`, `prefix-cache-economics`, `structured-note-taking`, `three-axes-of-context-degradation`.
+- Entry frontmatter fields: `name`, `description`, `last_refreshed` (ISO date; all 15 dated 2026-06-19), `sources` (list of `title — author/venue — URL`). Body carries `Related: [[slug]]` edges. `INDEX.md` has no frontmatter (heading + `- [slug](knowledge/slug.md) — desc` bullets).
 - `three-axes-of-context-degradation` is an index over three axes: **position** (`lost-in-the-middle`, `attention-sinks`), **length** (`context-rot`, `effective-vs-advertised-context`), **noise** (`distractor-sensitivity`, `literal-vs-latent-matching`).
-- Edge-graph closure: the transitive closure over `Related` edges from the concepts this feature cites reaches **all 14** entries. `three-axes-of-context-degradation` links all six axis members; `compaction-vs-eviction` links `effective-vs-advertised-context` + `prefix-cache-economics`. No proper subset of the 14 is link-closed.
+- Edge-graph closure: the transitive closure over `Related` edges from the concepts this feature cites reaches **all 15** entries. `three-axes-of-context-degradation` links all six axis members; `compaction-vs-eviction` links `effective-vs-advertised-context` + `prefix-cache-economics`; `explore-then-compact-handoff` links `explore-execute-boundary` (its temporal sibling). No proper subset of the 15 is link-closed. (Re-measured 2026-06-20 at vendoring: the 2026-06-19 audit counted 14; `explore-execute-boundary` was added to the KB afterward and `explore-then-compact-handoff` gained an edge to it, extending the closure by one. `explore-execute-boundary`'s own edges all resolve in-set, so 15 is closed. Per `DESIGN#Decision-1` invalidation trigger — "the KB's concept set changes shape" — the full closure is vendored.)
 
 ## Principle → concept mapping (verified)
 
-Verified against `references/*.md`, `leanplan.md`, the adapter SKILLs, and the 14 entries.
+Verified against `references/*.md`, `leanplan.md`, the adapter SKILLs, and the 15 entries.
 
 - JIT loading (philosophy P1; `leanplan.md` §1.2 / §4) → `jit-loading`.
 - Small surface / attention discipline (philosophy P3; §6 prose rule) → `lost-in-the-middle`, `distractor-sensitivity`.
@@ -22,7 +22,7 @@ Verified against `references/*.md`, `leanplan.md`, the adapter SKILLs, and the 1
 - Isolation (not yet present) → `context-isolation`, `explore-then-compact-handoff`.
 - Stable→volatile load order (not yet present) → `prefix-cache-economics` (entry states "order stable-to-volatile").
 - Edge-placement in long artifacts (not yet present) → `lost-in-the-middle`. The "~100-line" trigger is a LeanPlan-local heuristic (reuses the §6 ToC>100 threshold); the concept itself states no line cutoff.
-- Session-boundary discipline (not yet present) → `compaction-vs-eviction`, `explore-then-compact-handoff`, `context-isolation`; "warm session" also traces to `prefix-cache-economics`.
+- Session-boundary discipline (not yet present) → `explore-execute-boundary` (the temporal explore→execute / plan→impl boundary — primary), `compaction-vs-eviction`, `explore-then-compact-handoff`, `context-isolation`; "warm session" also traces to `prefix-cache-economics`.
 
 ## Self-conformance gaps (measured)
 

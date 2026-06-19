@@ -15,7 +15,7 @@ flowchart TD
       CE["references/context-engineering.md — principle to concept, by three axes"]
     end
     subgraph nodes [Nodes · loaded on deep challenge]
-      N["references/context-engineering/SLUG.md x14 — distilled + source + last_refreshed + Related"]
+      N["references/context-engineering/SLUG.md x15 — distilled + source + last_refreshed + Related"]
     end
     KB[("external CE knowledge base")]
 
@@ -34,7 +34,7 @@ flowchart TD
 
 ## Decision-1: two-layer-vendored-archive
 
-A two-layer CE archive lives under `references/`: a mapping file `references/context-engineering.md` (principle → `[[concept]]`, organized by the three axes) and one distilled node per concept at `references/context-engineering/<slug>.md` — **all 14 concepts** (the connected closure; no proper subset is link-closed). Nodes are distilled prose (the prescription + the failure mode it counters), not transcripts. Realizes `SPEC#O-2-principle-resolves-to-grounded-definition`, `SPEC#INV-1-portable-self-contained`, `SPEC#INV-3-grounding-stays-off-the-hot-path`. See rationale at [design-rationale.md#Decision-1-two-layer-vendored-archive].
+A two-layer CE archive lives under `references/`: a mapping file `references/context-engineering.md` (principle → `[[concept]]`, organized by the three axes) and one distilled node per concept at `references/context-engineering/<slug>.md` — **all 15 concepts** (the connected closure; no proper subset is link-closed). Nodes are distilled prose (the prescription + the failure mode it counters), not transcripts. Realizes `SPEC#O-2-principle-resolves-to-grounded-definition`, `SPEC#INV-1-portable-self-contained`, `SPEC#INV-3-grounding-stays-off-the-hot-path`. See rationale at [design-rationale.md#Decision-1-two-layer-vendored-archive].
 
 ## Decision-2: surface-grounds-by-name-hook
 
