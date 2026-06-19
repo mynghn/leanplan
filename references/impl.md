@@ -10,6 +10,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 - Cited anchors from the card (SPEC O/INV, DESIGN Decisions, optional Guidelines) — JIT-loaded only as needed.
 - Current code at the affected paths.
 - DESIGN RATIONALE — JIT only, when a stop-the-line trigger is under review.
+- `artifact-contract.md` — JIT only, before writing or editing an artifact's structure or anchors (e.g. in the Artifact Update Loop); `philosophy.md` only when a principle's intent is in question. (CE: jit-loading)
 
 ## Output
 
@@ -96,3 +97,4 @@ PR body is particularly durable — visible in GitHub history post-squash, linka
 - **Default no comments.** A new inline comment is justified only when a WHY cannot be encoded in a higher form (type / test / annotation / commit / PR body).
 - **Smallest meaningful change.** No speculative scope, no drive-by refactors.
 - **Distillation is not optional.** Every WHY the task relied on must have a durable home before the task is considered complete; don't leave plan docs as the only holder of important WHYs.
+- **Isolate breadth-heavy investigation.** When broad code investigation would swamp the working window, run it in a sub-agent that returns only the distilled conclusions, keeping the raw trail out. Guidance, not mandate — when breadth exceeds the window. (CE: context-isolation, explore-then-compact-handoff)
