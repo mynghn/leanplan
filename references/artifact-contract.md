@@ -24,8 +24,8 @@ Archive artifacts, created when useful:
 
 | Artifact | Owns |
 |---|---|
-| REQUIREMENT | Biz WHAT |
-| SPEC | Tech WHAT, externally observable contract |
+| REQUIREMENT | Biz WHAT — biz intent, incl. system policies as *why a cross-cutting property matters* |
+| SPEC | Tech WHAT — externally observable contract; canonical prose home for `O` / `INV` facts |
 | DESIGN | Tech HOW, finished system shape |
 | DESIGN RATIONALE | Tech WHY |
 | RESEARCH | Evidence |
@@ -103,6 +103,19 @@ Each task card must include:
 ### `**GAP**` acknowledgment
 
 A SPEC O or INV item may be deliberately uncovered (no task verifies it directly) when the team has accepted the gap. Annotate it on a line containing `**GAP**` inside `plan.md` (typically in a forward-coverage table). The validator treats such items as acknowledged — not coverage errors. Use sparingly and document the acceptance rationale next to the marker.
+
+## One Prose Home Per Fact
+
+A fact is authored as prose **once**, in its owning artifact; every other occurrence is an anchor reference, never a re-paraphrase. A search for any cross-cutting fact then returns one prose statement plus bare `…#…` anchors — zero restatements.
+
+The rule binds **every seam**, not only DESIGN→SPEC:
+
+- **Altitude split (REQ ↔ SPEC).** A cross-cutting property has two altitudes, two homes: REQUIREMENT owns the biz *intent* (why it matters); SPEC `O` / `INV` owns the *observable form* (the canonical home for the testable statement). Neither restates the other's altitude — this resolves the blurred seam where a continuous property could read as either.
+- **Symmetric citation downstream.** Every realization reference cites its target's anchor and stops — DESIGN→SPEC, TASK→SPEC, TASK→DESIGN alike.
+- **Within DESIGN.** The Architecture caption owns boundaries and flow; `Decision` blocks own realization claims — the caption doesn't restate a Decision.
+- **Within TASK.** Inline `Completion` citations are the canonical forward-coverage home; a forward-coverage table, if kept, is a derived `**GAP**` view — not a re-authored mapping.
+
+Each stage doc carries its seam's operational instance; the per-artifact Drift Guards below are instances of this rule, not separate ones.
 
 ## Prose Style
 
