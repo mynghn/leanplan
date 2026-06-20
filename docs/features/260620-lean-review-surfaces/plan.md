@@ -35,7 +35,7 @@ One track: edits to the LeanPlan reference contract + stage docs, then a conform
 - **Repo**: leanplan — `references/{design.md, plan.md, artifact-contract.md}`
 - **Completion**:
   - `design.md` (Decision body) and `plan.md` (Goal) guidance each lead with the conclusion and carry one good/bad example; `artifact-contract.md` Prose Style names the two fields (`SPEC#O-1-surface-graspable-at-skim-depth`).
-  - A DESIGN/PLAN authored from the templates yields its bottom line — what it decides and what to check — from headings + lead lines alone.
+  - A DESIGN/PLAN authored from the templates passes the `SPEC#O-1-surface-graspable-at-skim-depth` skim test.
   - `validate.py` surface-budget check still green; no surface inflates (`SPEC#INV-2-leanness-not-regressed`).
 - **Dependencies**: none
 
@@ -45,6 +45,6 @@ One track: edits to the LeanPlan reference contract + stage docs, then a conform
 - **Repo**: leanplan — `docs/features/260620-lean-review-surfaces/*` (+ `references/` self-consistency)
 - **Completion**:
   - This feature's `requirement.md` System-policies read as biz intent, and a grep across its chain returns zero cross-artifact re-paraphrases (`SPEC#O-2-one-canonical-home-per-fact`).
-  - This feature's `design.md`/`plan.md` yield their bottom line from headings + lead lines alone (`SPEC#O-1-surface-graspable-at-skim-depth`).
+  - This feature's `design.md`/`plan.md` pass the `SPEC#O-1-surface-graspable-at-skim-depth` skim test.
   - `validate.py` green across the feature dir: every anchor resolves and SPEC↔TASK coverage holds (`SPEC#INV-1-functional-identity-preserved`); each touched surface stays within its prose budget (`SPEC#INV-2-leanness-not-regressed`).
 - **Dependencies**: C1, C2 (the rules must exist before conforming to and verifying them)

@@ -3,10 +3,10 @@
 ## Outcome
 
 ### O-1: surface-graspable-at-skim-depth
-Every surface artifact (REQUIREMENT, SPEC, DESIGN, PLAN) yields its bottom line — what it decides and what a reviewer must check — from its headings and the lead line of each block alone, without reading any block to its end. DESIGN and PLAN meet the same bar REQUIREMENT and SPEC already hold. Verifiable by inspection: read only headings + first lines, and the artifact's decisions and check-points are recoverable.
+When a reviewer skims any surface artifact (REQUIREMENT, SPEC, DESIGN, PLAN) — reading only headings and each block's lead line — its bottom line is recoverable: what it decides and what to check, without reading any block to its end. DESIGN and PLAN reach the bar REQUIREMENT and SPEC already hold. One-shot test: skim-read a surface; its decisions and check-points are recoverable.
 
 ### O-2: one-canonical-home-per-fact
-Any cross-cutting fact — a property, policy, or invariant — is authored as prose in exactly one owning location; every other occurrence references it by anchor instead of re-paraphrasing. The artifact contract makes that ownership unambiguous, including the currently-blurred seam where a continuous property could read as either a REQUIREMENT system-policy or a SPEC invariant. (Which artifact owns each kind of fact is DESIGN's concern.) Verifiable: a grep for the fact surfaces one prose statement plus bare `…#…` references; a reviewer then confirms by inspection that no occurrence re-states it in different words — a paraphrase shares no keyword, so the grep finds the anchors, not the semantic equivalence.
+When any cross-cutting fact — a property, policy, or invariant — is searched across the chain, it surfaces as one authored prose statement plus bare `…#…` anchors; no other occurrence re-paraphrases it. The artifact contract makes that ownership unambiguous, including the currently-blurred seam where a continuous property could read as either a REQUIREMENT system-policy or a SPEC invariant. (Which artifact owns each kind of fact is DESIGN's concern.) One-shot test: grep the fact → one prose home + bare anchors; a reviewer confirms no occurrence restates it in different words (a paraphrase shares no keyword, so the grep finds the anchors, not the semantic equivalence).
 
 ## Invariants
 

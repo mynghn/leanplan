@@ -36,11 +36,11 @@ Realization (where the rule lands):
 Bind the two fields that collapse into blobs/run-ons — the DESIGN `Decision` body and the TASK `Goal` — to lead with their conclusion (the choice / the achieved outcome) on line one, with parallel facets as lists. Realizes SPEC#O-1-surface-graspable-at-skim-depth. See rationale at [design-rationale.md#Decision-2-conclusion-first-on-prose-shaped-fields].
 
 - **Targets.** `design.md` (Decision-body guidance + one good/bad example), `plan.md` (Goal-field guidance + example), `artifact-contract.md` Prose Style (bind the rule to these named fields).
-- **No new check.** Conclusion-first is not reliably lintable; rely on template + guidance + examples. Raw verbosity is backstopped by the landed surface-budget guard — the absolute-size half of SPEC#INV-2-leanness-not-regressed; non-inflation is checked by diff inspection. Consistent with the SPEC Non-goal (automation optional).
+- **No new check.** Conclusion-first is not reliably lintable; rely on template + guidance + examples. Raw verbosity is backstopped by the landed surface-budget guard; the full leanness verification (incl. non-inflation) is stated once at `SPEC#INV-2-leanness-not-regressed`. Consistent with the SPEC Non-goal (automation optional).
 - **REQUIREMENT/SPEC unchanged** — their list-shaped templates already conform; this lifts DESIGN/PLAN to that bar.
 
 ## Coverage
 - **SPEC#O-1-surface-graspable-at-skim-depth** → Decision-2.
 - **SPEC#O-2-one-canonical-home-per-fact** → Decision-1.
 - **SPEC#INV-1-functional-identity-preserved** → by construction: every change edits guidance/rule text or prose order only; no anchor, traceability rule, or stage role is removed — the de-dup rule *strengthens* anchoring.
-- **SPEC#INV-2-leanness-not-regressed** → surface-budget guard (absolute-size backstop) + diff inspection for non-inflation; Decision-1 removes restatements, Decision-2 raises information density, not prose.
+- **SPEC#INV-2-leanness-not-regressed** → Decision-1 (fewer restatements) + Decision-2 (denser information, not denser prose).
