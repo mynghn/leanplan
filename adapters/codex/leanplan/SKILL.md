@@ -1,11 +1,11 @@
 ---
 name: leanplan
-description: Use LeanPlan, a portable LLM-aware spec-driven-development framework, to author or validate feature artifacts through requirement, specify, design, plan, and impl stages.
+description: Use LeanPlan, a portable LLM-aware spec-driven-development framework, to author or validate feature artifacts through the requirement, specify, design, plan, and impl stages, plus the off-pipeline sharpen move.
 ---
 
 # LeanPlan
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill is the Codex-side dispatcher across all five stages; the Claude Code runtime exposes the same content via per-stage slash commands.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill is the Codex-side dispatcher across all five stages plus the off-pipeline `sharpen` move; the Claude Code runtime exposes the same content via slash commands.
 
 Use this skill when the user asks to create, refine, validate, or implement a LeanPlan feature plan. Canonical assets (shared between Claude Code and Codex runtimes) live at `~/.local/share/leanplan/`.
 
@@ -20,6 +20,7 @@ Parse the user's intent and load only the matching reference from the canonical 
 | `design <KEY>` | `~/.local/share/leanplan/references/design.md` |
 | `plan <KEY>` | `~/.local/share/leanplan/references/plan.md` |
 | `impl <KEY> <task-id>` | `~/.local/share/leanplan/references/impl.md` |
+| `sharpen <what-shifted>` | `~/.local/share/leanplan/references/sharpen.md` |
 | `validate <feature-path>` | Run `python3 ~/.local/share/leanplan/scripts/validate.py` |
 
 Throughout, `<KEY>` is the feature id. Its three forms (sequence / tracker-key / date), the `leanplan-new` allocation, and the `## Upstream` rule are defined in `artifact-contract.md` / `leanplan.md` §5 and produced by the `requirement` edge — load them there rather than restating here.

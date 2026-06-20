@@ -6,6 +6,8 @@ This doc carries the procedure for the REQUIREMENT stage — capturing biz WHAT 
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
+Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
+
 ## Inputs
 
 - Feature intent: a short business problem or solution title (free-form phrase), a tracker key to anchor on (e.g. Jira `NEWCS-3595`), or an existing feature id to revise.

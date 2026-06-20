@@ -19,6 +19,7 @@ Archive artifacts, created when useful:
 
 - `design-rationale.md`
 - `research.md`
+- `understanding.md`
 
 ## Stage Ownership
 
@@ -29,6 +30,7 @@ Archive artifacts, created when useful:
 | DESIGN | Tech HOW, finished system shape |
 | DESIGN RATIONALE | Tech WHY |
 | RESEARCH | Evidence |
+| UNDERSTANDING | Understanding deltas — mid-round re-derivation log |
 | TASK (`plan.md`) | Time-ordered work navigation |
 
 ## Anchors
@@ -39,6 +41,7 @@ Anchor headings live at any of H2 / H3 / H4 to fit document structure. The text 
 - `INV-<N>: <slug>` — Invariant (continuous property)
 - `Decision-<N>: <slug>` — DESIGN decision
 - `Task: <id>` — TASK card
+- `Delta-<N>: <slug>` — understanding delta (UNDERSTANDING archive)
 
 Use kebab-case slugs. IDs are stable; do not renumber existing anchors after edits.
 
@@ -48,6 +51,7 @@ Citation forms:
 - `SPEC#INV-1-mission-fail-safe`
 - `DESIGN#Decision-2-direct-kafka-publisher`
 - `TASK#Task:A1`
+- `UNDERSTANDING#Delta-1-premise-falsified`
 
 ## Required Shapes
 
@@ -79,6 +83,10 @@ Use matching `Decision-<N>: <slug>` anchors. Body is **free-form prose** — typ
 ### RESEARCH
 
 Use descriptive topic headings. Store evidence only. Interpretation belongs in rationale.
+
+### UNDERSTANDING
+
+Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `SPEC#…` / `DESIGN#…` citations — no restatement. IDs are stable; append, never renumber.
 
 ### TASK (`plan.md`)
 

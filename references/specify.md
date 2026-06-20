@@ -6,6 +6,8 @@ This doc carries the procedure for the SPEC stage — turning a REQUIREMENT into
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
+Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
+
 ## Inputs
 
 - `<cwd>/docs/features/<KEY>/requirement.md` (required). If absent, stop and tell the user to run `/requirement <feature-title>` (or `requirement <feature-title>` for Codex) first — it allocates the `<KEY>` (`NNNN-slug`) dir and prints its path.

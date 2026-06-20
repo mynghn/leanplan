@@ -277,7 +277,7 @@ Framework choices informed by parallel research:
 
 ## 12. Skill responsibilities
 
-Skills map to **edges** (transformations between stages), not to nodes. Each edge skill produces the next stage's artifact from the prior one. Skill names are bare (no `feature-` prefix).
+Skills map to **edges** (transformations between stages), not to nodes — with one off-pipeline exception, the `sharpen` move (noted below). Each edge skill produces the next stage's artifact from the prior one. Skill names are bare (no `feature-` prefix).
 
 | Skill | Edge | Produces | Scope |
 |---|---|---|---|
@@ -290,6 +290,8 @@ Skills map to **edges** (transformations between stages), not to nodes. Each edg
 Each skill enforces the relevant drift guards from §7 and naming conventions from §8 at write time. Universal operational rules stay at skill / CLAUDE.md level, not re-emitted per artifact.
 
 **RESEARCH** is not a standalone skill. The research activity spans the `specify` and `design` edges; entries worth archiving are written into the RESEARCH artifact during those skills' execution.
+
+**`sharpen`** is not a stage edge. It is the off-pipeline move — a thin adapter over `references/sharpen.md`, invocable mid-round from inside any stage to re-derive a disturbed understanding and emit a durable delta; it reads committed artifacts but never edits them, and produces no next-stage artifact.
 
 ## 13. Evolution path
 

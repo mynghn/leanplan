@@ -6,6 +6,8 @@ This doc carries the procedure for the implementation stage — taking one task 
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
+Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them, distinct from the Stop-The-Line / Artifact Update Loop below, which deliberately walks up and edits the affected layer.
+
 ## Inputs
 
 - `<cwd>/docs/features/<KEY>/plan.md` — locate `Task: <task-id>` card. If absent, stop.
