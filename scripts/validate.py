@@ -26,6 +26,7 @@ SURFACE_FILES = {
 OPTIONAL_FILES = {
     "rationale": "design-rationale.md",
     "research": "research.md",
+    "understanding": "understanding.md",
 }
 
 STAGE_ORDER = ("requirement", "spec", "design", "plan")
@@ -43,11 +44,11 @@ STAGE_ORDER = ("requirement", "spec", "design", "plan")
 SURFACE_SOFT_CAP = {"requirement": 90, "spec": 110, "design": 160, "plan": 220}
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
-ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision)-(\d+):\s+([a-z0-9][a-z0-9-]*))\s*$", re.MULTILINE)
+ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision|Delta)-(\d+):\s+([a-z0-9][a-z0-9-]*))\s*$", re.MULTILINE)
 TASK_RE = re.compile(r"^(#{2,4})\s+Task:\s+([A-Za-z][A-Za-z0-9-]*)\s*$", re.MULTILINE)
 CITATION_RE = re.compile(
-    r"\b(?P<file>SPEC|DESIGN|RATIONALE|RESEARCH|TASK)#(?P<target>"
-    r"(?:O|INV|Decision)-\d+-[a-z0-9][a-z0-9-]*|Task:[A-Za-z][A-Za-z0-9-]*)"
+    r"\b(?P<file>SPEC|DESIGN|RATIONALE|RESEARCH|TASK|UNDERSTANDING)#(?P<target>"
+    r"(?:O|INV|Decision)-\d+-[a-z0-9][a-z0-9-]*|Delta-\d+-[a-z0-9][a-z0-9-]*|Task:[A-Za-z][A-Za-z0-9-]*)"
 )
 # A SPEC O/INV item appearing on a line containing **GAP** is treated as
 # deliberately uncovered — see references/artifact-contract.md "**GAP**
@@ -303,7 +304,7 @@ class Validator:
         for match in CITATION_RE.finditer(text):
             file_key = match.group("file")
             target = match.group("target")
-            if file_key == "RESEARCH":
+            if file_key in ("RESEARCH", "UNDERSTANDING"):
                 continue
             if target not in anchors_by_file.get(file_key, set()):
                 self._error(filename, f"broken citation: {file_key}#{target}", self._line_for_offset(text, match.start()))
