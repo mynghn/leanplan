@@ -6,6 +6,7 @@
 #   leanplan-new <PROJ-123>               # tracker key:    PROJ-123      (bare, e.g. a Jira issue key)
 #   leanplan-new --date <slug-or-title>   # date id:        YYMMDD-slug   (e.g. 260616-anomaly-publisher)
 #   leanplan-new --date=YYMMDD <title>    # date id with an explicit date instead of today
+#   leanplan-new --rename <old> <new>     # relocate an existing feature, rewrite refs, re-validate
 #
 # The feature id comes in three forms; leanplan-new picks one as follows:
 #   1. --date present                     -> date id:     <YYMMDD>-<slug>  (YYMMDD = today, or --date=NNNNNN)
@@ -36,6 +37,98 @@ FEATURES_ROOT="docs/features"
 slugify() {
     printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
 }
+
+# do_rename <old> <new>: relocate an existing feature and leave nothing stranded.
+# Moves docs/features/<old> -> docs/features/<new>, rewrites every intra-repo
+# reference to the old path, refreshes the moved artifacts' H1 self-identity, then
+# re-validates. The reference-rewrite + re-validate is exactly the step a raw `mv`
+# skips — the omission that stranded stubs at the old path and motivated O-4.
+do_rename() {
+    if [ $# -ne 2 ]; then
+        echo "usage: leanplan-new --rename <old-key> <new-key>" >&2
+        exit 1
+    fi
+    local OLD="$1" NEW="$2" k f
+
+    # KEY charset gate: [A-Za-z0-9-] only (covers all three id forms), no leading
+    # dash. Load-bearing twice — it stops a key from smuggling a path separator
+    # (so a rename can never escape docs/features/), and keeps OLD/NEW free of
+    # regex metacharacters before they are interpolated into the grep/sed below.
+    for k in "$OLD" "$NEW"; do
+        case "$k" in
+            ''|-*|*[!A-Za-z0-9-]*)
+                echo "error: invalid feature key '$k' — keys are [A-Za-z0-9-], no leading dash" >&2
+                exit 1 ;;
+        esac
+    done
+    if [ "$OLD" = "$NEW" ]; then
+        echo "error: <old> and <new> are the same key ('$OLD') — nothing to rename" >&2
+        exit 1
+    fi
+
+    local OLD_DIR="$FEATURES_ROOT/$OLD" NEW_DIR="$FEATURES_ROOT/$NEW"
+    if [ ! -d "$OLD_DIR" ]; then
+        echo "error: $OLD_DIR does not exist" >&2
+        exit 1
+    fi
+    if [ -e "$NEW_DIR" ]; then
+        echo "error: $NEW_DIR already exists — refusing to overwrite" >&2
+        exit 2
+    fi
+
+    local SCRIPT_DIR
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+    # 1. Move the directory. Filesystem-level so it works with or without git;
+    #    git records it as a rename on the next `git add -A` via content
+    #    similarity, preserving blame/history (the O-3 spirit at the dir level).
+    mv "$OLD_DIR" "$NEW_DIR"
+
+    # 2. Rewrite intra-repo references to the OLD feature path -> NEW, repo-wide.
+    #    The `([^A-Za-z0-9-]|$)` boundary is load-bearing: without it the pattern
+    #    `docs/features/foo` would also match a sibling `docs/features/foo-bar` and
+    #    corrupt its path. -i.bak (then rm) is the GNU/BSD-portable in-place idiom
+    #    the rest of this repo uses; -I skips binaries; .git is excluded.
+    while IFS= read -r f; do
+        sed -i.bak -E "s#docs/features/${OLD}([^A-Za-z0-9-]|\$)#docs/features/${NEW}\1#g" "$f"
+        rm -f "$f.bak"
+    done < <(grep -rIl --exclude-dir=.git -- "docs/features/${OLD}" . 2>/dev/null || true)
+
+    # 3. Refresh the moved artifacts' H1 self-identity. `# <old> — STAGE` is the
+    #    one place each artifact still names the old key after step 2 (citations
+    #    are key-agnostic anchors). The trailing space scopes the match to the H1.
+    for f in "$NEW_DIR"/*.md; do
+        [ -f "$f" ] || continue
+        sed -i.bak -E "s/^# ${OLD} /# ${NEW} /" "$f"
+        rm -f "$f.bak"
+    done
+
+    # 4. Re-validate the renamed feature — O-4's "nothing stranded" is only proven
+    #    when the moved set still passes. `if` guards $? from set -e.
+    local out ec
+    if out=$(python3 "$SCRIPT_DIR/validate.py" "$NEW_DIR" 2>&1); then
+        ec=0
+    else
+        ec=$?
+    fi
+    if [ "$ec" -ne 0 ]; then
+        echo "$out" >&2
+        echo "error: renamed to $NEW_DIR but validation failed — fix the issues above" >&2
+        exit 1
+    fi
+
+    echo "renamed $OLD -> $NEW at $NEW_DIR (references rewritten, validated)" >&2
+    echo "$NEW_DIR"
+    exit 0
+}
+
+# --rename short-circuits the allocator: it relocates an existing feature rather
+# than allocating a new id, so it has its own arg shape and exits before the
+# allocate path below.
+if [ "${1:-}" = "--rename" ]; then
+    shift
+    do_rename "$@"
+fi
 
 # --- parse args: optional --date[=YYMMDD] flag plus one positional (title or key) ---
 DATE_MODE=0
