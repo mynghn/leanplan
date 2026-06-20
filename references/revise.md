@@ -27,7 +27,20 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules —
 3. **Edit, preserving identity.** Re-evaluate the corrected artifact **in place** by default — a local edit that keeps stable anchor IDs. Escalate to **re-derivation** (re-run the stage skill from the corrected upstream) only when the change is *structural*: the anchor set itself must change, not just prose inside stable anchors. Either way, surviving IDs are never renumbered, and superseded items are retired-by-note `(retired)`, not deleted (`artifact-contract.md` → Anchors).
 4. **Propagate downstream-only.** Walk each downstream artifact whose content depends on the change, in stage order, applying the same in-place-default / re-derive-on-structural rule. Leave no downstream artifact citing or restating the superseded content.
 5. **Re-validate.** Run `validate.py` on the feature; the committed set must pass and carry no surviving reference to superseded content. A revised artifact's `UNDERSTANDING#Delta-N-slug` citation of its justifying Delta is resolution-checked.
-6. **Scope-gate.** If the correction would push REQUIREMENT past one-deployment size, stop and split rather than grow — the structural path (split / rename), not an inline edit.
+6. **Scope-gate.** If the correction would push REQUIREMENT past one-deployment size, stop and split rather than grow — the structural path, not an inline edit (see **Structural operations**).
+
+## Structural operations
+
+A feature **rename** or **split** is a first-class revise operation, not improvised dir surgery — both route through the single allocator (`leanplan-new`) so nothing is left stranded.
+
+- **Rename is mechanical.** Run `leanplan-new --rename <old> <new>`: it moves the dir, rewrites every intra-repo reference to the old path, refreshes the moved artifacts' identity, and re-validates — the reference-rewrite + re-validate is exactly the step a raw `mv` skips. revise's part is only to invoke it; identity changed, not content, so there is nothing further to propagate.
+- **Split is judgment-driven** — the response when the scope-gate fires: a justified drift has grown the feature past one-deployment size, or two separable concerns are found tangled in one feature.
+  1. **Allocate** the second feature through `leanplan-new` — dir creation stays in the one allocator; never hand-make a feature dir.
+  2. **Partition** the anchors and artifact content between the two features. Items that stay keep their IDs — survivors are never renumbered; items that move are re-homed in the new feature's artifacts. Anything superseded in place retires-by-note as usual.
+  3. **Propagate** within each resulting feature per the downstream-only / in-place-default rule above.
+  4. **Re-validate both** feature dirs; each must pass `validate.py` independently, with no artifact or citation pointing at the other's content unless a cross-reference is intended.
+
+Both operations end where every revise ends — a re-validated committed set. A rename or split that leaves a dangling path, an unread artifact, or a renumbered survivor is not complete.
 
 ## Guardrails
 
