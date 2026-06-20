@@ -300,11 +300,15 @@ class Validator:
             "DESIGN": {a["target"] for a in self._anchors("design")},
             "RATIONALE": {a["target"] for a in self._anchors("rationale")},
             "TASK": {f"Task:{t['id']}" for t in self._parse_tasks(self.texts.get("plan", ""))},
+            # Inbound UNDERSTANDING#Delta-N citations resolve against understanding.md's
+            # delta anchors — a revised artifact cites the Delta that justified it. RESEARCH
+            # stays skipped below: it carries descriptive headings, not a resolvable anchor set.
+            "UNDERSTANDING": {a["target"] for a in self._anchors("understanding")},
         }
         for match in CITATION_RE.finditer(text):
             file_key = match.group("file")
             target = match.group("target")
-            if file_key in ("RESEARCH", "UNDERSTANDING"):
+            if file_key == "RESEARCH":
                 continue
             if target not in anchors_by_file.get(file_key, set()):
                 self._error(filename, f"broken citation: {file_key}#{target}", self._line_for_offset(text, match.start()))

@@ -86,7 +86,7 @@ Use descriptive topic headings. Store evidence only. Interpretation belongs in r
 
 ### UNDERSTANDING
 
-Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `SPEC#…` / `DESIGN#…` / `TASK#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `SPEC#` / `DESIGN#` / `TASK#` citations are resolution-checked; *inbound* `UNDERSTANDING#…` citations are not resolved yet — like RESEARCH, they are recorded for retrieval and the later revision step, deferred until that consumer (C) lands.
+Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `SPEC#…` / `DESIGN#…` / `TASK#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `SPEC#` / `DESIGN#` / `TASK#` citations are resolution-checked, and *inbound* `UNDERSTANDING#Delta-N-slug` citations now resolve against these `Delta-<N>` anchors too — a revised artifact cites the Delta that justified it. RESEARCH# citations stay recorded-for-retrieval only: RESEARCH carries descriptive headings, not a resolvable anchor set.
 
 ### TASK (`plan.md`)
 

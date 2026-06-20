@@ -135,6 +135,25 @@ inject_outcome_only_task() {
 TASK
 }
 
+inject_understanding_citation_ok() {
+    # A revised artifact cites the Delta that justified it, and the delta exists,
+    # so the inbound UNDERSTANDING#Delta-N citation must RESOLVE (parity with
+    # SPEC#/DESIGN#). Guards the citation-resolution half of INV-1.
+    cat > "$1/understanding.md" <<'U'
+# LP-EXAMPLE — UNDERSTANDING
+
+## Delta-1: premise-falsified
+The understanding now is X; prior assumption Y is killed.
+U
+    printf '\nRevised per `UNDERSTANDING#Delta-1-premise-falsified`.\n' >> "$1/design.md"
+}
+
+inject_understanding_citation_broken() {
+    # An inbound UNDERSTANDING# citation with no matching delta must now ERROR.
+    # Before C this was unconditionally skipped (always passed); the skip is gone.
+    printf '\nRevised per `UNDERSTANDING#Delta-9-nonexistent`.\n' >> "$1/design.md"
+}
+
 # Validate.py exit semantics:
 #   0 = clean (no errors; warnings allowed in default mode)
 #   1 = at least one error (or any warning under --strict)
@@ -146,6 +165,8 @@ assert_case "requirement drift (--strict)"    1 "implementation choice in REQUIR
 assert_case "task step drift (--strict)"      1 "looks like line-level scripting"       inject_task_step_drift    "--strict"
 assert_case "surface bloat (--strict)"        1 "soft cap"                               inject_surface_bloat      "--strict"
 assert_case "outcome-only task reason"        0 "validation passed"                     inject_outcome_only_task  "--strict"
+assert_case "understanding citation resolves"  0 "validation passed"                     inject_understanding_citation_ok
+assert_case "broken understanding citation"    1 "broken citation: UNDERSTANDING#Delta-9-nonexistent" inject_understanding_citation_broken
 
 printf '\nselftest: %d passed, %d failed\n' "$pass" "$fail"
 exit "$fail"
