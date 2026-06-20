@@ -16,7 +16,7 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
 CODEX_SKILLS_DIR="$HOME/.agents/skills"
 
-CLAUDE_SKILLS=(requirement specify design plan impl sharpen)
+CLAUDE_SKILLS=(requirement specify design plan impl sharpen revise)
 
 action="${1:-install}"
 
