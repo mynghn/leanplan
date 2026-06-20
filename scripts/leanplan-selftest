@@ -73,6 +73,20 @@ inject_broken_anchor() {
     rm -f "$1/$f.bak"
 }
 
+inject_duplicate_delta() {
+    # Append-only integrity: re-emitting an existing Delta id (the easy mistake
+    # when /sharpen is re-invoked across stateless sessions) must be caught.
+    cat > "$1/understanding.md" <<'U'
+# LP-EXAMPLE — UNDERSTANDING
+
+## Delta-1: premise-falsified
+The understanding now is X; prior assumption Y is killed.
+
+## Delta-1: premise-falsified
+A second block reusing the same id — must be flagged.
+U
+}
+
 inject_coverage_hole() {
     local f
     f=$(task_file "$1")
@@ -126,6 +140,7 @@ TASK
 #   1 = at least one error (or any warning under --strict)
 assert_case "baseline (clean fixture)"        0 "validation passed"                     inject_baseline
 assert_case "broken anchor"                   1 "broken citation"                       inject_broken_anchor
+assert_case "duplicate delta anchor"          1 "duplicate anchor: Delta-1"             inject_duplicate_delta
 assert_case "coverage hole"                   1 "is not covered by any task"            inject_coverage_hole
 assert_case "requirement drift (--strict)"    1 "implementation choice in REQUIREMENT"  inject_req_drift          "--strict"
 assert_case "task step drift (--strict)"      1 "looks like line-level scripting"       inject_task_step_drift    "--strict"

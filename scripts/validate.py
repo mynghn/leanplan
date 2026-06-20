@@ -44,7 +44,7 @@ STAGE_ORDER = ("requirement", "spec", "design", "plan")
 SURFACE_SOFT_CAP = {"requirement": 90, "spec": 110, "design": 160, "plan": 220}
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
-ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision)-(\d+):\s+([a-z0-9][a-z0-9-]*))\s*$", re.MULTILINE)
+ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision|Delta)-(\d+):\s+([a-z0-9][a-z0-9-]*))\s*$", re.MULTILINE)
 TASK_RE = re.compile(r"^(#{2,4})\s+Task:\s+([A-Za-z][A-Za-z0-9-]*)\s*$", re.MULTILINE)
 CITATION_RE = re.compile(
     r"\b(?P<file>SPEC|DESIGN|RATIONALE|RESEARCH|TASK|UNDERSTANDING)#(?P<target>"
