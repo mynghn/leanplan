@@ -154,6 +154,36 @@ inject_understanding_citation_broken() {
     printf '\nRevised per `UNDERSTANDING#Delta-9-nonexistent`.\n' >> "$1/design.md"
 }
 
+inject_retired_anchor() {
+    # Retire-by-note on a heading must keep the anchor's ID resolvable: marking
+    # O-1's heading (retired) must NOT break its inbound plan.md citation or the
+    # "at least one O anchor" check. This is the cross-artifact half of O-3.
+    sed -i.bak -E 's/^(#{2,4} O-1: single-invocation-sync)$/\1 (retired)/' "$1/spec.md"
+    rm -f "$1/spec.md.bak"
+}
+
+inject_retired_task() {
+    # Retiring a TASK card heading must keep it parseable so its ID still resolves
+    # (no silent drop — the asymmetric risk the Task: retire form would otherwise
+    # carry). The appended card is cited via TASK#Task:Z9, which resolves only if
+    # the (retired)-marked heading is still parsed.
+    local f
+    f=$(task_file "$1")
+    cat >> "$1/$f" <<'TASK'
+
+## Task: Z9 (retired)
+
+**Goal**: Superseded task kept for history, per `SPEC#O-1-single-invocation-sync`.
+
+**Completion**:
+- n/a — retired; superseding work covers `SPEC#O-1-single-invocation-sync`.
+
+**Dependencies**: none
+
+Superseded; retained for traceability — see `TASK#Task:Z9`.
+TASK
+}
+
 # Validate.py exit semantics:
 #   0 = clean (no errors; warnings allowed in default mode)
 #   1 = at least one error (or any warning under --strict)
@@ -167,6 +197,8 @@ assert_case "surface bloat (--strict)"        1 "soft cap"                      
 assert_case "outcome-only task reason"        0 "validation passed"                     inject_outcome_only_task  "--strict"
 assert_case "understanding citation resolves"  0 "validation passed"                     inject_understanding_citation_ok
 assert_case "broken understanding citation"    1 "broken citation: UNDERSTANDING#Delta-9-nonexistent" inject_understanding_citation_broken
+assert_case "retired anchor still resolves"    0 "validation passed"                     inject_retired_anchor
+assert_case "retired task still resolves"      0 "validation passed"                     inject_retired_task
 
 printf '\nselftest: %d passed, %d failed\n' "$pass" "$fail"
 exit "$fail"

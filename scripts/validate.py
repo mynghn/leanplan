@@ -44,8 +44,15 @@ STAGE_ORDER = ("requirement", "spec", "design", "plan")
 SURFACE_SOFT_CAP = {"requirement": 90, "spec": 110, "design": 160, "plan": 220}
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
-ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision|Delta)-(\d+):\s+([a-z0-9][a-z0-9-]*))\s*$", re.MULTILINE)
-TASK_RE = re.compile(r"^(#{2,4})\s+Task:\s+([A-Za-z][A-Za-z0-9-]*)\s*$", re.MULTILINE)
+# A trailing ` (retired)` marker is tolerated on any anchor/Task heading: a
+# superseded item is retired by marking its heading (artifact-contract.md ->
+# Anchors), and its ID must keep resolving in that retired state (it is not
+# captured into the id/target, so citations and coverage are unaffected). Without
+# this the marker would silently de-resolve the anchor — the exact loss
+# retire-by-note exists to prevent.
+RETIRED_SUFFIX = r"(?:\s+\(retired\))?"
+ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision|Delta)-(\d+):\s+([a-z0-9][a-z0-9-]*))" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
+TASK_RE = re.compile(r"^(#{2,4})\s+Task:\s+([A-Za-z][A-Za-z0-9-]*)" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
 CITATION_RE = re.compile(
     r"\b(?P<file>SPEC|DESIGN|RATIONALE|RESEARCH|TASK|UNDERSTANDING)#(?P<target>"
     r"(?:O|INV|Decision)-\d+-[a-z0-9][a-z0-9-]*|Delta-\d+-[a-z0-9][a-z0-9-]*|Task:[A-Za-z][A-Za-z0-9-]*)"

@@ -43,7 +43,7 @@ Anchor headings live at any of H2 / H3 / H4 to fit document structure. The text 
 - `Task: <id>` — TASK card
 - `Delta-<N>: <slug>` — understanding delta (UNDERSTANDING archive)
 
-Use kebab-case slugs. IDs are stable: never renumber an existing anchor after edits, and never delete a superseded `O` / `INV` / `Decision` / `Task:` — retire it in place with an inline `(retired)` note so its ID still resolves and prior review and traceability stay reconstructable.
+Use kebab-case slugs. IDs are stable: never renumber an existing anchor after edits, and never delete a superseded `O` / `INV` / `Decision` / `Task:` — retire it in place by appending ` (retired)` to its anchor heading and recording the supersession reason in the body. The marker is not part of the slug, so the ID still resolves and prior review and traceability stay reconstructable — e.g. `### O-2: stale-outcome (retired)` keeps resolving as `O-2-stale-outcome`. (`validate.py` tolerates the heading marker; do not instead decorate the slug itself.)
 
 Citation forms:
 
