@@ -10,7 +10,8 @@ All LeanPlan tooling lives at `~/.local/share/leanplan/scripts/`, applied via ch
 | `scan-leaks` | Narrow leak detector (sibling of `validate.py`): flags round-scoped anchor tokens (`O-`/`INV-`/`Decision-`/`Delta-<N>`) and cross-artifact citations (`SPEC#…`) leaked into durable outputs *outside* `docs/features/**`. Scans file paths or raw text (`--text` / stdin). High-precision only — feature ids, `docs(<slug>)` labels, and bare numbers don't match, so the allowed grey zone needs no allow-list; inline `leanplan-allow-key` suppresses a line. Callers exclude `docs/features/**`. | 0 clean (or leaks warn) / 1 leaks under `--strict` or `$LEANPLAN_STRICT=1` / 2 input error |
 | `leanplan-new <slug-or-title>` / `<PROJ-123>` / `--date[=YYMMDD] <title>` | Allocates a feature id in one of three forms — `NNNN-slug` repo-local sequence (default; scan `docs/features/*` max + 1 over exactly-WIDTH-digit ids, zero-pad 4, `$LEANPLAN_ID_WIDTH` overrides), a bare tracker key auto-detected from an `[A-Z]+-N` arg, or `YYMMDD-slug` from `--date` (today, or an explicit override) — then creates `<cwd>/docs/features/<id>/{requirement,spec,design,design-rationale,plan}.md` and prints the resolved path on stdout (human messages on stderr). Other / legacy dirs coexist. Stubs pass `validate.py --stage requirement` clean on a fresh dir (later stages validate as each is filled in). | 0 / 1 (bad input) / 2 (dir exists) |
 | `leanplan-selftest` | Defect-injection battery against the bundled `fixtures/valid/` (override via `LEANPLAN_FIXTURE`). Verifies `validate.py` catches the expected drift in each scenario, and that `scan-leaks` catches a round-scoped key leaked into non-artifact text. | pass count on stdout / fail count as exit |
-| `pre-commit-leanplan` | Installable per-repo git pre-commit hook. Warn-only by default; `LEANPLAN_STRICT=1` blocks on errors. Install via `ln -s ~/.local/share/leanplan/scripts/pre-commit-leanplan <repo>/.git/hooks/pre-commit`. | 0 / non-zero in strict mode on validator errors |
+| `pre-commit-leanplan` | Installable per-repo git pre-commit hook. Runs `validate.py` over staged feature dirs **and** `scan-leaks` over staged files outside `docs/features/**` (plus any `git config leanplan.scanExclude` / `LEANPLAN_SCAN_EXCLUDE` egrep). Warn-only by default; `LEANPLAN_STRICT=1` blocks. Install: `ln -s ~/.local/share/leanplan/scripts/pre-commit-leanplan <repo>/.git/hooks/pre-commit`. | 0 / non-zero in strict mode on findings |
+| `commit-msg-leanplan` | Installable per-repo git `commit-msg` hook: runs `scan-leaks` over the commit message (comment lines stripped, since git drops them). Warn-only by default; `LEANPLAN_STRICT=1` blocks. Install: `ln -s ~/.local/share/leanplan/scripts/commit-msg-leanplan <repo>/.git/hooks/commit-msg`. | 0 / non-zero in strict mode on a leak |
 
 ## Validator quick reference
 
@@ -29,6 +30,14 @@ python3 ~/.local/share/leanplan/scripts/validate.py docs/features/<KEY> --allow-
 git diff --cached --name-only -z | xargs -0 ~/.local/share/leanplan/scripts/scan-leaks   # staged files
 printf '%s' "$PR_BODY" | ~/.local/share/leanplan/scripts/scan-leaks --strict   # text via stdin, block on leak
 ~/.local/share/leanplan/scripts/scan-leaks --text "commit subject" --json      # text via arg, JSON out
+```
+
+The pre-commit hook always skips `docs/features/**` (anchors resolve there); add
+repo-internal excludes with an egrep, e.g. for LeanPlan's own token-saturated
+tooling — its detector vocabulary and test data are a legitimate-match class:
+
+```bash
+git config leanplan.scanExclude '^(scripts|fixtures)/'   # or: export LEANPLAN_SCAN_EXCLUDE='^(scripts|fixtures)/'
 ```
 
 
