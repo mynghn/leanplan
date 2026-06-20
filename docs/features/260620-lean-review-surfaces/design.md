@@ -43,4 +43,4 @@ Bind the two fields that collapse into blobs/run-ons — the DESIGN `Decision` b
 - **SPEC#O-1-surface-graspable-at-skim-depth** → Decision-2.
 - **SPEC#O-2-one-canonical-home-per-fact** → Decision-1.
 - **SPEC#INV-1-functional-identity-preserved** → by construction: every change edits guidance/rule text or prose order only; no anchor, traceability rule, or stage role is removed — the de-dup rule *strengthens* anchoring.
-- **SPEC#INV-2-leanness-not-regressed** → the existing surface-budget guard (unchanged) + Decision-1 (fewer restatements) + Decision-2 (denser information, not denser prose).
+- **SPEC#INV-2-leanness-not-regressed** → surface-budget guard (absolute-size backstop) + diff inspection for non-inflation; Decision-1 removes restatements, Decision-2 raises information density, not prose.

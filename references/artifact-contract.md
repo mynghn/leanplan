@@ -110,18 +110,18 @@ A fact is authored as prose **once**, in its owning artifact; every other occurr
 
 The rule binds **every seam**, not only DESIGN→SPEC:
 
-- **Altitude split (REQ ↔ SPEC).** A cross-cutting property has two altitudes, two homes: REQUIREMENT owns the biz *intent* (why it matters); SPEC `O` / `INV` owns the *observable form* (the canonical home for the testable statement). Neither restates the other's altitude — this resolves the blurred seam where a continuous property could read as either.
+- **Altitude split (REQ ↔ SPEC).** A cross-cutting property has two altitudes, two homes: REQUIREMENT owns the biz *intent* (the rule + why it matters, no measurable predicate); SPEC `O` / `INV` owns the *observable form* (the canonical home — the same rule carrying a measurable predicate: a threshold, condition, or test). Neither restates the other's altitude — this resolves the blurred seam where a continuous property could read as either. *Discriminator:* a line with a measurable predicate is SPEC's; a line stating only the rule and its rationale is REQUIREMENT's. E.g. REQ — *"prices stay in parity across channels; split pricing erodes trust"* / SPEC#INV — *"web price == app price for identical input."*
 - **Symmetric citation downstream.** Every realization reference cites its target's anchor and stops — DESIGN→SPEC, TASK→SPEC, TASK→DESIGN alike.
 - **Within DESIGN.** The Architecture caption owns boundaries and flow; `Decision` blocks own realization claims — the caption doesn't restate a Decision.
 - **Within TASK.** Inline `Completion` citations are the canonical forward-coverage home; a forward-coverage table, if kept, is a derived `**GAP**` view — not a re-authored mapping.
 
-Each stage doc carries its seam's operational instance; the per-artifact Drift Guards below are instances of this rule, not separate ones.
+Each stage doc carries its seam's operational instance; the per-artifact Drift Guards below are instances of this rule, not separate ones. Each avoided restatement removes a near-miss distractor; the surviving bare anchor is a literal lexical handle, not a latent lookup. (CE: distractor-sensitivity, literal-vs-latent-matching)
 
 ## Prose Style
 
 Applies to every artifact, in any authoring language. Write-time guidance, not validator-enforced.
 
-- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support. The artifact should be graspable from headings and lead lines alone. The two prose-shaped fields most prone to collapsing into a blob — the DESIGN `Decision` body and the TASK `Goal` — get a worked good/bad example in `design.md` / `plan.md`.
+- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support. The artifact should be graspable from headings and lead lines alone. The two prose-shaped fields most prone to collapsing into a blob — the DESIGN `Decision` body and the TASK `Goal` — get a worked good/bad example in `design.md` / `plan.md`. REQUIREMENT and SPEC are list-shaped by construction (user-story bullets; atomic `O` / `INV` items) and already conform — the rule binds the free-prose fields, where the blob risk lives, not the lists.
 - **Lists over dense paragraphs.** When content enumerates parallel points, conditions, or steps, use bullet or ordered lists. Reserve flowing prose for a single causal chain.
 - **Short, declarative sentences.** Break run-ons; promote a buried qualifier to its own clause or bullet rather than nesting it in parentheses.
 

@@ -6,17 +6,9 @@ Full grounding: 4-thread workflow `wf_4101899c-5af` (thread findings cited inlin
 The 4 feedbacks distilled into **three features**. A is being authored now; B and C are
 parked here with their forged framing so we reload — not re-derive — when we pick them up.
 
-> **Base note (in-flight drift, 2026-06-20).** During this session `main` advanced — PR #6
-> (`feat/ce-pe-adversarial-hardening`) merged, and **Surface Budget hardened**: prose-line
-> caps 90/110/160/220 (diagrams/code/blanks excluded), now enforced in `validate.py`.
-> Re-checked A against the new base: Problem/Outcome intact; **de-dup thread untouched**;
-> leanness now partly mechanized → A *builds on* the budget enforcement (size caps ≠ BLUF
-> structure). New base for this work = `origin/main` @ `8be1e86`.
-> *(Meta: this is feature C's in-flight drift, happening live — confirms C is a real need.)*
-
 ---
 
-## A — Lean review surfaces  ·  `[ACTIVE — requirement written → next: /specify]`
+## A — Lean review surfaces  ·  `[SHIPPED — PR #7 feat/lean-review-surfaces]`
 
 Threads **2 + 3**. BLUF readability + cross-artifact de-dup on the four rendered surfaces.
 Acts on the *rendered* artifacts; ready to `/specify` soonest.
