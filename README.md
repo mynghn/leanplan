@@ -17,7 +17,7 @@ leanplan/
 ├── scripts/                    validate.py + scaffold + selftest + pre-commit hook
 ├── fixtures/                   valid / invalid / gap-ack examples
 └── adapters/                   per-runtime skill implementations
-    ├── claude/                 Claude Code (6-skill set)
+    ├── claude/                 Claude Code (7-skill set)
     └── codex/leanplan/         Codex (1 dispatcher)
 ```
 

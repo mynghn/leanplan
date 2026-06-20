@@ -22,4 +22,5 @@ REQUIREMENT (biz WHAT) → SPEC (tech contract, generic categories only) → DES
 - `artifact-contract.md` — structural rules (feature layout, anchors, traceability, drift guards).
 - `<stage>.md` — per-stage procedure (requirement, specify, design, plan, impl).
 - `sharpen.md` — the off-pipeline understanding-sharpening move; invoked mid-round on a disturbance, reads committed artifacts but never edits them.
+- `revise.md` — the off-pipeline later-update move; invoked at any in-flight occasion to inject a justified drift and propagate it downstream-only. sharpen's repair-half complement: it edits committed artifacts, but only against a recorded justification.
 - `leanplan.md` — full framework design (coordinate model, edge semantics, validator design, stop-the-line catalog). Load only when challenged on framework shape.
