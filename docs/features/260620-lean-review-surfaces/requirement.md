@@ -34,4 +34,4 @@ Confirmed when: a human reviews any surface at skim depth and gets its bottom li
 
 ## Upstream
 
-- LeanPlan self-feedback distill, 2026-06-20. Sibling features (problem-understanding; later-update) and the full four-thread grounding are parked in `docs/leanplan-feedback-backlog.md`.
+- LeanPlan self-feedback distill, 2026-06-20. Sibling features (problem-understanding; later-update) are tracked as GitHub issues (`label:backlog`); the full four-thread grounding (workflow `wf_4101899c-5af`) is regenerable.
