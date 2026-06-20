@@ -42,7 +42,7 @@ slugify() {
 # Moves docs/features/<old> -> docs/features/<new>, rewrites every intra-repo
 # reference to the old path, refreshes the moved artifacts' H1 self-identity, then
 # re-validates. The reference-rewrite + re-validate is exactly the step a raw `mv`
-# skips — the omission that stranded stubs at the old path and motivated O-4.
+# skips — the omission that stranded stubs unread at the old path.
 do_rename() {
     if [ $# -ne 2 ]; then
         echo "usage: leanplan-new --rename <old-key> <new-key>" >&2
@@ -72,6 +72,10 @@ do_rename() {
         exit 1
     fi
     if [ -e "$NEW_DIR" ]; then
+        # Limitation: on a case-insensitive filesystem (default macOS/Windows) a
+        # case-only rename (FOO -> foo) resolves to the same inode and trips here.
+        # No corruption — mv never runs — but the fix is a two-step rename through
+        # an intermediate key.
         echo "error: $NEW_DIR already exists — refusing to overwrite" >&2
         exit 2
     fi
@@ -79,9 +83,18 @@ do_rename() {
     local SCRIPT_DIR
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+    # Pre-rename verdict: does the feature validate BEFORE the move? This lets
+    # step 4 tell "the rename broke something" apart from "the feature was already
+    # mid-flight". A feature with only requirement authored (spec/design/plan
+    # still stubs) fails full validation — a normal state in which a rename must
+    # still succeed, since it is reachable at any in-flight stage. `if` guards $?
+    # from set -e.
+    local pre_ec
+    if python3 "$SCRIPT_DIR/validate.py" "$OLD_DIR" >/dev/null 2>&1; then pre_ec=0; else pre_ec=1; fi
+
     # 1. Move the directory. Filesystem-level so it works with or without git;
     #    git records it as a rename on the next `git add -A` via content
-    #    similarity, preserving blame/history (the O-3 spirit at the dir level).
+    #    similarity, preserving blame/history so prior work stays reconstructable.
     mv "$OLD_DIR" "$NEW_DIR"
 
     # 2. Rewrite intra-repo references to the OLD feature path -> NEW, repo-wide.
@@ -96,25 +109,31 @@ do_rename() {
 
     # 3. Refresh the moved artifacts' H1 self-identity. `# <old> — STAGE` is the
     #    one place each artifact still names the old key after step 2 (citations
-    #    are key-agnostic anchors). The trailing space scopes the match to the H1.
+    #    are key-agnostic anchors). Restrict the substitution to line 1 (`1s`) so a
+    #    body line that happens to start `# <old> ` is never rewritten; if the H1
+    #    key was hand-drifted from the dir name it simply won't match, left as-is.
     for f in "$NEW_DIR"/*.md; do
         [ -f "$f" ] || continue
-        sed -i.bak -E "s/^# ${OLD} /# ${NEW} /" "$f"
+        sed -i.bak -E "1s/^# ${OLD} /# ${NEW} /" "$f"
         rm -f "$f.bak"
     done
 
-    # 4. Re-validate the renamed feature — O-4's "nothing stranded" is only proven
-    #    when the moved set still passes. `if` guards $? from set -e.
-    local out ec
-    if out=$(python3 "$SCRIPT_DIR/validate.py" "$NEW_DIR" 2>&1); then
-        ec=0
-    else
-        ec=$?
-    fi
-    if [ "$ec" -ne 0 ]; then
+    # 4. Re-validate the renamed feature. "Nothing stranded" is proven when the
+    #    rename does not WORSEN the verdict: a clean feature must stay clean, but a
+    #    feature that is mid-flight (its stub downstream artifacts fail full
+    #    validation) must still rename without error. Only a NEW failure — passed
+    #    before, fails after — means the reference rewrite stranded something.
+    local out post_ec
+    if out=$(python3 "$SCRIPT_DIR/validate.py" "$NEW_DIR" 2>&1); then post_ec=0; else post_ec=1; fi
+    if [ "$post_ec" -ne 0 ] && [ "$pre_ec" -eq 0 ]; then
         echo "$out" >&2
-        echo "error: renamed to $NEW_DIR but validation failed — fix the issues above" >&2
+        echo "error: rename broke validation (the feature passed before the move) — the reference rewrite stranded something; investigate above" >&2
         exit 1
+    fi
+    if [ "$post_ec" -ne 0 ]; then
+        # Pre-existing mid-flight issues; the rename itself stranded nothing new.
+        echo "note: renamed $OLD -> $NEW; pre-existing validation issues (unrelated to the rename) remain:" >&2
+        echo "$out" >&2
     fi
 
     echo "renamed $OLD -> $NEW at $NEW_DIR (references rewritten, validated)" >&2

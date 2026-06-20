@@ -138,7 +138,8 @@ TASK
 inject_understanding_citation_ok() {
     # A revised artifact cites the Delta that justified it, and the delta exists,
     # so the inbound UNDERSTANDING#Delta-N citation must RESOLVE (parity with
-    # SPEC#/DESIGN#). Guards the citation-resolution half of INV-1.
+    # SPEC#/DESIGN#). Guards the auditable-justification link: a revised artifact
+    # can cite the delta that justified it and have that link checked.
     cat > "$1/understanding.md" <<'U'
 # LP-EXAMPLE — UNDERSTANDING
 
@@ -157,7 +158,8 @@ inject_understanding_citation_broken() {
 inject_retired_anchor() {
     # Retire-by-note on a heading must keep the anchor's ID resolvable: marking
     # O-1's heading (retired) must NOT break its inbound plan.md citation or the
-    # "at least one O anchor" check. This is the cross-artifact half of O-3.
+    # "at least one O anchor" check — a retired item's ID must keep resolving so
+    # prior work stays reconstructable, not silently deleted.
     sed -i.bak -E 's/^(#{2,4} O-1: single-invocation-sync)$/\1 (retired)/' "$1/spec.md"
     rm -f "$1/spec.md.bak"
 }
