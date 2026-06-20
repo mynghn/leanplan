@@ -25,7 +25,7 @@ One track: edits to the LeanPlan reference contract + stage docs, then a conform
 - **Completion**:
   - The "one prose home / every other mention = anchor" rule is present in `artifact-contract.md` and scoped to every seam, not only DESIGN→SPEC (`SPEC#O-2-one-canonical-home-per-fact`).
   - `requirement.md` defines System-policies as biz intent (no SPEC-vocabulary overlap); `specify.md` names SPEC `O`/`INV` as the observable canonical home.
-  - Grep an existing chain (e.g. `260619-…`): any cross-cutting property returns one prose statement + bare anchors — zero re-paraphrases.
+  - Grep an existing chain (e.g. `260619-…`) → one prose statement + bare anchors; a reviewer confirms no occurrence re-paraphrases it — grep catches the literal anchors, the no-paraphrase check is the reviewer's (`SPEC#O-2-one-canonical-home-per-fact`).
   - `validate.py` green.
 - **Dependencies**: none
 

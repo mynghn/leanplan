@@ -2,7 +2,7 @@
 
 ## Architecture
 
-Two contract edits land below — a de-dup rule (`Decision-1`) and conclusion-first legibility (`Decision-2`). REQUIREMENT holds a cross-cutting property's biz *why*, SPEC owns its observable form (the canonical `O`/`INV` home), DESIGN and TASK cite anchors. Both are guidance/contract edits to existing reference docs — no new tooling, no change to the anchor scheme or traceability.
+Two contract edits land below — a de-dup rule (`Decision-1`) and conclusion-first legibility (`Decision-2`). Both are guidance/contract edits to existing reference docs — no new tooling, no change to the anchor scheme or traceability. The diagram shows the cite-don't-restate flow `Decision-1` defines.
 
 ```mermaid
 flowchart LR
@@ -23,7 +23,7 @@ Generalize the existing DESIGN→SPEC "no duplicate Invariants" guard into a con
 Ownership + the seams it resolves:
 - **REQ↔SPEC (altitude split).** REQUIREMENT system-policy = biz *intent* (why a cross-cutting property matters); SPEC `O`/`INV` = its observable form (canonical home). A SPEC INV realizing a policy states the observable form and leaves the biz intent to REQUIREMENT — never re-paraphrasing.
 - **Symmetric guard.** "Cite the anchor, don't restate" binds REQ→SPEC and TASK→SPEC, not only DESIGN→SPEC.
-- **Within TASK.** Forward coverage has one home: inline `Completion` citations are canonical; a forward-coverage table, if kept, is a derived `**GAP**`-acknowledgment view — not a re-authored mapping.
+- **Within TASK.** Forward coverage has one home: inline `Completion` citations are canonical; a forward-coverage table, if kept, is a derived view of them, not a re-authored mapping — only the deliberately-uncovered subset carries the reserved `**GAP**` marker.
 - **Within DESIGN.** The Architecture caption owns boundaries/flow only; `Decision` blocks own realization claims — the caption does not restate a Decision.
 
 Realization (where the rule lands):
