@@ -41,7 +41,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
    - No top-level `## Schemas` or `## Interfaces` section — schemas live inside their Decisions.
    - Tech-realization specifics a downstream plan task will need (field mappings, response shapes, signatures, call sequences) are *captured here* — so the plan card can anchor in without restating. Skim each Decision: does it answer "what does the system look like in this slice?" completely?
    - Non-trivial decisions have resolvable rationale anchors in `design-rationale.md`.
-   - SPEC Invariants are referenced (not re-stated).
+   - Upstream SPEC `O` / `INV` are referenced, not re-stated; the Architecture caption doesn't restate a `Decision`.
    - Each Decision leads with its one-line WHAT (the choice), not preamble; past ~100 lines, order the highest-stakes Decisions at the edges, not buried mid-file (conclusion-first + edge-placement; `artifact-contract.md` → Prose Style).
 
 ## Guardrails
@@ -55,7 +55,10 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
   - ❌ a RATIONALE entry for the trivial one — forces a form where one line suffices.
   - ❌ burying the non-trivial tradeoff as a one-liner — the road-not-taken is the highest-loss-risk WHY under eviction; it needs RATIONALE → PR body, not a clause.
 - **No fake decisions.** A choice with no real alternative isn't a decision — fold its content into the diagram or reference the SPEC Invariant it satisfies.
-- **No duplicate Invariants.** If SPEC says "must be non-blocking", DESIGN doesn't re-state it. Reference the SPEC anchor (e.g. `satisfies SPEC#INV-3-non-blocking-handover`).
+- **Conclusion-first Decision body.** Line 1 is the choice itself; parallel facets (schema, rejected alternatives, invalidation cue) follow as a list below it — the body is graspable from its lead line alone (`artifact-contract.md` → Prose Style).
+  - ✅ choice first: *"Store the session token as a salted hash, not plaintext — satisfies `SPEC#INV-2-tokens-never-stored-in-clear`; schema and the rejected encrypt-at-rest alternative follow as list items."*
+  - ❌ choice buried: *"Because we already hash passwords and a second reversible secret widens the blast radius while `SPEC#INV-2-tokens-never-stored-in-clear` must still hold, we store the token as a salted hash…"* — the choice lands only after three clauses of preamble.
+- **One prose home — cite, don't restate.** DESIGN references an upstream SPEC `O` / `INV` by anchor (e.g. `satisfies SPEC#INV-3-non-blocking-handover`) instead of re-stating it. Within DESIGN, the Architecture caption owns boundaries and flow only; it doesn't restate a `Decision`, and the `Decision` blocks own realization claims (`artifact-contract.md` → One Prose Home Per Fact).
 - **RATIONALE is free-form.** No prescribed inner sections. Capture reasoning, don't fill a form.
 - **RESEARCH is evidence-only.** Interpretations belong in RATIONALE.
 - **Isolate breadth-heavy investigation.** When code investigation (a wide cross-module / SOTA scan) would swamp the working window, run it in a sub-agent that returns only the distilled findings — a RESEARCH entry or the conclusions — keeping the raw trail out. Guidance, not mandate — when breadth exceeds the window. (CE: context-isolation, explore-then-compact-handoff)

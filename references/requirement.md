@@ -27,14 +27,14 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 2. **Load upstream** (when a Jira key, PRD link, or Slack thread is supplied): harvest the biz *problem*, not the requested implementation — upstream often arrives mixed with solution suggestions; strip them. Capture under `## Upstream` any tracker key / links that are metadata — when the feature id itself is a tracker key, that key is the identity, so record only supplementary refs here.
 3. **Draft interactively**. Misframed Problem is the single largest source of downstream rework. Confirm framing with the user before writing:
    - **Problem** — what biz pain or opportunity drives this? Who feels it? What is currently broken, missing, or constrained?
-   - **Outcome** — biz future state + observable success signal. Prefer **user-story bullets** for user-visible behaviors using the form `**short title** — one-line summary. follow-up detail when needed.` Group system-level policies / cross-cutting invariants (price parity, state-machine rules, regional constraints) under a separate sub-group rather than forcing them into user-story shape — not every outcome is a user story. Fold the success signal into the same section (don't split into a separate "Success metric" section).
+   - **Outcome** — biz future state + observable success signal. Prefer **user-story bullets** for user-visible behaviors using the form `**short title** — one-line summary. follow-up detail when needed.` Group system policies — cross-cutting biz rules (price parity, state-machine rules, regional constraints) — under a separate sub-group rather than forcing them into user-story shape; not every outcome is a user story. State the biz *intent* (why the rule matters); its observable, testable form is SPEC's to own, so don't pre-empt SPEC vocabulary here (`artifact-contract.md` → One Prose Home Per Fact). Fold the success signal into the same section (don't split into a separate "Success metric" section).
    - **Non-goals** — only if scope edges are genuinely ambiguous.
    - **Upstream** — only if refs exist; short list.
 4. **Write** the artifact at the path `leanplan-new` printed in step 1 (e.g. `docs/features/0007-anomaly-publisher/requirement.md`). Do **not** `mkdir` — `leanplan-new` is the single directory allocator; the requirement skill never creates the dir itself.
 5. **Self-check** before exiting:
    - Grep body for tech-stack nouns (Kafka, Redis, Kotlin, Spring, gRPC, Postgres, Flink, Kubernetes, Docker, etc.) — zero hits expected.
    - Outcome names a biz-observable signal.
-   - Outcome bullets that *are* user-visible behaviors are written in user-story form; bullets that are system invariants are grouped separately, not disguised as user stories.
+   - Outcome bullets that *are* user-visible behaviors are written in user-story form; system policies are grouped separately, not disguised as user stories.
    - Conditional sections are omitted when empty (don't ship empty Non-goals or Upstream sections).
    - Problem leads with the pain itself (who feels it, what's broken), not background — a PM grasps it from the first line (conclusion-first; `artifact-contract.md` → Prose Style).
 
@@ -42,7 +42,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 - **No implementation choices.** No specific stack (Kafka, Redis, Postgres, gRPC), no internal architecture, no chosen pattern. Biz-vocabulary channels — "admin tool", "partner API", "batch integration" — are fine; they name channels, not choices.
 - **Outcome folds the success signal.** Biz future state + observable signal in the same section. Don't split into a separate "Success metric" subsection.
-- **User-story bullets where it fits.** When an outcome describes a user-visible behavior, write it as `**short title** — one-line summary. detail.` so reviewers can scan the feature shape. Don't twist system invariants into fake user stories — group them separately.
+- **User-story bullets where it fits.** When an outcome describes a user-visible behavior, write it as `**short title** — one-line summary. detail.` so reviewers can scan the feature shape. Don't twist system policies into fake user stories — group them separately.
 - **Conditional sections must earn their place.** Non-goals only when scope is ambiguous; Upstream only when refs exist. Otherwise omit — empty sections dilute the review surface.
 - **Biz-native vocabulary.** Reviewers are PMs / stakeholders. Avoid internal system names unless they *are* the biz context (e.g. a product line).
 
@@ -62,9 +62,9 @@ User stories:
 - **<short title>** — <one-line user-observable behavior>. <follow-up detail if it sharpens the story; otherwise drop>.
 - ...
 
-System policies: <only when cross-cutting invariants exist; otherwise drop this group>
+System policies: <only when cross-cutting biz rules exist; otherwise drop this group>
 
-- **<short title>** — <invariant or policy>. <detail>.
+- **<short title>** — <the biz rule + why it matters; SPEC owns its observable form>. <detail>.
 - ...
 
 <observable success signal folded into a final sentence or two>

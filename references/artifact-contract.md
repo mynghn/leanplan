@@ -24,8 +24,8 @@ Archive artifacts, created when useful:
 
 | Artifact | Owns |
 |---|---|
-| REQUIREMENT | Biz WHAT |
-| SPEC | Tech WHAT, externally observable contract |
+| REQUIREMENT | Biz WHAT — biz intent, incl. system policies as *why a cross-cutting property matters* |
+| SPEC | Tech WHAT — externally observable contract; canonical prose home for `O` / `INV` facts |
 | DESIGN | Tech HOW, finished system shape |
 | DESIGN RATIONALE | Tech WHY |
 | RESEARCH | Evidence |
@@ -104,11 +104,24 @@ Each task card must include:
 
 A SPEC O or INV item may be deliberately uncovered (no task verifies it directly) when the team has accepted the gap. Annotate it on a line containing `**GAP**` inside `plan.md` (typically in a forward-coverage table). The validator treats such items as acknowledged — not coverage errors. Use sparingly and document the acceptance rationale next to the marker.
 
+## One Prose Home Per Fact
+
+A fact is authored as prose **once**, in its owning artifact; every other occurrence is an anchor reference, never a re-paraphrase. A search for any cross-cutting fact then returns one prose statement plus bare `…#…` anchors — zero restatements.
+
+The rule binds **every seam**, not only DESIGN→SPEC:
+
+- **Altitude split (REQ ↔ SPEC).** A cross-cutting property has two altitudes, two homes: REQUIREMENT owns the biz *intent* (the rule + why it matters, no observable, testable predicate); SPEC `O` / `INV` owns the *observable form* (the canonical home — the same rule carrying an observable, testable predicate: a threshold, condition, or test). Neither restates the other's altitude — this resolves the blurred seam where a continuous property could read as either. *Discriminator:* a line with an observable, testable predicate is SPEC's; a line stating only the rule and its rationale is REQUIREMENT's. E.g. REQ — *"prices stay in parity across channels; split pricing erodes trust"* / SPEC#INV — *"web price == app price for identical input."*
+- **Symmetric citation downstream.** Every realization reference cites its target's anchor and stops — DESIGN→SPEC, TASK→SPEC, TASK→DESIGN alike.
+- **Within DESIGN.** The Architecture caption owns boundaries and flow; `Decision` blocks own realization claims — the caption doesn't restate a Decision.
+- **Within TASK.** Inline `Completion` citations are the canonical forward-coverage home; a forward-coverage table, if kept, is a derived view of them, not a re-authored mapping — and only the deliberately-uncovered subset carries the reserved `**GAP**` marker.
+
+Each stage doc carries its seam's operational instance; the per-artifact Drift Guards below are instances of this rule, not separate ones. Each avoided restatement removes a near-miss distractor; the surviving bare anchor is a literal lexical handle, not a latent lookup. (CE: distractor-sensitivity, literal-vs-latent-matching)
+
 ## Prose Style
 
 Applies to every artifact, in any authoring language. Write-time guidance, not validator-enforced.
 
-- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support. The artifact should be graspable from headings and lead lines alone.
+- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support. The artifact should be graspable from headings and lead lines alone. The two prose-shaped fields most prone to collapsing into a blob — the DESIGN `Decision` body and the TASK `Goal` — get a worked good/bad example in `design.md` / `plan.md`. REQUIREMENT and SPEC are list-shaped by construction (user-story bullets; atomic `O` / `INV` items) and already conform — the rule binds the free-prose fields, where the blob risk lives, not the lists.
 - **Lists over dense paragraphs.** When content enumerates parallel points, conditions, or steps, use bullet or ordered lists. Reserve flowing prose for a single causal chain.
 - **Short, declarative sentences.** Break run-ons; promote a buried qualifier to its own clause or bullet rather than nesting it in parentheses.
 

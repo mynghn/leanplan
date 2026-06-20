@@ -36,6 +36,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 7. **One-deployment guardrail (advisory)** — task count > 12 warns; > 16 warns more strongly; under `--strict` (or `LEANPLAN_STRICT=1`) these escalate to errors. If oversized, surface a split question to the user: should this be split into multiple features?
 8. **Self-check**:
    - No step-by-step edit instructions in any Goal.
+   - Each Goal leads with the outcome it achieves, not preamble — the plan's decisions are recoverable from Goal lead lines (conclusion-first; `artifact-contract.md` → Prose Style).
    - No tech-realization restatement in Goals (field mappings, response/proto shapes, controller orchestration sequences, signatures, code paths). If a Goal explains *what the system looks like after the work lands*, that content belongs in a DESIGN Decision — the Goal anchors in.
    - Every Completion is observable (you could write the verification).
    - Task cards are self-sufficient at cut-off (sentences complete without the anchor target).
@@ -49,10 +50,14 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
   - ✅ healthy in Goal: *"BFF facade for ListMyCoupons — thin delegation to D2 (`DESIGN#Decision-13-cross-domain-wrapping`); itinerary-aware logic stays in socar-server (`SPEC#INV-2-shared-business-policy`)."*
   - ✅ healthy in Completion: *"(a) authed + valid spec → response with `is_available` accurate; (b) anon → UNAUTHENTICATED; (c) parity with app channel for identical input."*
   - ❌ drift in Goal: *"Request mapping: `web.{a, b, c}` → `domain.{a', b', c'}`; response mapping: `repeated PriceItem price_items=1 ...`; controller orchestration: `resolve(ctx) → checkPaymentCard → checkApprovedDriver → previewV2`."* — push these to DESIGN.
+- **Conclusion-first Goal.** Lead with the outcome this task achieves; the how and the anchors follow. The Goal's bottom line is graspable from its first clause (`artifact-contract.md` → Prose Style).
+  - ✅ *"Publish detected anomalies on detection (`SPEC#O-1-detected-anomaly-published`) — direct publisher per `DESIGN#Decision-2-direct-kafka-publisher`."* — outcome first, anchors trailing.
+  - ❌ *"Since the detector runs in-process and the team wants no new component, this task adds a direct Kafka publisher (`DESIGN#Decision-2-direct-kafka-publisher`) to publish anomalies on detection (`SPEC#O-1-detected-anomaly-published`)."* — the outcome lands last, after the rationale.
 - **Dependencies are *enablers*, not gates.** Phrase as "P2 lands the schema that makes P1 testable", not "P1 cannot start until P2 completes". Impl agent re-evaluates at task entry.
 - **Guidelines describe work-stance, not system shape.** If a line describes what exists *after* the work lands, push it to DESIGN. Externally-observable compat behavior → SPEC Invariants. Test specifics → task Completion.
 - **External blockers become first-class tasks.** INFRAREQ / DBREQ filings, cross-team coordination — those are tasks in the DAG, not hidden "waiting" states.
-- **Anchors carry ID + slug (identity, not restatement).** `SPEC#O-1-detected-anomaly-published-within-5s` — ID stable; slug names the reference at-a-glance. Don't paraphrase the item's content in the task card; rely on the anchor + JIT load when needed.
+- **Anchors carry ID + slug (identity, not restatement).** `SPEC#O-1-detected-anomaly-published` — ID stable; slug names the reference at-a-glance. Don't paraphrase the item's content in the task card; rely on the anchor + JIT load (`artifact-contract.md` → One Prose Home Per Fact).
+- **Forward coverage has one home.** Inline `Completion` citations are the canonical SPEC↔TASK mapping; a forward-coverage table, if kept, is a derived view of them (not a re-authored mapping) — only the deliberately-uncovered subset carries the reserved `**GAP**` marker (`artifact-contract.md` → One Prose Home Per Fact).
 - **`**GAP**` ack is rare.** Use it only for deliberately-deferred coverage with a documented acceptance rationale.
 - **Isolate breadth-heavy verification.** On a large feature (near the task guardrail), the bidirectional sweep holds full SPEC + DESIGN + every task card in the window at once — a breadth-heavy aggregation that degrades. Run it in a sub-agent that returns only the gap lists (uncovered SPEC items + orphan tasks), keeping the full-corpus read out of the planning window. Guidance, not mandate — when breadth exceeds the window. (CE: context-isolation, explore-then-compact-handoff)
 
