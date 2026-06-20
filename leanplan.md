@@ -299,7 +299,7 @@ Framework ships incrementally; not every phase is required to start.
 
 | Phase | Addition | Cost |
 |---|---|---|
-| 1 (now) | 5 skill prompts (§12) — 1 standalone (`requirement`) + 4 edge | low |
+| 1 (now) | 6 skill prompts (§12) — 1 standalone (`requirement`) + 4 edge + 1 off-pipeline (`sharpen`) | low |
 | 2 | Bash validators + scaffolds + git hooks (structural safety nets) | medium |
 | 3 | CLI wrapper + per-feature progress state files | medium-high |
 | 4 | Harness-flavored capabilities (see below) | high |

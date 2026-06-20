@@ -86,7 +86,7 @@ Use descriptive topic headings. Store evidence only. Interpretation belongs in r
 
 ### UNDERSTANDING
 
-Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `SPEC#…` / `DESIGN#…` citations — no restatement. IDs are stable; append, never renumber.
+Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `SPEC#…` / `DESIGN#…` / `TASK#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber. Like RESEARCH, this is an archive: a delta's *outbound* citations are resolution-checked, but the `Delta-<N>` headings and *inbound* `UNDERSTANDING#…` citations are recorded for retrieval (and the later revision step) rather than validator-resolved or uniqueness-checked today — append-only integrity is author discipline until that consumer lands.
 
 ### TASK (`plan.md`)
 

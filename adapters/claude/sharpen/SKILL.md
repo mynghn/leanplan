@@ -18,4 +18,4 @@ Runtime glue:
 
 - **Disturbance** — `$ARGUMENTS` is what shifted, or the external claim to check. The move engages within the in-flight stage and returns control to it; it never gates the stage.
 - **Write target** — the only write is an appended `Delta-<N>: <slug>` block in `<cwd>/docs/features/<KEY>/understanding.md`. No committed surface artifact is edited.
-- **Validate** — after emitting a delta, `python3 ~/.local/share/leanplan/scripts/validate.py docs/features/<KEY>` confirms its scope-of-impact citations resolve.
+- **Validate** — after emitting a delta, run `python3 ~/.local/share/leanplan/scripts/validate.py --stage <in-flight-stage> docs/features/<KEY>` to confirm its scope-of-impact citations resolve. Scope `--stage` to the stage you paused in: the default (`full`) requires every surface artifact through `plan.md`, so a delta emitted mid-requirement/spec/design would otherwise fail on not-yet-authored downstream files rather than on the delta.

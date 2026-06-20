@@ -33,7 +33,7 @@ flowchart TB
 
 The delta lands in a new feature-local **archive** `docs/features/<KEY>/understanding.md` — append-only, one `Delta-<N>: <slug>` block per delta, conclusion-first. Realizes `SPEC#O-4-understanding-delta-emitted` and `SPEC#INV-4-understanding-delta-durable`, and keeps the delta out of the committed surfaces (`SPEC#INV-1`). See rationale at [design-rationale.md#Decision-2-understanding-delta-archive].
 
-- **Delta block** (inside each `Delta-<N>: <slug>`): a conclusion line (what the understanding now is) · the prior assumption it kills · why (the disturbance + verification verdict, if any) · scope-of-impact as bare citations to the committed work it bears on (`SPEC#O-…`, `DESIGN#Decision-…`) — no restatement.
+- **Delta block** (inside each `Delta-<N>: <slug>`): a conclusion line (what the understanding now is) · the prior assumption it kills · why (the disturbance + verification verdict, if any) · scope-of-impact as bare citations to the committed work it bears on (`SPEC#O-…`, `DESIGN#Decision-…`, `TASK#Task:…` — whichever layers the change implicates) — no restatement.
 - **Archive, not surface:** excluded from the Surface Budget; created only when a delta is actually emitted (a disturbance-free round has no `understanding.md`).
 - Citation form: `UNDERSTANDING#Delta-<N>-<slug>`. Stable IDs; append, never renumber.
 
