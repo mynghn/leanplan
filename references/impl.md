@@ -6,7 +6,7 @@ This doc carries the procedure for the implementation stage — taking one task 
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
-Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them, distinct from the Stop-The-Line / Artifact Update Loop below, which deliberately walks up and edits the affected layer.
+Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them, distinct from the Stop-The-Line / Artifact Update Loop below, which deliberately walks up and edits the affected layer (via `/revise`).
 
 ## Inputs
 
@@ -49,18 +49,15 @@ If any of the following surfaces at task entry or mid-implementation, stop and r
 
 ## Artifact Update Loop
 
-On any stop-the-line trigger:
+A stop-the-line trigger is an impl-time *detection*; the edit it implies is not impl's to perform inline. Hand the edit-and-propagate to the off-pipeline `/revise` move (`revise.md`) — the single home for editing committed artifacts — so a mid-impl correction follows the same path as a drift caught between stages.
 
-1. **Identify the highest affected layer**:
-   - REQUIREMENT for business scope change.
-   - SPEC for contract change.
-   - DESIGN for realization change.
-   - TASK for sequencing / work-navigation change.
-2. **Surface to the user** what's wrong and the proposed update.
-3. **Update that layer** (edit the artifact).
-4. **Re-evaluate downstream artifacts** that referenced the updated layer. They may stay valid, need local update, or trigger re-planning. Default is re-evaluate in place, not fully re-derive.
-5. **Resume implementation** only after the walk-up completes.
-6. **Scope gate**: if the update pushes REQUIREMENT beyond one-deployment size, pause — the feature should be split, not grown.
+On any trigger:
+
+1. **Record the drift as a justification.** Capture what impl found — the contradiction, the missing verification path, the scope spill — as a `Delta` in `understanding.md`, or hand up an existing one. This is `/revise`'s required input, and it is what makes the correction an auditable update rather than a silent patch.
+2. **Invoke `/revise <KEY>`.** It identifies the highest artifact the drift corrects (REQUIREMENT / SPEC / DESIGN / TASK), edits it and only its downstream — in place by default, re-deriving only on an anchor-set change — preserving anchor IDs, then re-validates. The walk-up, the downstream re-evaluation, and the one-deployment scope gate (split rather than grow) all live there now.
+3. **Resume implementation** only after `/revise` completes and the feature re-validates.
+
+Never patch the current task around an upstream wrongness — that silent drift is exactly what `/revise`'s justified, downstream-only discipline exists to prevent.
 
 ## Distillation Hierarchy
 
