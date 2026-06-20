@@ -1,0 +1,107 @@
+# leanplan-leak-scan — round-scoped key leak scan for PR surfaces.
+#
+# INSTALLABLE TEMPLATE. Copy into your repo's .github/workflows/ to enable.
+# LeanPlan's own repo ships this but runs no live CI; enabling it is a per-repo
+# choice, not a design dependency.
+#
+# It covers the durable surfaces no local git hook can see — the PR description and
+# review comments, which are created server-side after push. Staged code and the
+# commit message are covered locally by pre-commit-leanplan / commit-msg-leanplan;
+# this adds a changed-code safety net for contributors who skip those hooks.
+#
+# Warn by default: leaks surface as workflow annotations and the check stays green.
+# Set the repo variable LEANPLAN_STRICT=1 (Settings → Secrets and variables →
+# Actions → Variables) to fail the check on a leaking PR *description* or *changed
+# code*. PR comments are post-hoc (already posted) — always detect-and-flag, never
+# blocking.
+#
+# Optional repo variables:
+#   LEANPLAN_REF           ref of mynghn/leanplan to fetch scan-leaks from
+#                          (default: main; pin to a tag or SHA for stability).
+#   LEANPLAN_SCAN_EXCLUDE  egrep of extra paths to skip in the changed-code scan,
+#                          on top of the always-excluded docs/features/**.
+name: leanplan-leak-scan
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+  issue_comment:
+    types: [created, edited]
+  pull_request_review_comment:
+    types: [created, edited]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  scan:
+    # issue_comment also fires on plain issues; only run for PR comments.
+    if: ${{ github.event_name != 'issue_comment' || github.event.issue.pull_request }}
+    runs-on: ubuntu-latest
+    env:
+      LP_STRICT: ${{ vars.LEANPLAN_STRICT == '1' && '1' || '0' }}
+      LP_REF: ${{ vars.LEANPLAN_REF || 'main' }}
+      LP_EXCLUDE: ${{ vars.LEANPLAN_SCAN_EXCLUDE }}
+    steps:
+      - name: Fetch scan-leaks + annotate helper
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/mynghn/leanplan/${LP_REF}/scripts/scan-leaks" -o /tmp/scan-leaks
+          chmod +x /tmp/scan-leaks
+          cat > /tmp/annotate.py <<'PY'
+          import json, sys
+          surface, blocking = sys.argv[1], sys.argv[2] == "1"
+          strict = __import__("os").environ.get("LP_STRICT") == "1"
+          findings = json.load(sys.stdin)
+          for f in findings:
+              level = "error" if (strict and blocking) else "warning"
+              print(f"::{level} title=LeanPlan round-scoped key leak::"
+                    f"{surface} ({f['path']}:{f['line']}): {f['token']} — "
+                    f"write the constraint in words, not the round-scoped key")
+          # Fail the check only on a blocking surface under strict mode.
+          sys.exit(1 if findings and strict and blocking else 0)
+          PY
+
+      - name: Scan PR description
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          printf '%s\n%s\n' "$TITLE" "$BODY" \
+            | /tmp/scan-leaks --json - \
+            | python3 /tmp/annotate.py "PR description" 1
+
+      - name: Checkout (for changed-code scan)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan changed code files
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          # Changed files, minus the always-excluded artifacts and any repo excludes.
+          mapfile -t files < <(
+            git diff --name-only --diff-filter=ACM "$BASE" "$HEAD" \
+              | grep -vE '^docs/features/' \
+              | { if [ -n "$LP_EXCLUDE" ]; then grep -vE "$LP_EXCLUDE"; else cat; fi; }
+          )
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "no changed code files to scan"; exit 0
+          fi
+          /tmp/scan-leaks --json "${files[@]}" \
+            | python3 /tmp/annotate.py "changed code" 1
+
+      - name: Scan new comment
+        if: ${{ github.event_name == 'issue_comment' || github.event_name == 'pull_request_review_comment' }}
+        env:
+          COMMENT: ${{ github.event.comment.body }}
+        run: |
+          # Comments are post-hoc — flag only, never block (blocking=0).
+          printf '%s\n' "$COMMENT" \
+            | /tmp/scan-leaks --json - \
+            | python3 /tmp/annotate.py "PR comment" 0

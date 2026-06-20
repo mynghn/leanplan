@@ -40,6 +40,20 @@ tooling — its detector vocabulary and test data are a legitimate-match class:
 git config leanplan.scanExclude '^(scripts|fixtures)/'   # or: export LEANPLAN_SCAN_EXCLUDE='^(scripts|fixtures)/'
 ```
 
+## PR-surface leak scan (GitHub Action)
+
+`templates/leanplan-leak-scan.yml` is an installable workflow template covering the
+surfaces no local hook can see — the PR description and review comments (plus a
+changed-code safety net). Copy it into a repo's `.github/workflows/` to enable
+(LeanPlan's own repo ships but does not run it). Warn-by-default annotations; set
+the repo variable `LEANPLAN_STRICT=1` to fail the check on a leaking PR description
+or changed code — comments are post-hoc, so they are flag-only. Pin the fetched
+`scan-leaks` via the `LEANPLAN_REF` repo variable.
+
+```bash
+cp ~/.local/share/leanplan/scripts/templates/leanplan-leak-scan.yml <repo>/.github/workflows/
+```
+
 
 ## Conventions enforced
 
