@@ -19,7 +19,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 ## Procedure
 
-*Default flow, not a rigid script — re-derive it against the actual input. Load-bearing (don't skip or reorder): allocate-before-write (step 1), the sparse-arrival draw-out (step 3), the Problem-framing confirmation (step 4), the self-check (step 6).*
+*Default flow, not a rigid script — re-derive it against the actual input. Load-bearing (don't skip or reorder): allocate-before-write (step 1), the sparse-arrival judgment (step 3), the Problem-framing confirmation (step 4), the self-check (step 6).*
 
 1. **Allocate the feature.** Parse `$ARGUMENTS` and pick the id form, then let `leanplan-new` create the dir (it is the single allocator — never `mkdir` yourself). It prints the resolved `docs/features/<id>` path on stdout — **capture that path** and use it for every subsequent write; if it exits non-zero, stop (don't write).
    - **Revising** — if `$ARGUMENTS` already names an existing dir under `docs/features/` (any form), operate on `docs/features/<that-id>/` directly; skip allocation.
@@ -27,7 +27,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
    - **Date** — if the user wants a date-keyed feature, confirm a short kebab slug, then run `leanplan-new --date "<slug-or-title>"` (today's `YYMMDD`; pass `--date=YYMMDD` to override).
    - **Sequence** (default) — otherwise treat `$ARGUMENTS` as a biz-intent / title phrase, confirm a short kebab slug with the user (slugs are permanent in the dir name), then run `leanplan-new "<slug-or-title>"` for the next repo-local `NNNN-slug`.
 2. **Load upstream** (when a Jira key, PRD link, or Slack thread is supplied): harvest the biz *problem*, not the requested implementation — upstream often arrives mixed with solution suggestions; strip them. Capture under `## Upstream` any tracker key / links that are metadata — when the feature id itself is a tracker key, that key is the identity, so record only supplementary refs here.
-3. **Draw out a sparse arrival** before distilling, so distillation works from a formed understanding instead of a thin guess. First judge the arrival: does `$ARGUMENTS` plus any upstream already carry a *formed* problem — an articulable pain, with who feels it and what is broken? The read is qualitative, not a word count, and a mis-judgment is cheap because the planner can decline.
+3. **Draw out a sparse arrival** before distilling, so distillation works from a formed understanding instead of a thin guess. Always judge the arrival: does `$ARGUMENTS` plus any upstream already carry a *formed* problem — an articulable pain, with who feels it and what is broken? The read is qualitative, not a word count. When unsure, lean sparse and offer — a needless offer is cheap (the planner declines it), but a sparse arrival mistaken for formed is skipped with nothing left to decline, slipping undrawn into distillation.
    - **Formed → skip.** Proceed straight to distillation (step 4); never draw out an understanding that already exists.
    - **Sparse → draw it out** through structured questions (`AskUserQuestion` on Claude; the runtime-native prompt on Codex):
      - **Elicit** the problem — the pain, who feels it, what is broken, missing, or constrained.
