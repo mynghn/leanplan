@@ -2,7 +2,7 @@
 
 ## Guidelines
 
-- **Framework-source topology** — the work edits LeanPlan's own source in this repo (`references/`, `scripts/`); the *live* copies are the chezmoi-installed ones at `~/.local/share/leanplan/`, which the hooks invoke by absolute path (see `install.sh`, `scripts/README.md`). Edit source here, then reinstall to make guidance and hook changes live; ensure any new script / hook / template is carried by `install.sh` so it reaches the canonical path the hooks reference.
+- **Framework-source topology** — the work edits LeanPlan's own source in this repo (`references/`, `scripts/`); the *live* copies are at `~/.local/share/leanplan/`, a chezmoi-managed external clone of the repo's `main` that the hooks invoke by absolute path (see `scripts/README.md`). The whole repo is mirrored, so a new script reaches the canonical path simply by living in `scripts/`, going live after merge + `chezmoi update` — `install.sh` is the non-chezmoi *adapter* installer and delivers no scripts. Git hooks are enabled per-repo (symlink into `.git/hooks/`); the Action ships as a per-repo opt-in workflow template.
 - **Branch** — land on a `feat/round-scoped-key-leakage` branch off the base; the planning docs currently sit on `feat/sparse-arrival-drawout`, so move them onto the feature branch before impl, to keep the two features unmixed.
 
 ## Dependency DAG
@@ -50,6 +50,7 @@ The guidance arm (G1) is independent — it ships as prose and covers every surf
 - **Repo**: leanplan (`scripts/pre-commit-leanplan`; new `commit-msg` hook in `scripts/`).
 - **Completion**:
   - (a) staging a code file containing `INV-1` and committing emits a warning while the commit proceeds; (b) a commit message containing `SPEC#INV-1-…` emits a warning; (c) `LEANPLAN_STRICT=1` blocks both; (d) staged `docs/features/**` artifacts are not flagged (round-scoped anchors resolve there).
+  - The pre-commit scan skips `docs/features/**` always, plus any repo-configured paths (LeanPlan excludes its own token-saturated framework dirs `scripts/`/`fixtures/`, which carry anchors as detector vocabulary and test data — a legitimate-match class, not a leak).
   - Both hooks install/ship per the framework-source-topology Guideline.
 - **Dependencies**: D1 — lands the detector the hooks invoke.
 
