@@ -19,7 +19,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 ## Procedure
 
-*Default flow, not a rigid script — re-derive it against the actual input. Load-bearing (don't skip or reorder): allocate-before-write (step 1), the Problem-framing confirmation (step 3), the self-check (step 5).*
+*Default flow, not a rigid script — re-derive it against the actual input. Load-bearing (don't skip or reorder): allocate-before-write (step 1), the sparse-arrival draw-out (step 3), the Problem-framing confirmation (step 4), the self-check (step 6).*
 
 1. **Allocate the feature.** Parse `$ARGUMENTS` and pick the id form, then let `leanplan-new` create the dir (it is the single allocator — never `mkdir` yourself). It prints the resolved `docs/features/<id>` path on stdout — **capture that path** and use it for every subsequent write; if it exits non-zero, stop (don't write).
    - **Revising** — if `$ARGUMENTS` already names an existing dir under `docs/features/` (any form), operate on `docs/features/<that-id>/` directly; skip allocation.
@@ -27,18 +27,28 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
    - **Date** — if the user wants a date-keyed feature, confirm a short kebab slug, then run `leanplan-new --date "<slug-or-title>"` (today's `YYMMDD`; pass `--date=YYMMDD` to override).
    - **Sequence** (default) — otherwise treat `$ARGUMENTS` as a biz-intent / title phrase, confirm a short kebab slug with the user (slugs are permanent in the dir name), then run `leanplan-new "<slug-or-title>"` for the next repo-local `NNNN-slug`.
 2. **Load upstream** (when a Jira key, PRD link, or Slack thread is supplied): harvest the biz *problem*, not the requested implementation — upstream often arrives mixed with solution suggestions; strip them. Capture under `## Upstream` any tracker key / links that are metadata — when the feature id itself is a tracker key, that key is the identity, so record only supplementary refs here.
-3. **Draft interactively**. Misframed Problem is the single largest source of downstream rework. Confirm framing with the user before writing:
+3. **Draw out a sparse arrival** before distilling, so distillation works from a formed understanding instead of a thin guess. First judge the arrival: does `$ARGUMENTS` plus any upstream already carry a *formed* problem — an articulable pain, with who feels it and what is broken? The read is qualitative, not a word count, and a mis-judgment is cheap because the planner can decline.
+   - **Formed → skip.** Proceed straight to distillation (step 4); never draw out an understanding that already exists.
+   - **Sparse → draw it out** through structured questions (`AskUserQuestion` on Claude; the runtime-native prompt on Codex):
+     - **Elicit** the problem — the pain, who feels it, what is broken, missing, or constrained.
+     - **Frame** — offer two or more candidate problem framings for the planner to choose among; don't silently adopt the first.
+     - **Surface** — raise the gaps and ambiguities bearing on the problem and resolve them with the planner.
+   - **Opt-in, never a gate.** The step offers; it never blocks. The planner can decline it or cut it short and move to distillation at any point.
+   - **Forms understanding, writes nothing.** The draw-out forms the planner's understanding in the conversation — no file. Distillation (steps 4–5) is the sole writer of `requirement.md` and works from that understanding.
+   - **Cold start only.** This draws an understanding out of a blank-slate arrival; a disturbance to an *already-formed* understanding is `/sharpen` (Claude) / `sharpen` (Codex), not this step.
+4. **Draft interactively**. Misframed Problem is the single largest source of downstream rework. Confirm framing with the user before writing:
    - **Problem** — what biz pain or opportunity drives this? Who feels it? What is currently broken, missing, or constrained?
    - **Outcome** — biz future state + observable success signal. Prefer **user-story bullets** for user-visible behaviors using the form `**short title** — one-line summary. follow-up detail when needed.` Group system policies — cross-cutting biz rules (price parity, state-machine rules, regional constraints) — under a separate sub-group rather than forcing them into user-story shape; not every outcome is a user story. State the biz *intent* (why the rule matters); its observable, testable form is SPEC's to own, so don't pre-empt SPEC vocabulary here (`artifact-contract.md` → One Prose Home Per Fact). Fold the success signal into the same section (don't split into a separate "Success metric" section).
    - **Non-goals** — only if scope edges are genuinely ambiguous.
    - **Upstream** — only if refs exist; short list.
-4. **Write** the artifact at the path `leanplan-new` printed in step 1 (e.g. `docs/features/0007-anomaly-publisher/requirement.md`). Do **not** `mkdir` — `leanplan-new` is the single directory allocator; the requirement skill never creates the dir itself.
-5. **Self-check** before exiting:
+5. **Write** the artifact at the path `leanplan-new` printed in step 1 (e.g. `docs/features/0007-anomaly-publisher/requirement.md`). Do **not** `mkdir` — `leanplan-new` is the single directory allocator; the requirement skill never creates the dir itself.
+6. **Self-check** before exiting:
    - Grep body for tech-stack nouns (Kafka, Redis, Kotlin, Spring, gRPC, Postgres, Flink, Kubernetes, Docker, etc.) — zero hits expected.
    - Outcome names a biz-observable signal.
    - Outcome bullets that *are* user-visible behaviors are written in user-story form; system policies are grouped separately, not disguised as user stories.
    - Conditional sections are omitted when empty (don't ship empty Non-goals or Upstream sections).
    - Problem leads with the pain itself (who feels it, what's broken), not background — a PM grasps it from the first line (conclusion-first; `artifact-contract.md` → Prose Style).
+   - Problem reflects a formed understanding, not a sparse guess — a sparse arrival was drawn out (problem elicited, framings weighed, gaps resolved) before distillation, and the draw-out wrote no file of its own.
 
 ## Guardrails
 
@@ -47,6 +57,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 - **User-story bullets where it fits.** When an outcome describes a user-visible behavior, write it as `**short title** — one-line summary. detail.` so reviewers can scan the feature shape. Don't twist system policies into fake user stories — group them separately.
 - **Conditional sections must earn their place.** Non-goals only when scope is ambiguous; Upstream only when refs exist. Otherwise omit — empty sections dilute the review surface.
 - **Biz-native vocabulary.** Reviewers are PMs / stakeholders. Avoid internal system names unless they *are* the biz context (e.g. a product line).
+- **Draw out a sparse arrival; never force it.** When the arrival carries no formed problem, elicit it — problem, candidate framings, gaps — before distilling. The draw-out is opt-in: a formed arrival skips it, and the planner can decline or cut it short at any point. It forms the planner's understanding only — distillation stays the sole writer of `requirement.md`.
 
 ## Template
 
