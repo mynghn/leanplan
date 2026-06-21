@@ -96,16 +96,21 @@ The seven per-artifact shapes — 5.1 REQUIREMENT, 5.2 SPEC, 5.3 DESIGN, 5.4 DES
 
 ### Operational — in-artifact
 
-| Rule | Purpose |
+These in-artifact rules are the **structural contract**, owned by `artifact-contract.md`; this doc cites their canonical home, it does not restate them (grounding hooks kept where a rule rests on a context-engineering concept):
+
+| Rule | Canonical home |
 |---|---|
-| Grep-friendly anchored headings (`## O-<N>: <slug>`, `## INV-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`, `## Delta-<N>: <slug>`) | Enable anchor-based JIT linking across artifacts; the grep-able ID+slug is a literal lexical handle agents/humans locate by exact match, not latent inference. (context-engineering: jit-loading, literal-vs-latent-matching) |
-| Sibling layout at `docs/features/<KEY>/`, one-level link depth max | Prevent nested partial-read failures |
-| Declarative present tense; MUST / MUST NOT reserved for true invariants | Language signals re-reasoning invitation vs. commands |
-| Conclusion-first prose; prefer bullet / ordered lists over dense paragraphs | Reviewer grasps the artifact from headings + lead lines (review fidelity); agent attends to front-loaded claims over buried ledes. Write-time guidance, not validator-enforced; stage shapes (REQUIREMENT user-stories) are instances. See `artifact-contract.md` → Prose Style. (context-engineering: lost-in-the-middle, distractor-sensitivity) |
-| Edge-placement in long artifacts: past the >100-line ToC threshold, re-anchor critical invariants near the tail and order high-stakes DAG cards at the edges | U-shaped recall favors the edges over the middle, so the highest-stakes items sit where attention is strongest; the >100-line trigger reuses the §6 ToC threshold (a LeanPlan-local heuristic, not a cutoff the concept states). Write-time guidance, not validator-enforced. (context-engineering: lost-in-the-middle) |
-| Surface budget: keep REQUIREMENT / SPEC / DESIGN / TASK tight; push depth to RATIONALE / RESEARCH or split an oversized feature. Soft per-stage *prose*-line caps are advisory — Mermaid/code/blank lines excluded, so diagrams never read as bloat (the values live once in `artifact-contract.md` → Surface Budget, enforced by `validate.py`) | Surface artifacts are designed for review fidelity, not completeness — a lean surface is reviewed carefully, a verbose one rubber-stamped, and over-specific detail leaks into impl. *Direction, not a hard cap*: an advisory backstop for pathological bloat, mirroring the DAG-size guardrail (`validate.py` warns, `--strict` escalates, `--allow-large` suppresses). Archive is **lossless** — moving content off the surface keeps it JIT-loadable. (context-engineering: context-rot, effective-vs-advertised-context, distractor-sensitivity) |
-| Mermaid for diagrams (no ASCII fallback) | Clean diffs; agents edit reliably; GitHub renders natively |
-| Verification mapping (bidirectional) — every SPEC Outcome item (O) and Invariant (INV) maps to ≥ 1 TASK completion criterion; every TASK cites ≥ 1 SPEC O, INV, DESIGN Decision, or doc Guideline as its reason | Catches both unverified requirements (SPEC → TASK gap) and orphan implementation work (TASK without plan justification) |
+| Grep-friendly anchored heading patterns (`O-<N>` / `INV-<N>` / `Decision-<N>` / `Task: <id>` / `Delta-<N>`) | `artifact-contract.md` → Anchors (context-engineering: jit-loading, literal-vs-latent-matching) |
+| Sibling layout at `docs/features/<KEY>/`, one-level link depth | `artifact-contract.md` → Feature Layout |
+| Declarative present tense; MUST / MUST NOT reserved for true invariants | `artifact-contract.md` → Drift Guards |
+| Conclusion-first prose; lists over dense paragraphs | `artifact-contract.md` → Prose Style (context-engineering: lost-in-the-middle, distractor-sensitivity) |
+| Surface budget (advisory prose caps; lossless archive) | `artifact-contract.md` → Surface Budget (context-engineering: context-rot, effective-vs-advertised-context, distractor-sensitivity) |
+| Mermaid for diagrams (no ASCII fallback) | `artifact-contract.md` → Drift Guards |
+| Bidirectional verification mapping (SPEC O/INV ↔ TASK) | `artifact-contract.md` → Traceability |
+
+Native to this doc — design-level authoring guidance not in the contract:
+
+- **Edge-placement in long artifacts.** Past the >100-line ToC threshold, re-anchor critical invariants near the tail and order high-stakes DAG cards at the edges — U-shaped recall favors the edges over the middle, so the highest-stakes items sit where attention is strongest. Write-time guidance, not validator-enforced. (context-engineering: lost-in-the-middle)
 
 ### Ceremonial — moved to skill prompts or dropped
 
