@@ -121,7 +121,7 @@ U
 inject_coverage_hole() {
     local f
     f=$(task_file "$1")
-    # Remove every reference to O-2 (both citation and bare ID textual references).
+    # Remove every reference to the second outcome anchor (both citation and bare-ID forms).
     sed -i.bak -E '/SPEC#O-2/d; /O-2 staleness-reporting/d' "$1/$f"
     rm -f "$1/$f.bak"
 }
@@ -144,8 +144,8 @@ inject_surface_bloat() {
 }
 
 inject_outcome_only_task() {
-    # Append a task whose ONLY reason citation is a SPEC#O- anchor (no INV, no
-    # DESIGN). Regression guard for the reverse-coverage matcher: it must accept
+    # Append a task whose ONLY reason citation is an Outcome anchor (no Invariant,
+    # no Decision). Regression guard for the reverse-coverage matcher: it must accept
     # Outcome-only tasks (the contract permits them; trivial-realization features
     # rely on them). Previously the matcher keyed on the dropped 'AC' token and
     # rejected this, masked only because every fixture task also cited INV/DESIGN.
@@ -179,7 +179,8 @@ assert_case "surface bloat (--strict)"        1 "soft cap"                      
 assert_case "outcome-only task reason"        0 "validation passed"                     inject_outcome_only_task  "--strict"
 
 # scan-leaks defect injection: round-scoped keys leaked into a non-artifact file
-# must be caught (Decision-3 verification). Exit semantics mirror validate.py —
+# must be caught — defect-injection coverage for the per-surface leak backstop.
+# Exit semantics mirror validate.py —
 # a leak warns (exit 0) by default and escalates to error (exit 1) under --strict;
 # the grey zone (feature ids, readable scope labels, bare numbers) stays clean,
 # and the inline directive suppresses even under --strict.
@@ -190,7 +191,7 @@ scan_case "scan: feature id + scope label clean"    'docs(lean-review-surfaces):
 scan_case "scan: bare number + commit sha clean"    'retry after 2; pinned at 6184aa2'            0 "clean"
 scan_case "scan: inline directive suppresses"       'satisfies INV-1  # leanplan-allow-key'       0 "clean"       "--strict"
 
-# Every anchor kind + a non-SPEC citation must be caught — not only INV-1 / SPEC#,
+# Every anchor kind + a non-SPEC citation must be caught — not only the kinds above,
 # else a regex edit dropping an alternation regresses with the suite still green.
 scan_case "scan: bare anchor O-1 leak (strict)"        'see the O-1 baseline here'               1 "O-1"               "--strict"
 scan_case "scan: bare anchor Decision-2 leak (strict)" 'following Decision-2 we chose X'          1 "Decision-2"        "--strict"
