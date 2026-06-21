@@ -7,7 +7,7 @@ allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(git *
 
 # impl
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill drives the implementation stage (one task card → landed code).
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the implementation stage (one task card → landed code).
 
 Load `~/.local/share/leanplan/references/impl.md` — it is authoritative for the procedure (the 6 stop-the-line triggers, artifact update loop walk-up, distillation hierarchy types → tests → annotations → commit → PR body → inline, squash-safe PR-body promotion rule). Load these on demand, not up front (CE: jit-loading):
 

@@ -1,6 +1,6 @@
 # LeanPlan
 
-A lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos.
+A lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work.
 
 ## What it is
 

@@ -7,7 +7,7 @@ allowed-tools: Read, AskUserQuestion, WebSearch, WebFetch, Write, Bash(python3 ~
 
 # sharpen
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill runs the sharpen move — a mid-round, off-pipeline re-derivation of a disturbed understanding (not a stage edge).
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the sharpen move — a mid-round, off-pipeline re-derivation of a disturbed understanding (not a stage edge).
 
 Load `~/.local/share/leanplan/references/sharpen.md` — it is authoritative for the procedure (reflect → verify → re-derive → decide → emit), the two honest stances (adversarial claim-verification, legitimate no-op), and the read-never-edit boundary. Load these on demand, not up front (CE: jit-loading):
 

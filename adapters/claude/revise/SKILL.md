@@ -7,7 +7,7 @@ allowed-tools: Read, Edit, Write, AskUserQuestion, Bash(python3 ~/.local/share/l
 
 # revise
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill runs the revise move — the single sanctioned, any-stage entry for editing committed artifacts: it injects a justified drift and propagates it downstream-only.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the revise move — the single sanctioned, any-stage entry for editing committed artifacts: it injects a justified drift and propagates it downstream-only.
 
 Load `~/.local/share/leanplan/references/revise.md` — it is authoritative for the procedure (intake-Delta → identify corrected artifact → edit in place / re-derive on structural change → propagate downstream-only → re-validate), the justified-or-nothing and downstream-only boundaries, and the repair-vs-cognitive split with `/sharpen`. Load these on demand, not up front (CE: jit-loading):
 

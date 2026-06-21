@@ -1,6 +1,6 @@
 # LeanPlan Philosophy
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the principles that shape what counts as a *good* artifact and a *good* implementation move at every stage.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This doc carries the principles that shape what counts as a *good* artifact and a *good* implementation move at every stage.
 
 ## Stage map
 

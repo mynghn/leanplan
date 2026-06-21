@@ -5,7 +5,7 @@ description: Use LeanPlan, a portable LLM-aware spec-driven-development framewor
 
 # LeanPlan
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill is the Codex-side dispatcher across all five stages plus the off-pipeline `sharpen` and `revise` moves; the Claude Code runtime exposes the same content via slash commands.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill is the Codex-side dispatcher across all five stages plus the off-pipeline `sharpen` and `revise` moves; the Claude Code runtime exposes the same content via slash commands.
 
 Use this skill when the user asks to create, refine, validate, or implement a LeanPlan feature plan. Canonical assets (shared between Claude Code and Codex runtimes) live at `~/.local/share/leanplan/`.
 

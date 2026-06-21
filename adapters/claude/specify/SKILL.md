@@ -7,7 +7,7 @@ allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(ls *)
 
 # specify
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill drives the SPEC stage (REQUIREMENT → SPEC edge).
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the SPEC stage (REQUIREMENT → SPEC edge).
 
 Load `~/.local/share/leanplan/references/specify.md` — it is authoritative for the procedure ("what a SPEC is NOT" test, generic-category tech guard, RESEARCH archive rule). Load these on demand, not up front (CE: jit-loading):
 

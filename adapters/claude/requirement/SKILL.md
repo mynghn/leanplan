@@ -7,7 +7,7 @@ allowed-tools: Read, Write, Edit, AskUserQuestion, Bash(~/.local/share/leanplan/
 
 # requirement
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This skill drives the REQUIREMENT stage.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the REQUIREMENT stage.
 
 Load `~/.local/share/leanplan/references/requirement.md` — it is authoritative for the procedure, guardrails, and template. Load these on demand, not up front (CE: jit-loading):
 
