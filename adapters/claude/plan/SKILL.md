@@ -2,7 +2,7 @@
 name: plan
 description: LeanPlan — produce a TASK plan.md from a DESIGN. Track subgraphs, prefixed task IDs, bidirectional verification against SPEC + DESIGN.
 argument-hint: "<feature-key>"
-allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Bash(ls *), Bash(mkdir *), Bash(git *)
+allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Bash(ls *), Bash(mkdir *), Bash(git *), Bash(python3 ~/.local/share/leanplan/scripts/validate.py *)
 ---
 
 # plan

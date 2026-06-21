@@ -23,7 +23,8 @@
 # Prints the allocated relative dir path (docs/features/<id>) to STDOUT as the only
 # stdout output, so a caller can capture it: dir=$(leanplan-new "$title").
 # Human-facing messages go to stderr. Exit codes: 0 success; 1 bad input
-# (missing/empty arg, bad LEANPLAN_ID_WIDTH, bad --date value); 2 feature dir already exists.
+# (missing/empty arg, bad LEANPLAN_ID_WIDTH, bad --date value) or a --rename that aborts
+# (unreadable file mid-scan, or a reference left stranded); 2 feature dir already exists.
 
 set -euo pipefail
 

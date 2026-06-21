@@ -335,10 +335,15 @@ class Validator:
     def _check_design_rationale_consistency(self) -> None:
         design_anchors = {a["target"] for a in self._anchors("design", kind="Decision")}
         rationale_anchors = {a["target"] for a in self._anchors("rationale", kind="Decision")}
-        if "rationale" not in self.texts:
-            return
-        for target in rationale_anchors - design_anchors:
-            self._error("design-rationale.md", f"rationale decision has no matching DESIGN decision: {target}")
+        # Orphan-rationale-block check needs the file to exist; but the
+        # design->rationale LINK check below must run even when design-rationale.md
+        # is ENTIRELY absent — a DESIGN that links design-rationale.md#Decision-N
+        # with no such file is a dangling pointer, the strictly-worse case of the
+        # missing-block error. Gating the whole method on file presence (an early
+        # return) silently passed it; gate only the orphan loop instead.
+        if "rationale" in self.texts:
+            for target in rationale_anchors - design_anchors:
+                self._error("design-rationale.md", f"rationale decision has no matching DESIGN decision: {target}")
         for target in design_anchors:
             if f"design-rationale.md#{target}" in self.texts.get("design", "") and target not in rationale_anchors:
                 self._error("design-rationale.md", f"DESIGN links to missing rationale block: {target}")

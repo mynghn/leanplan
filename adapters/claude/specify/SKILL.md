@@ -2,7 +2,7 @@
 name: specify
 description: LeanPlan — derive a SPEC (externally-observable contract) from an existing REQUIREMENT. Generic-category tech only; split episodic Outcome items from continuous Invariants.
 argument-hint: "<feature-key>"
-allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(ls *), Bash(mkdir *), WebFetch, WebSearch
+allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(ls *), Bash(mkdir *), Bash(python3 ~/.local/share/leanplan/scripts/validate.py *), WebFetch, WebSearch
 ---
 
 # specify

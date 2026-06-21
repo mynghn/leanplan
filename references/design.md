@@ -37,7 +37,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
    - an Architecture element,
    - **or** (for trivial realization not worth a Decision block) a directly-cited TASK Completion criterion that the downstream `plan` skill will add.
    Surface any uncovered items that *no* path realizes. Do not force-create a Decision for a trivial realization that the TASK layer handles directly.
-8. **Stop** if a design choice changes the SPEC contract — update SPEC first per the artifact update loop.
+8. **Stop** if a design choice changes the SPEC contract — SPEC is wrong, not just this DESIGN. Record the drift as a `Delta` in `understanding.md`, then run `/revise <KEY>` (Claude) / `revise <KEY>` (Codex) — it injects the fix at SPEC and propagates downstream-only (`revise.md`). Don't hand-edit SPEC inline.
 9. **Self-check** before exit:
    - No work ordering / INFRAREQ / rollout text (those belong in TASK).
    - No top-level `## Schemas` or `## Interfaces` section — schemas live inside their Decisions.
