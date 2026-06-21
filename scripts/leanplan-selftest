@@ -217,6 +217,31 @@ Superseded; retained for traceability — see `TASK#Task:Z9`.
 TASK
 }
 
+inject_retired_sole_coverage() {
+    # A live SPEC outcome whose ONLY covering task is retired must FAIL coverage:
+    # retire-by-note keeps the superseded card for history, but a dead task grants
+    # no forward-coverage credit — else retiring the last task of a live outcome
+    # silently passes a real coverage hole.
+    cat >> "$1/spec.md" <<'SPEC'
+
+### O-9: retired-sole-coverage
+When the only task covering an outcome is retired, coverage must fail.
+SPEC
+    local f
+    f=$(task_file "$1")
+    cat >> "$1/$f" <<'TASK'
+
+## Task: R9 (retired)
+
+**Goal**: Superseded — once covered `SPEC#O-9-retired-sole-coverage`.
+
+**Completion**:
+- n/a — retired; per `SPEC#O-9-retired-sole-coverage`.
+
+**Dependencies**: none
+TASK
+}
+
 # Validate.py exit semantics:
 #   0 = clean (no errors; warnings allowed in default mode)
 #   1 = at least one error (or any warning under --strict)
@@ -232,6 +257,7 @@ assert_case "understanding citation resolves"  0 "validation passed"            
 assert_case "broken understanding citation"    1 "broken citation: UNDERSTANDING#Delta-9-nonexistent" inject_understanding_citation_broken
 assert_case "retired anchor still resolves"    0 "validation passed"                     inject_retired_anchor
 assert_case "retired task still resolves"      0 "validation passed"                     inject_retired_task
+assert_case "retired task grants no coverage"  1 "is not covered by any task: SPEC#O-9-retired-sole-coverage" inject_retired_sole_coverage
 
 # scan-leaks defect injection: round-scoped keys leaked into a non-artifact file
 # must be caught — defect-injection coverage for the per-surface leak backstop.
