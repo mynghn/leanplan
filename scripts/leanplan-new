@@ -92,20 +92,61 @@ do_rename() {
     local pre_ec
     if python3 "$SCRIPT_DIR/validate.py" "$OLD_DIR" >/dev/null 2>&1; then pre_ec=0; else pre_ec=1; fi
 
+    # Atomicity: steps 1-3 below mutate the tree (move, repo-wide rewrite, H1
+    # refresh). A failure partway must leave NOTHING changed — otherwise the move
+    # lands, references are half-rewritten, and the feature is stranded at a path
+    # nothing points to: exactly what this command exists to prevent. We arm an
+    # EXIT trap that restores every rewritten file from its `.bak` and reverses the
+    # move, and disarm it only once the rename has fully held. Rollback state is
+    # script-global so the trap can see it regardless of function-local scope at
+    # exit (bash-3.2-safe; guarded array expansion avoids the empty-array nounset
+    # trap).
+    _RENAME_OLD_DIR="$OLD_DIR"
+    _RENAME_NEW_DIR="$NEW_DIR"
+    _RENAME_MOVED=0
+    _RENAME_BAKS=()
+    _rename_rollback() {
+        local ec=$? b
+        trap - EXIT
+        if [ "${#_RENAME_BAKS[@]}" -gt 0 ]; then
+            for b in "${_RENAME_BAKS[@]}"; do
+                [ -f "$b" ] && mv -f "$b" "${b%.bak}"
+            done
+        fi
+        if [ "$_RENAME_MOVED" -eq 1 ] && [ -d "$_RENAME_NEW_DIR" ] && [ ! -e "$_RENAME_OLD_DIR" ]; then
+            mv "$_RENAME_NEW_DIR" "$_RENAME_OLD_DIR"
+        fi
+        echo "rolled back: rename aborted, working tree restored to its pre-rename state" >&2
+        exit "$ec"
+    }
+    trap _rename_rollback EXIT
+
     # 1. Move the directory. Filesystem-level so it works with or without git;
     #    git records it as a rename on the next `git add -A` via content
     #    similarity, preserving blame/history so prior work stays reconstructable.
     mv "$OLD_DIR" "$NEW_DIR"
+    _RENAME_MOVED=1
 
     # 2. Rewrite intra-repo references to the OLD feature path -> NEW, repo-wide.
     #    The `([^A-Za-z0-9-]|$)` boundary is load-bearing: without it the pattern
     #    `docs/features/foo` would also match a sibling `docs/features/foo-bar` and
-    #    corrupt its path. -i.bak (then rm) is the GNU/BSD-portable in-place idiom
-    #    the rest of this repo uses; -I skips binaries; .git is excluded.
+    #    corrupt its path. -i.bak is the GNU/BSD-portable in-place idiom; the `.bak`
+    #    is kept (not rm'd inline) so the trap can restore it, and removed only on
+    #    success. grep's exit is checked, not swallowed: a read error (exit > 1,
+    #    e.g. an unreadable file) must abort+rollback, because a silently skipped
+    #    file keeps its stale reference and strands it; exit 1 (no matches) is the
+    #    only non-zero we tolerate. -I skips binaries; .git is excluded.
+    local refs grep_ec=0
+    refs=$(grep -rIl --exclude-dir=.git -- "docs/features/${OLD}" . 2>/dev/null) || grep_ec=$?
+    if [ "$grep_ec" -gt 1 ]; then
+        echo "error: could not scan the repo for references (grep exit $grep_ec) — a file was unreadable; aborting before anything is stranded" >&2
+        exit 1
+    fi
     while IFS= read -r f; do
+        [ -n "$f" ] || continue
+        _RENAME_BAKS+=("$f.bak")
         sed -i.bak -E "s#docs/features/${OLD}([^A-Za-z0-9-]|\$)#docs/features/${NEW}\1#g" "$f"
-        rm -f "$f.bak"
-    done < <(grep -rIl --exclude-dir=.git -- "docs/features/${OLD}" . 2>/dev/null || true)
+    done <<< "$refs"
 
     # 3. Refresh the moved artifacts' H1 self-identity. `# <old> — STAGE` is the
     #    one place each artifact still names the old key after step 2 (citations
@@ -114,8 +155,8 @@ do_rename() {
     #    key was hand-drifted from the dir name it simply won't match, left as-is.
     for f in "$NEW_DIR"/*.md; do
         [ -f "$f" ] || continue
+        _RENAME_BAKS+=("$f.bak")
         sed -i.bak -E "1s/^# ${OLD} /# ${NEW} /" "$f"
-        rm -f "$f.bak"
     done
 
     # 4. Re-validate the renamed feature. "Nothing stranded" is proven when the
@@ -130,6 +171,14 @@ do_rename() {
         echo "error: rename broke validation (the feature passed before the move) — the reference rewrite stranded something; investigate above" >&2
         exit 1
     fi
+
+    # Success: the rename held. Discard the backups and disarm the rollback before
+    # the normal-exit messages, so the trap never fires on a clean run.
+    if [ "${#_RENAME_BAKS[@]}" -gt 0 ]; then
+        for f in "${_RENAME_BAKS[@]}"; do rm -f "$f"; done
+    fi
+    trap - EXIT
+
     if [ "$post_ec" -ne 0 ]; then
         # Pre-existing mid-flight issues; the rename itself stranded nothing new.
         echo "note: renamed $OLD -> $NEW; pre-existing validation issues (unrelated to the rename) remain:" >&2
