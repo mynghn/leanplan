@@ -44,8 +44,17 @@ STAGE_ORDER = ("requirement", "spec", "design", "plan")
 SURFACE_SOFT_CAP = {"requirement": 90, "spec": 110, "design": 160, "plan": 220}
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
-ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision|Delta)-(\d+):\s+([a-z0-9][a-z0-9-]*))\s*$", re.MULTILINE)
-TASK_RE = re.compile(r"^(#{2,4})\s+Task:\s+([A-Za-z][A-Za-z0-9-]*)\s*$", re.MULTILINE)
+# A trailing ` (retired)` marker is tolerated on any anchor/Task heading: a
+# superseded item is retired by marking its heading (artifact-contract.md ->
+# Anchors), and its ID must keep resolving in that retired state so inbound
+# citations don't break (the marker is captured into its own group, never folded
+# into the id/target). Without this the marker would silently de-resolve the
+# anchor — the exact loss retire-by-note exists to prevent. Coverage is the one
+# place the retired state DOES matter: a retired Task grants no forward-coverage
+# credit (see _check_traceability), so a superseded card can't satisfy a live O.
+RETIRED_SUFFIX = r"(\s+\(retired\))?"
+ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision|Delta)-(\d+):\s+([a-z0-9][a-z0-9-]*))" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
+TASK_RE = re.compile(r"^(#{2,4})\s+Task:\s+([A-Za-z][A-Za-z0-9-]*)" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
 CITATION_RE = re.compile(
     r"\b(?P<file>SPEC|DESIGN|RATIONALE|RESEARCH|TASK|UNDERSTANDING)#(?P<target>"
     r"(?:O|INV|Decision)-\d+-[a-z0-9][a-z0-9-]*|Delta-\d+-[a-z0-9][a-z0-9-]*|Task:[A-Za-z][A-Za-z0-9-]*)"
@@ -243,9 +252,13 @@ class Validator:
         plan_text = self.texts.get("plan", "")
         # Collect SPEC item IDs annotated as **GAP** in plan.md (deliberately uncovered).
         gap_acked = self._gap_acknowledged_targets(plan_text)
+        # Coverage credit comes only from LIVE tasks: a retired (superseded) task's
+        # citations must not satisfy a live SPEC item, else retiring the sole task
+        # of a live outcome would silently pass a real coverage hole.
+        coverage_text = self._plan_text_excluding_retired_tasks(plan_text)
         for anchor in self._anchors("spec", kind="O") + self._anchors("spec", kind="INV"):
             target = anchor["target"]
-            if f"SPEC#{target}" in plan_text:
+            if f"SPEC#{target}" in coverage_text:
                 continue
             if target in gap_acked:
                 continue
@@ -300,11 +313,15 @@ class Validator:
             "DESIGN": {a["target"] for a in self._anchors("design")},
             "RATIONALE": {a["target"] for a in self._anchors("rationale")},
             "TASK": {f"Task:{t['id']}" for t in self._parse_tasks(self.texts.get("plan", ""))},
+            # Inbound UNDERSTANDING#Delta-N citations resolve against understanding.md's
+            # delta anchors — a revised artifact cites the Delta that justified it. RESEARCH
+            # stays skipped below: it carries descriptive headings, not a resolvable anchor set.
+            "UNDERSTANDING": {a["target"] for a in self._anchors("understanding")},
         }
         for match in CITATION_RE.finditer(text):
             file_key = match.group("file")
             target = match.group("target")
-            if file_key in ("RESEARCH", "UNDERSTANDING"):
+            if file_key == "RESEARCH":
                 continue
             if target not in anchors_by_file.get(file_key, set()):
                 self._error(filename, f"broken citation: {file_key}#{target}", self._line_for_offset(text, match.start()))
@@ -399,11 +416,35 @@ class Validator:
         for match in TASK_RE.finditer(text):
             tasks.append({
                 "id": match.group(2),
+                "retired": bool(match.group(3)),
                 "start": match.start(),
                 "end": match.end(),
                 "line": self._line_for_offset(text, match.start()),
             })
         return tasks
+
+    def _plan_text_excluding_retired_tasks(self, plan_text: str) -> str:
+        """plan_text with every retired Task card's span removed, so a superseded
+        task grants no forward-coverage credit. A retired card is kept for history
+        via retire-by-note, but it is dead work — it must not satisfy a live SPEC
+        item. Span = the retired heading through just before the next task heading
+        (or end of text for the last card)."""
+        parsed = self._parse_tasks(plan_text)
+        cuts = []
+        for index, task in enumerate(parsed):
+            if not task.get("retired"):
+                continue
+            start = int(task["start"])
+            end = int(parsed[index + 1]["start"]) if index + 1 < len(parsed) else len(plan_text)
+            cuts.append((start, end))
+        if not cuts:
+            return plan_text
+        kept, prev = [], 0
+        for start, end in cuts:
+            kept.append(plan_text[prev:start])
+            prev = end
+        kept.append(plan_text[prev:])
+        return "".join(kept)
 
     def _filename_for_key(self, key: str) -> str:
         if key in SURFACE_FILES:

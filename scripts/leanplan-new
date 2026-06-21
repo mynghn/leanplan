@@ -6,6 +6,7 @@
 #   leanplan-new <PROJ-123>               # tracker key:    PROJ-123      (bare, e.g. a Jira issue key)
 #   leanplan-new --date <slug-or-title>   # date id:        YYMMDD-slug   (e.g. 260616-anomaly-publisher)
 #   leanplan-new --date=YYMMDD <title>    # date id with an explicit date instead of today
+#   leanplan-new --rename <old> <new>     # relocate an existing feature, rewrite refs, re-validate
 #
 # The feature id comes in three forms; leanplan-new picks one as follows:
 #   1. --date present                     -> date id:     <YYMMDD>-<slug>  (YYMMDD = today, or --date=NNNNNN)
@@ -36,6 +37,175 @@ FEATURES_ROOT="docs/features"
 slugify() {
     printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
 }
+
+# do_rename <old> <new>: relocate an existing feature and leave nothing stranded.
+# Moves docs/features/<old> -> docs/features/<new>, rewrites every intra-repo
+# reference to the old path, refreshes the moved artifacts' H1 self-identity, then
+# re-validates. The reference-rewrite + re-validate is exactly the step a raw `mv`
+# skips — the omission that stranded stubs unread at the old path.
+do_rename() {
+    if [ $# -ne 2 ]; then
+        echo "usage: leanplan-new --rename <old-key> <new-key>" >&2
+        exit 1
+    fi
+    local OLD="$1" NEW="$2" k f
+
+    # KEY charset gate: [A-Za-z0-9-] only (covers all three id forms), no leading
+    # dash. Load-bearing twice — it stops a key from smuggling a path separator
+    # (so a rename can never escape docs/features/), and keeps OLD/NEW free of
+    # regex metacharacters before they are interpolated into the grep/sed below.
+    for k in "$OLD" "$NEW"; do
+        case "$k" in
+            ''|-*|*[!A-Za-z0-9-]*)
+                echo "error: invalid feature key '$k' — keys are [A-Za-z0-9-], no leading dash" >&2
+                exit 1 ;;
+        esac
+    done
+    if [ "$OLD" = "$NEW" ]; then
+        echo "error: <old> and <new> are the same key ('$OLD') — nothing to rename" >&2
+        exit 1
+    fi
+
+    local OLD_DIR="$FEATURES_ROOT/$OLD" NEW_DIR="$FEATURES_ROOT/$NEW"
+    if [ ! -d "$OLD_DIR" ]; then
+        echo "error: $OLD_DIR does not exist" >&2
+        exit 1
+    fi
+    if [ -e "$NEW_DIR" ]; then
+        # Limitation: on a case-insensitive filesystem (default macOS/Windows) a
+        # case-only rename (FOO -> foo) resolves to the same inode and trips here.
+        # No corruption — mv never runs — but the fix is a two-step rename through
+        # an intermediate key.
+        echo "error: $NEW_DIR already exists — refusing to overwrite" >&2
+        exit 2
+    fi
+
+    local SCRIPT_DIR
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+    # Atomicity: steps 1-3 below mutate the tree (move, repo-wide rewrite, H1
+    # refresh). A failure partway must leave NOTHING changed — otherwise the move
+    # lands, references are half-rewritten, and the feature is stranded at a path
+    # nothing points to: exactly what this command exists to prevent. We arm an
+    # EXIT trap that restores every rewritten file from its `.bak` and reverses the
+    # move, and disarm it only once the rename has fully held. Rollback state is
+    # script-global so the trap can see it regardless of function-local scope at
+    # exit (bash-3.2-safe; guarded array expansion avoids the empty-array nounset
+    # trap).
+    _RENAME_OLD_DIR="$OLD_DIR"
+    _RENAME_NEW_DIR="$NEW_DIR"
+    _RENAME_MOVED=0
+    _RENAME_BAKS=()
+    _rename_rollback() {
+        local ec=$? b
+        trap - EXIT
+        if [ "${#_RENAME_BAKS[@]}" -gt 0 ]; then
+            for b in "${_RENAME_BAKS[@]}"; do
+                [ -f "$b" ] && mv -f "$b" "${b%.bak}"
+            done
+        fi
+        if [ "$_RENAME_MOVED" -eq 1 ] && [ -d "$_RENAME_NEW_DIR" ] && [ ! -e "$_RENAME_OLD_DIR" ]; then
+            mv "$_RENAME_NEW_DIR" "$_RENAME_OLD_DIR"
+        fi
+        echo "rolled back: rename aborted, working tree restored to its pre-rename state" >&2
+        exit "$ec"
+    }
+    trap _rename_rollback EXIT
+
+    # 1. Move the directory. Filesystem-level so it works with or without git;
+    #    git records it as a rename on the next `git add -A` via content
+    #    similarity, preserving blame/history so prior work stays reconstructable.
+    mv "$OLD_DIR" "$NEW_DIR"
+    _RENAME_MOVED=1
+
+    # 2. Rewrite intra-repo references to the OLD feature path -> NEW, repo-wide.
+    #    The `([^A-Za-z0-9-]|$)` boundary is load-bearing: without it the pattern
+    #    `docs/features/foo` would also match a sibling `docs/features/foo-bar` and
+    #    corrupt its path. -i.bak is the GNU/BSD-portable in-place idiom; the `.bak`
+    #    is kept (not rm'd inline) so the trap can restore it, and removed only on
+    #    success. grep's exit is checked, not swallowed: a read error (exit > 1,
+    #    e.g. an unreadable file) must abort+rollback, because a silently skipped
+    #    file keeps its stale reference and strands it; exit 1 (no matches) is the
+    #    only non-zero we tolerate. -I skips binaries; .git is excluded.
+    local refs grep_ec=0
+    refs=$(grep -rIl --exclude-dir=.git -- "docs/features/${OLD}" . 2>/dev/null) || grep_ec=$?
+    if [ "$grep_ec" -gt 1 ]; then
+        echo "error: could not scan the repo for references (grep exit $grep_ec) — a file was unreadable; aborting before anything is stranded" >&2
+        exit 1
+    fi
+    while IFS= read -r f; do
+        [ -n "$f" ] || continue
+        _RENAME_BAKS+=("$f.bak")
+        sed -i.bak -E "s#docs/features/${OLD}([^A-Za-z0-9-]|\$)#docs/features/${NEW}\1#g" "$f"
+    done <<< "$refs"
+
+    # 3. Refresh the moved artifacts' H1 self-identity. `# <old> — STAGE` is the
+    #    one place each artifact still names the old key after step 2 (citations
+    #    are key-agnostic anchors). Restrict the substitution to line 1 (`1s`) so a
+    #    body line that happens to start `# <old> ` is never rewritten; if the H1
+    #    key was hand-drifted from the dir name it simply won't match, left as-is.
+    for f in "$NEW_DIR"/*.md; do
+        [ -f "$f" ] || continue
+        _RENAME_BAKS+=("$f.bak")
+        sed -i.bak -E "1s/^# ${OLD} /# ${NEW} /" "$f"
+    done
+
+    # 3.5 Residual-reference gate — the real "nothing stranded" proof. After the
+    #     rewrite, NO boundary-correct docs/features/<old> reference may survive
+    #     anywhere. validate.py can't see this (it resolves only FILE#ANCHOR
+    #     citations, never docs/features/<X> path tokens), so THIS re-scan — not
+    #     re-validation — is what proves the rewrite was complete. Same boundary as
+    #     step 2, so a sibling sharing the prefix never counts. A survivor is a
+    #     reference the rewrite missed: abort, and the trap rolls everything back.
+    #     `--exclude=*.bak` skips the rollback backups step 2 just wrote — they
+    #     deliberately still hold the OLD content and would otherwise self-trip this.
+    local residual rg_ec=0
+    residual=$(grep -rIlE --exclude-dir=.git --exclude='*.bak' -- "docs/features/${OLD}([^A-Za-z0-9-]|\$)" . 2>/dev/null) || rg_ec=$?
+    if [ "$rg_ec" -gt 1 ]; then
+        echo "error: could not re-scan for residual references (grep exit $rg_ec)" >&2
+        exit 1
+    fi
+    if [ -n "$residual" ]; then
+        echo "error: references to docs/features/${OLD} survived the rewrite — stranded in:" >&2
+        echo "$residual" >&2
+        exit 1
+    fi
+
+    # 4. Re-validate the renamed feature (informational, NOT the stranding gate —
+    #    that is 3.5). The rewrite + line-1 H1 refresh cannot break the feature's
+    #    own validation: citations are key-agnostic FILE#ANCHOR anchors and
+    #    validate.py never inspects the H1. So a non-clean result here is the
+    #    feature's pre-existing state (e.g. mid-flight stubs), reported but not a
+    #    rename fault — a rename must work at any in-flight stage.
+    local out validation_note=""
+    if ! out=$(python3 "$SCRIPT_DIR/validate.py" "$NEW_DIR" 2>&1); then
+        validation_note="$out"
+    fi
+
+    # Success: the rename held (nothing stranded). Discard the backups and disarm
+    # the rollback before the normal-exit messages, so the trap never fires clean.
+    if [ "${#_RENAME_BAKS[@]}" -gt 0 ]; then
+        for f in "${_RENAME_BAKS[@]}"; do rm -f "$f"; done
+    fi
+    trap - EXIT
+
+    if [ -n "$validation_note" ]; then
+        echo "note: renamed $OLD -> $NEW; the feature has pre-existing validation issues (unrelated to the rename):" >&2
+        echo "$validation_note" >&2
+    fi
+
+    echo "renamed $OLD -> $NEW at $NEW_DIR (references rewritten, none stranded)" >&2
+    echo "$NEW_DIR"
+    exit 0
+}
+
+# --rename short-circuits the allocator: it relocates an existing feature rather
+# than allocating a new id, so it has its own arg shape and exits before the
+# allocate path below.
+if [ "${1:-}" = "--rename" ]; then
+    shift
+    do_rename "$@"
+fi
 
 # --- parse args: optional --date[=YYMMDD] flag plus one positional (title or key) ---
 DATE_MODE=0

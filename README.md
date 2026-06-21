@@ -17,7 +17,7 @@ leanplan/
 ├── scripts/                    validate.py + scaffold + selftest + pre-commit hook
 ├── fixtures/                   valid / invalid / gap-ack examples
 └── adapters/                   per-runtime skill implementations
-    ├── claude/                 Claude Code (6-skill set)
+    ├── claude/                 Claude Code (7-skill set)
     └── codex/leanplan/         Codex (1 dispatcher)
 ```
 
@@ -49,6 +49,7 @@ dot_claude/skills/symlink_design.tmpl        →  ... /adapters/claude/design
 dot_claude/skills/symlink_plan.tmpl          →  ... /adapters/claude/plan
 dot_claude/skills/symlink_impl.tmpl          →  ... /adapters/claude/impl
 dot_claude/skills/symlink_sharpen.tmpl       →  ... /adapters/claude/sharpen
+dot_claude/skills/symlink_revise.tmpl        →  ... /adapters/claude/revise
 ```
 
 For Codex:
