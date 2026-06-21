@@ -185,7 +185,7 @@ inject_task_step_drift() {
 }
 
 inject_surface_bloat() {
-    # Pad spec.md well past its ~150-line soft cap with filler lines, to trip the
+    # Pad spec.md well past its ~110-line soft cap (SPEC) with filler lines, to trip the
     # surface-budget guardrail (advisory; escalates to error under --strict).
     local i
     for i in $(seq 1 200); do printf '<!-- filler %d -->\n' "$i" >> "$1/spec.md"; done
@@ -290,6 +290,25 @@ SPEC
 TASK
 }
 
+inject_remove_gap() {
+    # Strip the **GAP** ack from the only GAP-acked item (INV-3) so it becomes a
+    # real coverage hole. Locks that the GAP-ack branch actually FLIPS the verdict:
+    # the same item passes WITH the ack (baseline) and must FAIL without it. No
+    # other fixture isolates this — proves _gap_acknowledged_targets is load-bearing.
+    local f
+    f=$(task_file "$1")
+    sed -i.bak 's/\*\*GAP\*\*/(ack removed)/' "$1/$f"
+    rm -f "$1/$f.bak"
+}
+
+inject_design_links_absent_rationale() {
+    # Delete design-rationale.md entirely while design.md still links it
+    # (Decision-2, Decision-6). The design->rationale link check must fire even
+    # when the whole rationale file is ABSENT (not just missing a block) — guards
+    # the fix that dropped the early-return which silently passed this worse case.
+    rm -f "$1/design-rationale.md"
+}
+
 # Validate.py exit semantics:
 #   0 = clean (no errors; warnings allowed in default mode)
 #   1 = at least one error (or any warning under --strict)
@@ -306,6 +325,8 @@ assert_case "broken understanding citation"    1 "broken citation: UNDERSTANDING
 assert_case "retired anchor still resolves"    0 "validation passed"                     inject_retired_anchor
 assert_case "retired task still resolves"      0 "validation passed"                     inject_retired_task
 assert_case "retired task grants no coverage"  1 "is not covered by any task: SPEC#O-9-retired-sole-coverage" inject_retired_sole_coverage
+assert_case "gap ack removed -> coverage hole" 1 "is not covered by any task: SPEC#INV-3-atomicity-under-failure" inject_remove_gap
+assert_case "design links absent rationale"    1 "DESIGN links to missing rationale block" inject_design_links_absent_rationale
 
 # scan-leaks defect injection: round-scoped keys leaked into a non-artifact file
 # must be caught — defect-injection coverage for the per-surface leak backstop.

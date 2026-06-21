@@ -9,7 +9,7 @@
 1. **LLM-aware by construction.** Framework shape reflects how LLM agents consume and produce documents. Everything follows from this.
 2. **JIT loading, not initial heavy dump.** Minimal plan-doc length is the target; deep context lives in separately-loaded archives. (CE: jit-loading)
 3. **No flat task scripting.** Implementation agents reason at implement-time; plan docs provide intent + constraints, not step-by-step recipes. (CE: jit-loading, distractor-sensitivity)
-4. **Small surface for human reviewability.** Verbose docs get rubber-stamped; rubber-stamped docs leak over-specific instructions to implementation; agents get confused. Less surface = higher review fidelity. (CE: lost-in-the-middle, distractor-sensitivity)
+4. **Small surface for human reviewability.** Verbose docs get rubber-stamped; rubber-stamped docs leak over-specific instructions to implementation; agents get confused. Less surface should raise review fidelity — a deliberate, not-yet-measured bet (`artifact-contract.md` → Surface Budget). (CE: lost-in-the-middle, distractor-sensitivity)
 5. **Archive verbose reasoning separately.** Detailed investigation and rationale are preserved, but hidden from primary review surface. Accessed JIT by both humans and agents. (CE: jit-loading, context-as-working-set)
 6. **Target one-deployment scope.** Trivial changes skip the ceremony. Oversized work is split before entry.
 7. **Plan docs are in-feature artifacts only.** Their role is review surface + agent navigation during the plan-implement cycle. They do not aspire to long-surviving source-of-truth status — code is truth going forward. Evolving plan docs into a canonical system spec would add drift risk vs. code, perpetual maintenance burden, and cognitive load from competing sources of truth.
@@ -36,7 +36,7 @@ flowchart LR
     class RAT,RES archive
 ```
 
-Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations.
+Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations. Not shown: the off-pipeline `sharpen` / `revise` moves and their `understanding.md` delta archive (§5.7, §12), which sit beside the pipeline rather than on it.
 
 REQUEST (pre-REQUIREMENT immature biz request) is acknowledged but deferred. Framework currently assumes REQUIREMENT is well-formed via human-agent interaction.
 
@@ -51,6 +51,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 | DESIGN | **tech HOW (realization)** — shape of the finished system; components, chosen stack, schemas, boundaries | (LOW, TECH) |
 | DESIGN RATIONALE | **tech WHY** — reasoning behind DESIGN decisions (alternatives, forces, invalidation hints) | archive L1 |
 | RESEARCH | **evidence** — raw investigation underpinning WHY (codebase grep, SOTA articles, industry patterns, org history) | archive L2 |
+| UNDERSTANDING | **understanding deltas** — append-only mid-round re-derivation log; written by `sharpen`, consumed by `revise` | off-pipeline archive |
 | TASK | **execution plan** — time-ordered, *process-framed* sequence of land-able work items that realize DESIGN. Describes the **work** (what to do, in what order, how to verify); never restates the *finished system* (which is DESIGN's job — anchor in, don't paraphrase) | (LOW, TECH), time-axis |
 
 **Orthogonal dimensions the segregation enforces:**
@@ -145,13 +146,23 @@ Schemas and interfaces fold into individual Decisions. External boundaries shown
 
 TASK is a navigation graph, not an execution script.
 
+### 5.7 UNDERSTANDING — off-pipeline archive.
+
+| | |
+|---|---|
+| Structure | append-only `## Delta-<N>: <slug>` blocks, one per mid-round understanding shift |
+| Body | conclusion-first: new understanding → killed assumption → why (disturbance + any verdict) → scope-of-impact as bare `SPEC#` / `DESIGN#` / `TASK#` citations |
+| When to create an entry | a `sharpen` move concludes the understanding moved; `revise` consumes the Delta as its justification |
+
+Not a surface→archive challenge-loading tier (§4) — it is the delta log of the off-pipeline `sharpen` / `revise` moves (§12). Shape owned by `artifact-contract.md` → UNDERSTANDING; don't restate it here.
+
 ## 6. Cross-cutting structural rules
 
 ### Operational — in-artifact
 
 | Rule | Purpose |
 |---|---|
-| Grep-friendly anchored headings (`## O-<N>: <slug>`, `## INV-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`) | Enable anchor-based JIT linking across artifacts; the grep-able ID+slug is a literal lexical handle agents/humans locate by exact match, not latent inference. (CE: jit-loading, literal-vs-latent-matching) |
+| Grep-friendly anchored headings (`## O-<N>: <slug>`, `## INV-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`, `## Delta-<N>: <slug>`) | Enable anchor-based JIT linking across artifacts; the grep-able ID+slug is a literal lexical handle agents/humans locate by exact match, not latent inference. (CE: jit-loading, literal-vs-latent-matching) |
 | Sibling layout at `docs/features/<KEY>/`, one-level link depth max | Prevent nested partial-read failures |
 | Declarative present tense; MUST / MUST NOT reserved for true invariants | Language signals re-reasoning invitation vs. commands |
 | Conclusion-first prose; prefer bullet / ordered lists over dense paragraphs | Reviewer grasps the artifact from headings + lead lines (review fidelity); agent attends to front-loaded claims over buried ledes. Write-time guidance, not validator-enforced; stage shapes (REQUIREMENT user-stories) are instances. See `artifact-contract.md` → Prose Style. (CE: lost-in-the-middle, distractor-sensitivity) |
@@ -196,7 +207,7 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 | SPEC continuous-property section | **Invariants** | precise; formal-methods heritage; agents parse reliably |
 | TASK operational rules (doc-level + task-card) | **Guidelines** | 작업 지침 — operational guidance the doer follows while executing; altitude-distinct from §1 *Philosophy* (framework-level foundational stance) and SPEC *Invariants* (runtime system-level) |
 | Main functional section at REQUIREMENT and SPEC | **Outcome** (mirrored) | makes REQUIREMENT ↔ SPEC WHAT-translation visible |
-| JIT anchor heading patterns | SPEC Outcome items `### O-<N>: <slug>` and Invariants `### INV-<N>: <slug>` (nested under H2 `## Outcome` / `## Invariants` section headers); DESIGN `## Decision-<N>: <slug>`; TASK `## Task: <id>` (track-prefixed like P1 / A1 / D1 / I1). | ID enables stable cross-reference across slug edits; slug carries identity inline so JIT load isn't forced just to see what the reference is. Markdown anchor fragments resolve independent of heading level. |
+| JIT anchor heading patterns | SPEC Outcome items `### O-<N>: <slug>` and Invariants `### INV-<N>: <slug>` (nested under H2 `## Outcome` / `## Invariants` section headers); DESIGN `## Decision-<N>: <slug>`; TASK `## Task: <id>` (track-prefixed like P1 / A1 / D1 / I1); UNDERSTANDING `## Delta-<N>: <slug>`. | ID enables stable cross-reference across slug edits; slug carries identity inline so JIT load isn't forced just to see what the reference is. Markdown anchor fragments resolve independent of heading level. |
 | Feature directory id | **`<KEY>`** — one of `NNNN-slug` (sequence), `PROJ-123` (tracker key), or `YYMMDD-slug` (date) | Three id forms, all allocated by `leanplan-new`, cover the common ways teams anchor a feature: a repo-local sequence number for stable cross-feature ordering with no tracker coupling (the default; slug carries human identity inline, spec-kit lineage); a bare external tracker key (e.g. Jira) when the feature *is* that issue and the team wants it legible in the path; a `YYMMDD` date when chronological grouping is the natural key. Earlier LeanPlan demoted tracker keys to REQUIREMENT `## Upstream` to keep identity repo-owned — that is now the default, not the only option (see §9). The `<KEY>` token is kept in path templates (redefined, not renamed) — a sweep-rename would churn ~70 sites against the principle-4 small-surface value, and the precision win here is the single normative definition, not the placeholder's spelling. |
 
 ## 9. Key design resolutions

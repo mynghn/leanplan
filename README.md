@@ -15,7 +15,7 @@ leanplan/
 ├── leanplan.md                 framework design (the canonical doc)
 ├── references/                 per-stage operational guidance
 ├── scripts/                    validate.py + scaffold + selftest + pre-commit hook
-├── fixtures/                   valid / invalid / gap-ack examples
+├── fixtures/                   valid (incl. a GAP-ack) / invalid examples
 └── adapters/                   per-runtime skill implementations
     ├── claude/                 Claude Code (7-skill set)
     └── codex/leanplan/         Codex (1 dispatcher)
@@ -99,10 +99,9 @@ Editing the runtime tree is supported (it is a real working copy), but understan
 Open an issue or PR. The validator should pass on every commit:
 
 ```bash
-python3 scripts/validate.py fixtures/valid                # exit 0
+python3 scripts/validate.py fixtures/valid                # exit 0 (includes a GAP-acked SPEC item)
 python3 scripts/validate.py fixtures/invalid-missing-coverage  # exit 1, expected
-python3 scripts/validate.py fixtures/valid-with-gap       # exit 0 (GAP ack)
-LEANPLAN_FIXTURE=$PWD/fixtures/valid scripts/leanplan-selftest # 5/5 pass
+LEANPLAN_FIXTURE=$PWD/fixtures/valid scripts/leanplan-selftest # all pass (exit 0; prints "N passed, 0 failed")
 ```
 
 ## License
