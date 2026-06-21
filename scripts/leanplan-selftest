@@ -14,6 +14,7 @@ DEFAULT_FIXTURE="$(cd "$SCRIPT_DIR/.." && pwd)/fixtures/valid"
 FIXTURE="${LEANPLAN_FIXTURE:-$DEFAULT_FIXTURE}"
 VALIDATE="${LEANPLAN_VALIDATE:-$SCRIPT_DIR/validate.py}"
 SCAN="${LEANPLAN_SCAN:-$SCRIPT_DIR/scan-leaks}"
+LEANPLAN_NEW="${LEANPLAN_NEW:-$SCRIPT_DIR/leanplan-new}"
 
 if [ ! -d "$FIXTURE" ]; then
     echo "error: fixture not found at $FIXTURE (set LEANPLAN_FIXTURE to override)" >&2
@@ -25,6 +26,10 @@ if [ ! -x "$VALIDATE" ] && ! [ -f "$VALIDATE" ]; then
 fi
 if [ ! -x "$SCAN" ] && ! [ -f "$SCAN" ]; then
     echo "error: scan-leaks not found at $SCAN" >&2
+    exit 2
+fi
+if [ ! -x "$LEANPLAN_NEW" ] && ! [ -f "$LEANPLAN_NEW" ]; then
+    echo "error: leanplan-new not found at $LEANPLAN_NEW" >&2
     exit 2
 fi
 
@@ -93,6 +98,49 @@ scan_case() {
         printf '  --- output ---\n%s\n  --- end ---\n' "$out"
         fail=$((fail + 1))
     fi
+}
+
+# rename_case: exercise `leanplan-new --rename` in a throwaway mini-repo. Builds
+# docs/features/<old> from the fixture (H1 set to match the key so the H1 refresh
+# has work), runs an optional SETUP_FN against the repo root (siblings, refs), runs
+# the rename, then checks exit code + a PREDICATE eval'd at the repo root. This is
+# do_rename's only automated coverage — assert_case/scan_case drive validate.py /
+# scan-leaks, so the move/rewrite/H1/residual-gate/rollback/guards path would
+# otherwise regress with the suite still green.
+rename_case() {
+    local label="$1" old="$2" new="$3" expected_ec="$4" predicate="$5" setup_fn="${6:-}"
+    local repo="$TMP/rn-repo"
+    rm -rf "$repo"; mkdir -p "$repo/docs/features"
+    if [ "$old" != "-" ]; then
+        cp -R "$FIXTURE" "$repo/docs/features/$old"
+        sed -i.bak -E "1s/^# [A-Za-z0-9-]+ /# $old /" "$repo/docs/features/$old"/*.md
+        rm -f "$repo/docs/features/$old"/*.bak
+    fi
+    [ -n "$setup_fn" ] && "$setup_fn" "$repo"
+    local out ec
+    out=$(cd "$repo" && "$LEANPLAN_NEW" --rename "$old" "$new" 2>&1); ec=$?
+    local ok=1 why=""
+    [ "$ec" -eq "$expected_ec" ] || { ok=0; why="exit=$ec want=$expected_ec"; }
+    if [ -n "$predicate" ] && ! ( cd "$repo" && eval "$predicate" ); then ok=0; why="$why; predicate failed"; fi
+    if [ "$ok" -eq 1 ]; then
+        printf 'PASS %s\n' "$label"; pass=$((pass + 1))
+    else
+        printf 'FAIL %s  (%s)\n  --- output ---\n%s\n  --- end ---\n' "$label" "$why" "$out"; fail=$((fail + 1))
+    fi
+}
+
+# setup helpers for rename_case (run at the repo root)
+rn_setup_sibling_and_ref() {
+    # A sibling sharing the renamed key's prefix + a file referencing both: the
+    # rename must rewrite the target ref and leave the sibling's ref untouched.
+    cp -R "$FIXTURE" "$1/docs/features/0007-old-sibling"
+    printf 'see docs/features/0007-old/spec.md and docs/features/0007-old-sibling/spec.md\n' > "$1/ref.md"
+}
+rn_setup_unreadable_ref() {
+    # A referencing file grep can't read forces a scan read-error mid-rewrite; the
+    # rename must abort and roll the move back rather than strand a half-rename.
+    printf 'see docs/features/0007-old/spec.md\n' > "$1/ref.md"
+    chmod 000 "$1/ref.md"
 }
 
 inject_baseline() { :; }
@@ -304,6 +352,41 @@ if [ "$ntok" -eq 1 ]; then
 else
     printf 'FAIL %s  (expected 1 token, got %d)\n  --- output ---\n%s\n  --- end ---\n' \
         "scan: citation dedup (single token)" "$ntok" "$out"; fail=$((fail + 1))
+fi
+
+# --- leanplan-new --rename coverage (do_rename: move, rewrite, H1, residual gate, rollback, guards) ---
+rn_setup_make_new() { mkdir -p "$1/docs/features/0008-new"; }
+
+# happy-path: relocate + rewrite the target ref + refresh H1, while a sibling that
+# shares the key's prefix (and its reference) is left untouched (boundary safety).
+rename_case "rename: relocates, rewrites ref, spares sibling" 0007-old 0008-new 0 \
+    '[ -d docs/features/0008-new ] && [ ! -d docs/features/0007-old ] && [ -d docs/features/0007-old-sibling ] && grep -q "docs/features/0008-new/spec.md" ref.md && grep -q "docs/features/0007-old-sibling/spec.md" ref.md && grep -q "^# 0008-new " docs/features/0008-new/spec.md' \
+    rn_setup_sibling_and_ref
+
+# guard: refuse to overwrite an existing target dir; the source must stay put.
+rename_case "rename: refuses existing target (exit 2)" 0007-old 0008-new 2 \
+    '[ -d docs/features/0007-old ] && [ -d docs/features/0008-new ]' rn_setup_make_new
+
+# guard: a path-traversal / non-key new id is rejected before anything moves.
+rename_case "rename: rejects traversal key (exit 1)" 0007-old ../escape 1 \
+    '[ -d docs/features/0007-old ]'
+
+# rollback: an unreadable referencing file makes the scan error mid-rewrite; the
+# move must be reversed so nothing is left half-renamed.
+rename_case "rename: rolls back on scan read-error" 0007-old 0008-new 1 \
+    '[ -d docs/features/0007-old ] && [ ! -d docs/features/0008-new ]' rn_setup_unreadable_ref
+
+# mid-flight: a stub-only feature fails full validation but must still rename
+# (reachable at any in-flight stage), emitting an informational note not an error.
+rn_mf="$TMP/rn-midflight"; rm -rf "$rn_mf"; mkdir -p "$rn_mf/docs/features"
+mf_dir=$(cd "$rn_mf" && "$LEANPLAN_NEW" --date=260601 "mid flight" 2>/dev/null)
+mf_key=$(basename "$mf_dir")
+out=$(cd "$rn_mf" && "$LEANPLAN_NEW" --rename "$mf_key" 260601-renamed 2>&1); ec=$?
+if [ "$ec" -eq 0 ] && [ -d "$rn_mf/docs/features/260601-renamed" ] && printf '%s' "$out" | grep -q 'pre-existing validation issues'; then
+    printf 'PASS %s\n' "rename: mid-flight feature renames with note"; pass=$((pass + 1))
+else
+    printf 'FAIL %s  (expected exit=0 + note; got exit=%d)\n  --- output ---\n%s\n  --- end ---\n' \
+        "rename: mid-flight feature renames with note" "$ec" "$out"; fail=$((fail + 1))
 fi
 
 printf '\nselftest: %d passed, %d failed\n' "$pass" "$fail"
