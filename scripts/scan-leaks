@@ -24,8 +24,10 @@ Usage:
   printf '%s' "$MSG" | scan-leaks   # scan stdin when no PATH/--text is given
   scan-leaks PATH --strict --json
 
-Exit codes mirror validate.py: 0 when clean or when leaks are warnings (default),
-1 when leaks are present under --strict / $LEANPLAN_STRICT=1, 2 on input error.
+Exit codes follow validate.py's convention — 0 when clean or when leaks are warnings
+(default), 1 when leaks are present under --strict / $LEANPLAN_STRICT=1 — plus 2 for
+an input error (a path that is not a readable file), which validate.py has no
+equivalent of.
 """
 
 from __future__ import annotations
