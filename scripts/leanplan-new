@@ -30,6 +30,21 @@ set -euo pipefail
 
 FEATURES_ROOT="docs/features"
 
+usage() {
+    cat <<'EOF'
+leanplan-new — allocate a feature id and scaffold its artifact stubs.
+
+Usage:
+  leanplan-new <slug-or-title>           sequence id:  NNNN-slug
+  leanplan-new <PROJ-123>                tracker key:  PROJ-123 (bare)
+  leanplan-new --date[=YYMMDD] <title>   date id:      YYMMDD-slug
+  leanplan-new --rename <old> <new>      relocate an existing feature, rewrite refs
+
+Prints the allocated docs/features/<id> path on stdout; messages on stderr.
+Exit: 0 ok / 1 bad input or rename failure / 2 target dir exists.
+EOF
+}
+
 # Normalize to a kebab slug. The [a-z0-9-] charset is LOAD-BEARING, not cosmetic:
 # it collapses '/' and '.' to '-', so a slug can never introduce a path separator
 # and escape docs/features/. Do not relax it without re-adding an explicit
@@ -87,9 +102,10 @@ do_rename() {
     # Atomicity: steps 1-3 below mutate the tree (move, repo-wide rewrite, H1
     # refresh). A failure partway must leave NOTHING changed — otherwise the move
     # lands, references are half-rewritten, and the feature is stranded at a path
-    # nothing points to: exactly what this command exists to prevent. We arm an
-    # EXIT trap that restores every rewritten file from its `.bak` and reverses the
-    # move, and disarm it only once the rename has fully held. Rollback state is
+    # nothing points to: exactly what this command exists to prevent. We arm a
+    # trap (EXIT + INT/TERM — SIGKILL alone can't be trapped, so `kill -9` mid-rewrite
+    # is the one unrecoverable case) that restores every rewritten file from its `.bak`
+    # and reverses the move, and disarm it only once the rename has fully held. Rollback state is
     # script-global so the trap can see it regardless of function-local scope at
     # exit (bash-3.2-safe; guarded array expansion avoids the empty-array nounset
     # trap).
@@ -99,7 +115,7 @@ do_rename() {
     _RENAME_BAKS=()
     _rename_rollback() {
         local ec=$? b
-        trap - EXIT
+        trap - EXIT INT TERM
         if [ "${#_RENAME_BAKS[@]}" -gt 0 ]; then
             for b in "${_RENAME_BAKS[@]}"; do
                 [ -f "$b" ] && mv -f "$b" "${b%.bak}"
@@ -111,7 +127,7 @@ do_rename() {
         echo "rolled back: rename aborted, working tree restored to its pre-rename state" >&2
         exit "$ec"
     }
-    trap _rename_rollback EXIT
+    trap _rename_rollback EXIT INT TERM
 
     # 1. Move the directory. Filesystem-level so it works with or without git;
     #    git records it as a rename on the next `git add -A` via content
@@ -188,7 +204,7 @@ do_rename() {
     if [ "${#_RENAME_BAKS[@]}" -gt 0 ]; then
         for f in "${_RENAME_BAKS[@]}"; do rm -f "$f"; done
     fi
-    trap - EXIT
+    trap - EXIT INT TERM
 
     if [ -n "$validation_note" ]; then
         echo "note: renamed $OLD -> $NEW; the feature has pre-existing validation issues (unrelated to the rename):" >&2
@@ -199,6 +215,10 @@ do_rename() {
     echo "$NEW_DIR"
     exit 0
 }
+
+# --help anywhere prints usage and exits clean, so `leanplan-new --help` is
+# discoverable instead of being reported as an unknown option.
+case "${1:-}" in --help|-h) usage; exit 0 ;; esac
 
 # --rename short-circuits the allocator: it relocates an existing feature rather
 # than allocating a new id, so it has its own arg shape and exits before the
@@ -329,12 +349,16 @@ fi
 
 DIR="$FEATURES_ROOT/$FEATURE_ID"
 
-if [ -e "$DIR" ]; then
+# Atomic allocation: `mkdir` on the leaf (no -p) IS the existence check, so two
+# concurrent runs that computed the same id can't both succeed — the race loser's
+# mkdir fails and we exit 2 rather than silently clobbering its stubs (the TOCTOU
+# a separate `[ -e ]`-then-`mkdir -p` left open). The parent is created idempotently
+# first so the leaf mkdir is the only racing operation.
+mkdir -p "$FEATURES_ROOT"
+if ! mkdir "$DIR" 2>/dev/null; then
     echo "error: $DIR already exists — refusing to overwrite" >&2
     exit 2
 fi
-
-mkdir -p "$DIR"
 
 cat > "$DIR/requirement.md" <<EOF
 # $FEATURE_ID — <short biz-framed title>
