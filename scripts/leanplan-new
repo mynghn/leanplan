@@ -83,15 +83,6 @@ do_rename() {
     local SCRIPT_DIR
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-    # Pre-rename verdict: does the feature validate BEFORE the move? This lets
-    # step 4 tell "the rename broke something" apart from "the feature was already
-    # mid-flight". A feature with only requirement authored (spec/design/plan
-    # still stubs) fails full validation — a normal state in which a rename must
-    # still succeed, since it is reachable at any in-flight stage. `if` guards $?
-    # from set -e.
-    local pre_ec
-    if python3 "$SCRIPT_DIR/validate.py" "$OLD_DIR" >/dev/null 2>&1; then pre_ec=0; else pre_ec=1; fi
-
     # Atomicity: steps 1-3 below mutate the tree (move, repo-wide rewrite, H1
     # refresh). A failure partway must leave NOTHING changed — otherwise the move
     # lands, references are half-rewritten, and the feature is stranded at a path
@@ -159,33 +150,51 @@ do_rename() {
         sed -i.bak -E "1s/^# ${OLD} /# ${NEW} /" "$f"
     done
 
-    # 4. Re-validate the renamed feature. "Nothing stranded" is proven when the
-    #    rename does not WORSEN the verdict: a clean feature must stay clean, but a
-    #    feature that is mid-flight (its stub downstream artifacts fail full
-    #    validation) must still rename without error. Only a NEW failure — passed
-    #    before, fails after — means the reference rewrite stranded something.
-    local out post_ec
-    if out=$(python3 "$SCRIPT_DIR/validate.py" "$NEW_DIR" 2>&1); then post_ec=0; else post_ec=1; fi
-    if [ "$post_ec" -ne 0 ] && [ "$pre_ec" -eq 0 ]; then
-        echo "$out" >&2
-        echo "error: rename broke validation (the feature passed before the move) — the reference rewrite stranded something; investigate above" >&2
+    # 3.5 Residual-reference gate — the real "nothing stranded" proof. After the
+    #     rewrite, NO boundary-correct docs/features/<old> reference may survive
+    #     anywhere. validate.py can't see this (it resolves only FILE#ANCHOR
+    #     citations, never docs/features/<X> path tokens), so THIS re-scan — not
+    #     re-validation — is what proves the rewrite was complete. Same boundary as
+    #     step 2, so a sibling sharing the prefix never counts. A survivor is a
+    #     reference the rewrite missed: abort, and the trap rolls everything back.
+    #     `--exclude=*.bak` skips the rollback backups step 2 just wrote — they
+    #     deliberately still hold the OLD content and would otherwise self-trip this.
+    local residual rg_ec=0
+    residual=$(grep -rIlE --exclude-dir=.git --exclude='*.bak' -- "docs/features/${OLD}([^A-Za-z0-9-]|\$)" . 2>/dev/null) || rg_ec=$?
+    if [ "$rg_ec" -gt 1 ]; then
+        echo "error: could not re-scan for residual references (grep exit $rg_ec)" >&2
+        exit 1
+    fi
+    if [ -n "$residual" ]; then
+        echo "error: references to docs/features/${OLD} survived the rewrite — stranded in:" >&2
+        echo "$residual" >&2
         exit 1
     fi
 
-    # Success: the rename held. Discard the backups and disarm the rollback before
-    # the normal-exit messages, so the trap never fires on a clean run.
+    # 4. Re-validate the renamed feature (informational, NOT the stranding gate —
+    #    that is 3.5). The rewrite + line-1 H1 refresh cannot break the feature's
+    #    own validation: citations are key-agnostic FILE#ANCHOR anchors and
+    #    validate.py never inspects the H1. So a non-clean result here is the
+    #    feature's pre-existing state (e.g. mid-flight stubs), reported but not a
+    #    rename fault — a rename must work at any in-flight stage.
+    local out validation_note=""
+    if ! out=$(python3 "$SCRIPT_DIR/validate.py" "$NEW_DIR" 2>&1); then
+        validation_note="$out"
+    fi
+
+    # Success: the rename held (nothing stranded). Discard the backups and disarm
+    # the rollback before the normal-exit messages, so the trap never fires clean.
     if [ "${#_RENAME_BAKS[@]}" -gt 0 ]; then
         for f in "${_RENAME_BAKS[@]}"; do rm -f "$f"; done
     fi
     trap - EXIT
 
-    if [ "$post_ec" -ne 0 ]; then
-        # Pre-existing mid-flight issues; the rename itself stranded nothing new.
-        echo "note: renamed $OLD -> $NEW; pre-existing validation issues (unrelated to the rename) remain:" >&2
-        echo "$out" >&2
+    if [ -n "$validation_note" ]; then
+        echo "note: renamed $OLD -> $NEW; the feature has pre-existing validation issues (unrelated to the rename):" >&2
+        echo "$validation_note" >&2
     fi
 
-    echo "renamed $OLD -> $NEW at $NEW_DIR (references rewritten, validated)" >&2
+    echo "renamed $OLD -> $NEW at $NEW_DIR (references rewritten, none stranded)" >&2
     echo "$NEW_DIR"
     exit 0
 }
