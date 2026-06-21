@@ -118,7 +118,7 @@ Each task card must include:
 - Every SPEC O and INV maps to at least one task completion criterion or task body citation.
 - Every task cites at least one SPEC O, SPEC INV, DESIGN decision, or explicit guideline reason.
 - TASK dependencies are enablers, not rigid gates. Implementation agents re-evaluate them at task entry.
-- At impl close-out **and on the review path**, reconcile a task's load-bearing citations (the SPEC `O` / `INV` it realizes, the DESIGN `Decision` it builds on) against the delivered work: each cited constraint's substance must be present, or the citation is a surfaced skip. A reviewer runs this too — not only the implementing agent — which is what keeps a self-skipped consultation catchable. Review-tier, not `validate.py`-enforced; the procedure is `impl-closeout.md` → Close-Out Reconciliation.
+- At impl close-out **and on the review path**, run **Close-Out Reconciliation** (`impl-closeout.md`) on a task's load-bearing citations — a reviewer runs it independently, not only the implementing agent, which keeps a self-skipped consultation catchable.
 
 ### `**GAP**` acknowledgment
 
