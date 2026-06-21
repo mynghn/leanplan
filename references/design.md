@@ -48,7 +48,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 ## Guardrails
 
-- **Chosen realization only.** DESIGN is the time-independent finished-system shape. No work ordering, PR stacking, INFRAREQ procedure, or migration sequence — those belong in TASK.
+- **Chosen realization only.** DESIGN is the finished-system shape, not the work that builds it (Product, not Process). No work ordering, PR stacking, INFRAREQ procedure, or migration sequence — those belong in TASK.
 - **Tech-realization specifics live here, in full.** Field-by-field mappings, response/proto shapes, method signatures, controller/service call sequences, schemas — capture them inside the relevant `Decision-<N>` block at design time. Downstream plan tasks should be able to anchor in via `DESIGN#Decision-<N>-<slug>` *without restating* the content. If a plan task ends up paraphrasing a Decision because it lacked detail here, the missing detail is a gap in **this** doc — fill it. Symmetric guard with the corresponding rule in `plan.md`.
 - **Architecture is mandatory.** Even a trivial one-component feature gets a diagram — it forces clarity about boundaries.
 - **Trivial vs. non-trivial.** Trivial decisions get a one-line inline why; non-trivial decisions (a real alternative was weighed, a tradeoff accepted, an invalidation trigger worth recording) anchor to RATIONALE.

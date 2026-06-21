@@ -30,7 +30,20 @@ Index only — numbering is kept stable so in-doc `principle N` / `§1.N` citati
 
 ## 2. Stages & coordinate model
 
-Stages traverse two axes: **Abstraction** (HIGH ↔ LOW) and **Biz/Tech** (BIZ ↔ TECH). Progression goes from (HIGH, BIZ) origin to (LOW, TECH) running software.
+The pipeline traverses **three faithful axes**, each the sole discriminator of one stage boundary — so every high-traffic seam derives from the model, not from a memorized per-seam rule. Each cites a seminal decomposition model:
+
+| Axis | What it splits | Seam it derives |
+|---|---|---|
+| **World ↔ Machine** (Jackson, *The World and the Machine*, ICSE 1995) | the referent — the problem-world vs. our system (*not* biz vs. techy) | REQUIREMENT ↔ SPEC |
+| **Contract ↔ Realization** | observable-outside vs. internal-inside (*not* a relative WHAT/HOW abstraction ladder) | SPEC ↔ DESIGN |
+| **Product ↔ Process** (Osterweil, *Software Processes Are Software Too*) | the finished system vs. the work that builds it | DESIGN ↔ TASK |
+
+World↔Machine and Contract↔Realization form a 2×2 over the **Product** side; Product/Process then peels TASK off it:
+
+| | World | Machine |
+|---|---|---|
+| **Contract** | REQUIREMENT | SPEC |
+| **Realization** | *— World Design: out of software scope —* | DESIGN |
 
 ```mermaid
 flowchart LR
@@ -48,6 +61,8 @@ flowchart LR
     class RAT,RES archive
 ```
 
+**Reading the model.** An **artifact is a node** — a coordinate, a noun; a **stage is an edge** — one axis-flip, the skill/activity, a verb. Each pipeline step flips exactly one axis: `specify` flips World→Machine, `design` flips Contract→Realization, `plan` flips Product→Process. So the "distance" between two artifacts is the number of axes between them — adjacent pairs differ by one axis (the blurrable, high-traffic seams above) and non-adjacent pairs by two or three (robustly distinct, never blurred). The empty (World, Realization) cell — **World Design**, the non-software means to change the world ("offer a discount") — is a deliberate scope marker: LeanPlan does Machine design, not World design. Progression runs from the (World, Contract) origin (REQUIREMENT) to running software past the (Machine, Realization · Process) corner.
+
 Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations. Not shown: the off-pipeline `sharpen` / `revise` moves and their `understanding.md` delta archive (§5.7, §12), which sit beside the pipeline rather than on it.
 
 REQUEST (pre-REQUIREMENT immature biz request) is acknowledged but deferred. Framework currently assumes REQUIREMENT is well-formed via human-agent interaction.
@@ -58,19 +73,23 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 
 | Stage | Owns | Coordinate |
 |---|---|---|
-| REQUIREMENT | **biz WHAT** — what business outcome is wanted, non-technical | (HIGH, BIZ) |
-| SPEC | **tech WHAT (contract)** — externally-observable behaviors the system must expose; generic-category abstraction | (HIGH, TECH) |
-| DESIGN | **tech HOW (realization)** — shape of the finished system; components, chosen stack, schemas, boundaries | (LOW, TECH) |
-| DESIGN RATIONALE | **tech WHY** — reasoning behind DESIGN decisions (alternatives, forces, invalidation hints) | archive L1 |
+| REQUIREMENT | **biz outcome** — the business outcome wanted, non-technical | (World, Contract) |
+| SPEC | **observable contract** — externally-observable behaviors the system must expose; generic-category abstraction | (Machine, Contract) |
+| DESIGN | **internal realization** — shape of the finished system; components, chosen stack, schemas, boundaries | (Machine, Realization) |
+| DESIGN RATIONALE | **decision WHY** — reasoning behind DESIGN decisions (alternatives, forces, invalidation hints) | archive L1 |
 | RESEARCH | **evidence** — raw investigation underpinning WHY (codebase grep, SOTA articles, industry patterns, org history) | archive L2 |
 | UNDERSTANDING | **understanding deltas** — append-only mid-round re-derivation log; written by `sharpen`, consumed by `revise` | off-pipeline archive |
-| TASK | **execution plan** — time-ordered, *process-framed* sequence of land-able work items that realize DESIGN. Describes the **work** (what to do, in what order, how to verify); never restates the *finished system* (which is DESIGN's job — anchor in, don't paraphrase) | (LOW, TECH), time-axis |
+| TASK | **execution plan** — *process-framed* sequence of land-able work items that realize DESIGN. Describes the **work** (what to do, in what order, how to verify); never restates the *finished system* (which is DESIGN's job — anchor in, don't paraphrase) | (Machine, Realization · Process) |
 
-**Orthogonal dimensions the segregation enforces:**
+**How the model derives each seam.** The three axes (§2) each adjudicate exactly one high-traffic boundary, so an author places a fact — or catches a misplacement — by reasoning from the axis, no memorized per-seam rule:
 
-- **Contract vs. realization.** SPEC states the externally-observable contract (consumers care). DESIGN chooses internal realization. Swapping Kafka → SQS is a DESIGN change, not a SPEC rewrite. Preserves abstraction altitude.
-- **Time-independent vs. time-dependent.** REQUIREMENT / SPEC / DESIGN / RATIONALE / RESEARCH describe truths about the finished system. TASK is the only artifact that's time-ordered — once the work lands, TASK becomes archival; the others describe reality going forward.
-- **WHAT / HOW / WHY / evidence layering.** Each layer exists so the layer above can stay clean. WHAT (REQ, SPEC) carries contracts. HOW (DESIGN) realizes them. WHY (RATIONALE) explains choices. Evidence (RESEARCH) grounds explanations. TASK is the bridge from plan to code.
+- **World ↔ Machine derives REQUIREMENT ↔ SPEC.** REQUIREMENT states what the problem-world wants (the biz intent — "give the customer a discount"); SPEC states what our machine must observably do. An observable, testable predicate authored in REQUIREMENT belongs in SPEC; a bare world-intent authored in SPEC belongs in REQUIREMENT — derivable from the axis, no side-rule. (The "give a candy / discount" case is World·Realization — a *World Design*, §2 — so it stays out of both.)
+- **Contract ↔ Realization derives SPEC ↔ DESIGN.** SPEC states the externally-observable contract (consumers care); DESIGN chooses the internal realization. Swapping Kafka → SQS is a DESIGN change, not a SPEC rewrite — observable-outside vs. internal-inside, an absolute cut, not a relative WHAT/HOW ladder.
+- **Product ↔ Process derives DESIGN ↔ TASK.** DESIGN is the finished system (the Product); TASK is the work that builds it (the Process). A finished-system shape ("after this lands, the system looks like X") in a task card is drift — push it to DESIGN; a work-ordering step in DESIGN belongs in TASK. The Process side is also the only time-ordered artifact: once the work lands TASK becomes archival, while the Product-side artifacts describe reality going forward.
+
+**Further orthogonal concerns the segregation enforces:**
+
+- **WHY / evidence layering.** Each layer exists so the layer above stays clean: the Contract/Realization artifacts (REQ, SPEC, DESIGN) carry the system's truths; WHY (RATIONALE) explains the choices; evidence (RESEARCH) grounds the explanations. TASK is the bridge from plan to code.
 - **Surface vs. archive.** REQ / SPEC / DESIGN / TASK are the visible review surface — loaded by default. RATIONALE and RESEARCH are hidden archives — loaded only when challenge is triggered from the surface.
 - **Audience.** REQUIREMENT is primarily human-facing (biz reviewers, PM); agents use it as evaluation criteria only. DESIGN + TASK are primarily implementation-agent-facing. SPEC is shared. RATIONALE + RESEARCH are JIT for agents or humans challenging decisions.
 
@@ -149,7 +168,7 @@ The per-artifact drift guards are part of the **structural contract**, owned by 
 - **Outcome/Invariant split (formerly "AC split").** Traditional "Acceptance Criteria" conflates episode-verifiable ("when X, Y happens") with continuous constraints ("p99 < 5s"). Split: former → Outcome items (`### O-<N>`); latter → Invariants (`### INV-<N>`). Different observability downstream (test vs. SLO dashboard). "AC" (Acceptance Criteria, traditional SDLC term) dropped in favor of O/INV — precise, symmetric, unambiguous.
 - **References carry ID + slug (identity, not restatement).** Anchors look like `SPEC#O-1-detected-anomaly-published`. ID enables stable citation across slug edits; slug names the reference at-a-glance so agents and humans can orient without JIT-loading every hop. This is the reference's *identity*, not a restatement of its *content* (the item's conditions and constraints). Agent still JIT-loads full content when needed. At the code-migration boundary (principle 8), distill semantic content into commit/comment body; ID becomes an optional in-cycle breadcrumb (e.g., `(O-1)`) that gracefully decays when plan doc is discarded.
 - **Challenge mechanism.** Impl agent is expected to re-derive against current code at implement time. Prior-authored invalidation triggers are optional hints, not gates. Stop-the-line triggers (enumerated in `impl` skill) include: current code contradicts DESIGN, no verification path exists, dependency missing or invalidated, impl requires SPEC behavior change, invariant unprovable by current test strategy, task scope expands beyond feature boundary. Aligned with the "no flat scripting" principle.
-- **SPEC / DESIGN contract line.** SPEC carries generic-category tech (the WHAT), DESIGN carries chosen stack + realization (the HOW). Swapping Kafka → SQS is a DESIGN change, not a SPEC rewrite. Preserves abstraction altitude.
+- **SPEC / DESIGN contract line.** SPEC carries generic-category tech (the observable contract), DESIGN carries chosen stack + realization (the internal realization). Swapping Kafka → SQS is a DESIGN change, not a SPEC rewrite — the cut is observable-outside vs. internal-inside (Contract↔Realization, §2), not a relative WHAT/HOW ladder.
 - **Dependencies are enablers, not gates.** The DAG signals what becomes *possible* when prior tasks land, not rigid order requirements. Impl agent re-evaluates at task entry. Framing borrowed from OpenSpec.
 - **Plan docs as transient artifacts.** Plan docs are in-feature only — they don't accumulate into a living system spec. Code is the long-term source of truth. Rejected OpenSpec's delta-specs + canonical-specs mechanism on this principle: the destination (living spec) is a maintenance burden we don't want.
 - **Artifact update loop (within-cycle).** At *any* successive stage (DESIGN, TASK, or implementation), if a prior artifact is revealed wrong — not just needing refinement — the agent walks up to the **highest affected layer** and updates there: DESIGN for realization errors, SPEC for contract errors, REQUIREMENT for scope changes. Downstream artifacts that referenced the updated layer are re-evaluated (may stay valid, update locally, or trigger re-planning) — never fully re-derived by default. Never patch downstream alone to mask upstream errors; that is silent drift. Scope gate: if the update pushes REQUIREMENT beyond one-deployment size, pause per principle 6. Minor refinements (no invalidation) stay in code per principle 8. Applies within the plan-implement cycle only; post-ship, docs are discarded per principle 7. The editing core of this loop — identify highest affected layer → edit → re-evaluate downstream → scope-gate — is now carried by the off-pipeline `revise` move (§12, `references/revise.md`), generalized from impl to any in-flight stage and gated on a recorded justification; impl's stop-the-line *triggers* stay impl's but delegate the edit to it.
