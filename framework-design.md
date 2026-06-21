@@ -85,7 +85,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 
 - **World ↔ Machine derives REQUIREMENT ↔ SPEC.** REQUIREMENT states what the problem-world wants (the biz intent — "give the customer a discount"); SPEC states what our machine must observably do. An observable, testable predicate authored in REQUIREMENT belongs in SPEC; a bare world-intent authored in SPEC belongs in REQUIREMENT — derivable from the axis, no side-rule. (The "give a candy / discount" case is World·Realization — a *World Design*, §2 — so it stays out of both.)
 - **Contract ↔ Realization derives SPEC ↔ DESIGN.** SPEC states the externally-observable contract (consumers care); DESIGN chooses the internal realization. Swapping Kafka → SQS is a DESIGN change, not a SPEC rewrite — observable-outside vs. internal-inside, an absolute cut, not a relative WHAT/HOW ladder.
-- **Product ↔ Process derives DESIGN ↔ TASK.** DESIGN is the finished system (the Product); TASK is the work that builds it (the Process). A finished-system shape ("after this lands, the system looks like X") in a task card is drift — push it to DESIGN; a work-ordering step in DESIGN belongs in TASK. The Process side is also the only time-ordered artifact: once the work lands TASK becomes archival, while the Product-side artifacts describe reality going forward.
+- **Product ↔ Process derives DESIGN ↔ TASK.** DESIGN is the finished system (the Product); TASK is the work that builds it (the Process). A finished-system shape ("after this lands, the system looks like X") in a task card is drift — push it to DESIGN; a work-ordering step in DESIGN belongs in TASK. Time-ordering then falls out of this axis (not the reverse): the Process side is the only time-ordered artifact — once the work lands TASK becomes archival, while the Product-side artifacts describe reality going forward.
 
 **Further orthogonal concerns the segregation enforces:**
 
@@ -152,7 +152,7 @@ The per-artifact drift guards are part of the **structural contract**, owned by 
 
 ## 8. Naming decisions
 
-**This section is the naming authority.** Every element's name follows from the coordinate model (§2): given the axes, the name is predictable, and one element resolves to exactly one name. The scheme below is the **target** ideal-shape vocabulary; a separate, dedicated framework-wide rename rolls it out atomically (backlog **#34** — ~1,000 sites: artifacts, edges, items, anchors, `validate.py`, fixtures, adapters, every shipped feature). Until that sweep lands, the framework — and L's own artifacts — run in the **prior vocab** (last column), so everything still validates and nothing is half-renamed.
+**This section is the naming authority.** Every name the redesign settles follows from the coordinate model (§2) — given the axes it is predictable and resolves to exactly one element; a few established names (Decision, the Rationale / Research / Understanding archives, Guidelines, the `<KEY>` id) are retained by deliberate fiat, not re-derived (flagged below). The scheme below is the **target** ideal-shape vocabulary; a separate, dedicated framework-wide rename rolls it out atomically (backlog **#34** — ~1,000 sites: artifacts, edges, items, anchors, `validate.py`, fixtures, adapters, every shipped feature). Until that sweep lands, the framework — and L's own artifacts — run in the **prior vocab** (last column), so everything still validates and nothing is half-renamed.
 
 | Stage (edge · verb) | Artifact (node · noun) | File | Items (anchor) | Prior vocab |
 |---|---|---|---|---|

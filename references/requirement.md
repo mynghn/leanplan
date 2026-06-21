@@ -2,7 +2,7 @@
 
 This doc carries the procedure for the REQUIREMENT stage — capturing the biz outcome before any implementation choice. Edge: standalone input → REQUIREMENT.
 
-**Stage stance.** Capture the business WHAT in language a PM reads — the outcome and the pain behind it, in biz vocabulary. Biz-native *channels* ("admin tool", "partner API") are fine; the attractor to resist is implementation leakage — a chosen stack, architecture, or pattern (that belongs in SPEC / DESIGN).
+**Stage stance.** Capture the business outcome in language a PM reads — the future state and the pain behind it, in biz vocabulary. Biz-native *channels* ("admin tool", "partner API") are fine; the attractor to resist is implementation leakage — a chosen stack, architecture, or pattern (that belongs in SPEC / DESIGN).
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
