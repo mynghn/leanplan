@@ -37,3 +37,15 @@ Local commit messages are erased by squash-merge workflows. Persist by rationale
 | Cross-feature architecture | runbook / org ADR / structural code (types, module boundaries) |
 
 PR body is particularly durable — visible in GitHub history post-squash, linkable from future investigations. Don't rely on local commit messages for change rationale in squash-merge teams.
+
+## Close-Out Reconciliation
+
+The distillation above leaves the consultation proof; this step checks it. Run it at close-out as an impl self-check, and re-run it on the review path. It is **review-tier, not a `validate.py` gate** — the validator reads artifacts, not the code / commits / PR where substance lands, so it cannot judge whether a migrated reason is genuine.
+
+Reconcile the task card's **load-bearing citations** against the delivered work:
+
+- **Obligation set.** Exactly the citations the card makes from the load-bearing prefixes — the SPEC `O` / `INV` a task realizes and the DESIGN `Decision` it builds on. The card already enumerates them; no separate ledger is kept.
+- **Check.** Each one's constraint must appear as substance in the delivered work — a type, test, annotation, commit body, PR body, or comment from the hierarchy above, carried *in words*. Substance means the anchor's **actual content** — the condition or reason it states — not a paraphrase of the slug name, which only re-says what naming the anchor already said; reproducing the content is what reading yields, and a self-describing slug does not. A reviewer who has opened the anchor judges the match. A load-bearing citation with no such substance, or only slug-deep substance, is a **surfaced skip**: its anchor was named but never consulted. Flag it; do not accept it as conforming.
+- **Key on the artifact prefix, never the bare anchor.** A `Decision` cited from DESIGN is load-bearing and in scope; the same `Decision` slug cited from RATIONALE is archive — load-on-challenge, never forced, and never a finding when absent. Archive-prefix citations (`RATIONALE#…`, `RESEARCH#…`) never enter the reconciliation.
+
+The handles are read in-round, from the still-live plan card; the product carries only the distilled substance. So the check needs nothing round-scoped stamped into permanent history — it reads the card against the work, not a marker planted in the code.
