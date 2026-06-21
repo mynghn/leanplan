@@ -46,7 +46,7 @@ A shared detector, `scan-leaks` (sibling of `validate.py`), flags the high-preci
 
 - **Detected** (two alternations):
   - Bare anchor tokens — `\b(O|INV|Decision|Delta)-\d+\b` (e.g. `INV-1`, `Decision-2`).
-  - Cross-artifact citations — `\b(REQUIREMENT|SPEC|DESIGN|TASK|RATIONALE|RESEARCH|UNDERSTANDING)#[A-Za-z0-9:_-]+` — the `:` covers `Task:`-style ids (e.g. `SPEC#INV-1-…`, `DESIGN#Decision-2-…`).
+  - Cross-artifact citations — `\b(SPEC|DESIGN|TASK|RATIONALE|RESEARCH|UNDERSTANDING)#[A-Za-z0-9:_-]+` — the `:` covers `Task:`-style ids (e.g. `SPEC#INV-1-…`, `DESIGN#Decision-2-…`). REQUIREMENT is omitted: it carries no citable anchors, so it appears in neither `validate.py`'s citation kinds nor the contract.
 - **Not detected** (narrow by construction, so the SPEC's allowed cases pass untouched) — feature-id forms (`NNNN-slug`, `YYMMDD-slug`, bare tracker keys), readable scope labels (`docs(<slug>)`), bare numbers. These do not match the pattern, so the grey zone needs no special-casing.
 - **Inputs** — accepts both file paths and raw text (stdin / arg), so git hooks feed staged files and the Action feeds PR/comment text. The caller supplies what to scan; callers exclude `docs/features/**`.
 - **Source of truth** — the token pattern is derived from the artifact-contract anchor vocabulary and kept in sync with it (as `validate.py`'s `SURFACE_SOFT_CAP` mirrors the contract).
