@@ -6,43 +6,75 @@
 # or, if you already have per-repo pre-commits, chain it by calling this script
 # from your existing hook.
 #
-# Behavior: warn mode by default (diagnostics on stderr, commit proceeds).
-# Set LEANPLAN_STRICT=1 to escalate validator warnings to errors and block.
+# Two checks, both warn-by-default (diagnostics on stderr, commit proceeds). Set
+# LEANPLAN_STRICT=1 to escalate to errors and block:
+#   1. validate.py over any staged feature dirs (docs/features/<key>/).
+#   2. scan-leaks for round-scoped key leaks over staged files — everything except
+#      docs/features/** (where anchors resolve) and any repo-configured excludes.
+#      Add excludes via `git config leanplan.scanExclude '<egrep>'` or the
+#      LEANPLAN_SCAN_EXCLUDE env var. (LeanPlan's own repo excludes its
+#      token-saturated `scripts/`/`fixtures/`, which carry anchors as detector
+#      vocabulary and test data — a legitimate-match class, not a leak.)
 
 set -uo pipefail
 
-VALIDATE="$HOME/.local/share/leanplan/scripts/validate.py"
-if [ ! -f "$VALIDATE" ]; then
-    # Nothing to do; don't obstruct the commit.
-    exit 0
-fi
+SHARE="$HOME/.local/share/leanplan/scripts"
+VALIDATE="${LEANPLAN_VALIDATE:-$SHARE/validate.py}"
+SCAN="${LEANPLAN_SCAN:-$SHARE/scan-leaks}"
 
-# Pick up feature directories from staged feature-artifact paths.
-keys=$(git diff --cached --name-only --diff-filter=ACM \
-    | grep -E '^docs/features/[^/]+/.*\.md$' \
-    | awk -F/ '{ print $3 }' \
-    | sort -u)
+# Both checks shell out to python3; if it's unavailable, don't obstruct the commit
+# (mirrors the per-tool `[ -f ... ]` guards below).
+command -v python3 >/dev/null 2>&1 || exit 0
 
-if [ -z "$keys" ]; then
-    exit 0
-fi
-
-# Pass --strict through to validate.py when LEANPLAN_STRICT=1; default is advisory.
 strict_flag=""
 [ "${LEANPLAN_STRICT:-0}" = "1" ] && strict_flag="--strict"
 
 worst=0
-for key in $keys; do
-    # shellcheck disable=SC2086
-    python3 "$VALIDATE" "docs/features/$key" $strict_flag
-    ec=$?
-    [ "$ec" -gt "$worst" ] && worst=$ec
-done
 
+# --- 1. validate.py over staged feature dirs -------------------------------
+if [ -f "$VALIDATE" ]; then
+    keys=$(git diff --cached --name-only --diff-filter=ACM \
+        | grep -E '^docs/features/[^/]+/.*\.md$' \
+        | awk -F/ '{ print $3 }' \
+        | sort -u)
+    for key in $keys; do
+        # shellcheck disable=SC2086
+        python3 "$VALIDATE" "docs/features/$key" $strict_flag
+        ec=$?
+        [ "$ec" -gt "$worst" ] && worst=$ec
+    done
+fi
+
+# --- 2. scan-leaks over staged non-artifact files --------------------------
+if [ -f "$SCAN" ]; then
+    exclude_re="${LEANPLAN_SCAN_EXCLUDE:-$(git config --get leanplan.scanExclude 2>/dev/null || true)}"
+    scan_files=()
+    while IFS= read -r f; do
+        [ -n "$f" ] || continue
+        case "$f" in docs/features/*) continue ;; esac
+        if [ -n "$exclude_re" ] && printf '%s' "$f" | grep -qE "$exclude_re"; then
+            continue
+        fi
+        [ -f "$f" ] || continue   # skip deletions / non-regular paths
+        scan_files+=("$f")
+    done < <(git diff --cached --name-only --diff-filter=ACM)
+
+    if [ "${#scan_files[@]}" -gt 0 ]; then
+        # shellcheck disable=SC2086
+        scan_out=$(python3 "$SCAN" $strict_flag "${scan_files[@]}" 2>&1)
+        scan_ec=$?
+        # Surface scan output only when something was flagged (drop the clean line).
+        if [ "$scan_ec" -ne 0 ] || printf '%s' "$scan_out" | grep -qE '^(WARNING|ERROR):'; then
+            printf '%s\n' "$scan_out" >&2
+        fi
+        [ "$scan_ec" -gt "$worst" ] && worst=$scan_ec
+    fi
+fi
+
+# --- verdict ---------------------------------------------------------------
 if [ "$worst" -eq 0 ]; then
     exit 0
 fi
-
 if [ "${LEANPLAN_STRICT:-0}" = "1" ]; then
     echo "leanplan pre-commit: errors above — blocking (strict mode)" >&2
     exit "$worst"

@@ -23,7 +23,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 ## Procedure
 
-*Default flow, not a rigid script — this skill of all skills re-reasons rather than executes. Load-bearing (don't skip or reorder): inspect current code (step 3), the re-reason / stop-the-line check (step 4), explicit Completion verification (step 6), distillation (steps 7–8).*
+*Default flow, not a rigid script — this skill of all skills re-reasons rather than executes. Load-bearing (don't skip or reorder): inspect current code (step 3), the re-reason / stop-the-line check (step 4), explicit Completion verification (step 6), distillation (steps 7–8), the key-leak self-check (step 9).*
 
 1. **Load** the selected `Task: <task-id>` card (Goal, Repo, Completion, Dependencies, Guidelines).
 2. **JIT-load anchors** — read only the specific `O-<N>` / `INV-<N>` / `Decision-<N>` blocks referenced. Do not eagerly load the whole SPEC / DESIGN.
@@ -33,8 +33,9 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 6. **Verify each Completion criterion explicitly** — not "tests pass", but each specific criterion the card named.
 7. **Distill WHYs** per the hierarchy below at close-out.
 8. **Confirm plan artifacts are non-load-bearing**: the WHYs they carried have migrated; discarding the plan would not lose context for future readers.
-9. **Commit** with subject matching the change. Body carries distilled change rationale (alternatives, tradeoffs). For squash-merge teams, populate the PR body with the same content.
-10. **Hand off** to the next unblocked task in the DAG, or raise any stop-the-line item that surfaced mid-task.
+9. **Key-leak self-check** before commit — run the detector, don't eyeball it: `python3 ~/.local/share/leanplan/scripts/scan-leaks --strict <staged files>` for code, and `--text "<message/PR body>"` (or piped stdin) for the prose you're about to commit. It flags round-scoped tokens — in-round anchors, `SPEC#…`-style citations, the feature id used as a standing concept — and skips `docs/features/**`, where anchors resolve. Replace any hit with the constraint in words, or add `leanplan-allow-key` on the line for a legitimate match.
+10. **Commit** with subject matching the change. Body carries distilled change rationale (alternatives, tradeoffs). For squash-merge teams, populate the PR body with the same content.
+11. **Hand off** to the next unblocked task in the DAG, or raise any stop-the-line item that surfaced mid-task.
 
 ## Stop-The-Line Triggers
 
@@ -71,6 +72,8 @@ At close-out, migrate non-obvious WHYs from plan anchors into the strongest dura
 | 4 | **Commit message** | Change-scoped WHY — why this commit exists, alternatives considered, tradeoffs accepted. |
 | 5 | **PR body** | Change rationale that must survive squash-merge. |
 | 6 | **Inline comment** | Last resort — subtle invariant, workaround, non-obvious constraint that requires adjacency to the code. |
+
+**Substance, not the key.** Whichever tier you promote a WHY into, carry the constraint *in words* — never the round-local handle that points at it. An in-round anchor (`O-N` / `INV-N` / `Decision-N`), a `SPEC#…`-style cross-artifact citation, or the feature id is plan-scoped (philosophy.md P6) and dangles once the plan is discarded; a durable form reading only "satisfies the round's anchor" *feels* migrated but has carried the handle, not the reason. Write the reason itself (e.g. "tokens must never be stored in clear").
 
 ### Commit message vs. inline comment
 
