@@ -3,7 +3,7 @@
 ## Guidelines
 
 - Work on a feature branch off `main`; grounding is additive. The only change to *existing* instructions is C1 (adapter load order) — keep it surgical.
-- Several tasks edit `leanplan.md` (distinct sections — §1, §4, §6, §10, §13) and `philosophy.md`; land them section-aware to avoid clobbering. Anchor in DESIGN decisions; never restate them in the edits.
+- Several tasks edit `framework-design.md` (distinct sections — §1, §4, §6, §10, §13) and `philosophy.md`; land them section-aware to avoid clobbering. Anchor in DESIGN decisions; never restate them in the edits.
 - Name-hooks are `(CE: <slug>)` and must resolve via the mapping — never hook a concept absent from `references/context-engineering.md` and its node.
 - Runtime skills resolve via symlink to the installed copy `~/.local/share/leanplan/`; edits to this repo take effect for running skills only after reinstall / `chezmoi update`. Verify against the repo tree (V1); the reinstall is a post-merge step, not a task.
 
@@ -62,8 +62,8 @@ Tracks: **A** archive (vendored grounding), **S** surface (name-hooks on the hot
 
 ## Task: S1
 
-- **Goal**: Add `(CE: <slug>)` name-hooks to the pre-existing load-bearing rules in `philosophy.md` and `leanplan.md` (§1, §4, §6, §10) per `DESIGN#Decision-2-surface-grounds-by-name-hook`, using the verified `research.md` → Principle → concept mapping. Names only — never inline content.
-- **Repo**: `mynghn/leanplan` — `references/philosophy.md`, `leanplan.md`.
+- **Goal**: Add `(CE: <slug>)` name-hooks to the pre-existing load-bearing rules in `philosophy.md` and `framework-design.md` (§1, §4, §6, §10) per `DESIGN#Decision-2-surface-grounds-by-name-hook`, using the verified `research.md` → Principle → concept mapping. Names only — never inline content.
+- **Repo**: `mynghn/leanplan` — `references/philosophy.md`, `framework-design.md`.
 - **Completion**:
   - Each pre-existing load-bearing rule names the concept it implements, resolvable via the mapping — verifies `SPEC#O-1-load-bearing-rule-names-its-principle`.
   - No inlined concept content added to surface docs — supports `SPEC#INV-3-grounding-stays-off-the-hot-path`.
@@ -88,17 +88,17 @@ Tracks: **A** archive (vendored grounding), **S** surface (name-hooks on the hot
 ## Task: C3
 
 - **Goal**: Add the two §6 write-time rules per `DESIGN#Decision-5-stable-to-volatile-load-order` and `DESIGN#Decision-6-edge-placement-in-long-artifacts`: stable→volatile load ordering (+ adapter-authoring note) and edge-placement past the §6 ToC>100-line threshold. Self-hook `(CE: prefix-cache-economics)` and `(CE: lost-in-the-middle)` respectively.
-- **Repo**: `mynghn/leanplan` — `leanplan.md` §6 + adapter-authoring note.
+- **Repo**: `mynghn/leanplan` — `framework-design.md` §6 + adapter-authoring note.
 - **Completion**:
   - §6 carries both rules; the edge-placement rule keys off the existing ToC>100-line threshold — verifies `SPEC#O-3-framework-conforms-to-its-own-advice`. Both stay write-time guidance, not validator-enforced (no `validate.py` change).
 - **Dependencies**: A2 (enabler — hooks resolve once the mapping lands).
 
 ## Task: C4
 
-- **Goal**: Add the session-boundary principle per `DESIGN#Decision-7-session-boundary-principle` to `philosophy.md` and `leanplan.md` §1, with a §13 note that on Claude Code `/handoff` (plan→impl) and `/compact-focus` (pivots) realize it — harness commands named there only, never in the portable principle. Self-hook `(CE: compaction-vs-eviction)` / `(CE: explore-then-compact-handoff)`. No new per-feature state artifact.
-- **Repo**: `mynghn/leanplan` — `references/philosophy.md`, `leanplan.md` §1 + §13.
+- **Goal**: Add the session-boundary principle per `DESIGN#Decision-7-session-boundary-principle` to `philosophy.md` and `framework-design.md` §1, with a §13 note that on Claude Code `/handoff` (plan→impl) and `/compact-focus` (pivots) realize it — harness commands named there only, never in the portable principle. Self-hook `(CE: compaction-vs-eviction)` / `(CE: explore-then-compact-handoff)`. No new per-feature state artifact.
+- **Repo**: `mynghn/leanplan` — `references/philosophy.md`, `framework-design.md` §1 + §13.
 - **Completion**:
-  - The principle is present in `philosophy.md` + `leanplan.md` §1; §13 names the Claude harness realizations; the portable principle text names no harness command — verifies `SPEC#O-3-framework-conforms-to-its-own-advice` and supports `SPEC#INV-1-portable-self-contained`.
+  - The principle is present in `philosophy.md` + `framework-design.md` §1; §13 names the Claude harness realizations; the portable principle text names no harness command — verifies `SPEC#O-3-framework-conforms-to-its-own-advice` and supports `SPEC#INV-1-portable-self-contained`.
   - No `docs/features/<KEY>/`-style cross-session state file is introduced (principle 7 held).
 - **Dependencies**: A2 (enabler — hooks resolve once the mapping lands).
 

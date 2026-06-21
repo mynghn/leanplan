@@ -10,7 +10,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules —
 
 - `<cwd>/docs/features/<KEY>/` — the feature's committed artifacts. The corrected artifact and its downstream are edited; everything upstream is read-only.
 - The justification — a `Delta-<N>` block in `understanding.md` (`artifact-contract.md` → UNDERSTANDING). Either named at invocation (the `/sharpen` handoff, or a hand-up from an impl stop-the-line) or recorded at intake from the planner's asserted drift before any edit. With no Delta and no recordable justification, stop without mutating.
-- The Delta's scope-of-impact — its bare `SPEC#` / `DESIGN#` / `TASK#` citations name the committed work the drift bears on. JIT-load only those anchors. (CE: jit-loading)
+- The Delta's scope-of-impact — its bare `SPEC#` / `DESIGN#` / `TASK#` citations name the committed work the drift bears on. JIT-load only those anchors. (context-engineering: jit-loading)
 
 ## Output
 

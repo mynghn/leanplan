@@ -43,7 +43,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
    - Every Completion is observable (you could write the verification).
    - Task cards are self-sufficient at cut-off (sentences complete without the anchor target).
    - DAG renders.
-   - For a plan past ~100 lines, high-stakes / blocking cards sit at the edges (top and tail), not buried mid-file, and critical feature-level Guidelines are re-anchored near the tail (edge-placement; `leanplan.md` §6, `artifact-contract.md` → Prose Style).
+   - For a plan past ~100 lines, high-stakes / blocking cards sit at the edges (top and tail), not buried mid-file, and critical feature-level Guidelines are re-anchored near the tail (edge-placement; `framework-design.md` §6, `artifact-contract.md` → Prose Style).
 
 ## Guardrails
 
@@ -61,7 +61,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 - **Anchors carry ID + slug (identity, not restatement).** `SPEC#O-1-detected-anomaly-published` — ID stable; slug names the reference at-a-glance. Don't paraphrase the item's content in the task card; rely on the anchor + JIT load (`artifact-contract.md` → One Prose Home Per Fact).
 - **Forward coverage has one home.** Inline `Completion` citations are the canonical SPEC↔TASK mapping; a forward-coverage table, if kept, is a derived view of them (not a re-authored mapping) — only the deliberately-uncovered subset carries the reserved `**GAP**` marker (`artifact-contract.md` → One Prose Home Per Fact).
 - **`**GAP**` ack is rare.** Use it only for deliberately-deferred coverage with a documented acceptance rationale.
-- **Isolate breadth-heavy verification.** On a large feature (near the task guardrail), the bidirectional sweep holds full SPEC + DESIGN + every task card in the window at once — a breadth-heavy aggregation that degrades. Run it in a sub-agent that returns only the gap lists (uncovered SPEC items + orphan tasks), keeping the full-corpus read out of the planning window. Guidance, not mandate — when breadth exceeds the window. (CE: context-isolation, explore-then-compact-handoff)
+- **Isolate breadth-heavy verification.** On a large feature (near the task guardrail), the bidirectional sweep holds full SPEC + DESIGN + every task card in the window at once — a breadth-heavy aggregation that degrades. Run it in a sub-agent that returns only the gap lists (uncovered SPEC items + orphan tasks), keeping the full-corpus read out of the planning window. Guidance, not mandate — when breadth exceeds the window. (context-engineering: context-isolation, explore-then-compact-handoff)
 
 ## Template
 

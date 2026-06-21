@@ -52,7 +52,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 - **SPEC `O` / `INV` is the observable canonical home.** An INV realizing a REQUIREMENT system-policy states the observable form and leaves the biz *intent* to REQUIREMENT (`artifact-contract.md` → One Prose Home Per Fact).
 - **Stable IDs.** `N` is stable across slug edits. Append new items with higher numbers; supersede by retire-by-note, not deletion — the global rule, in `artifact-contract.md` → Anchors.
 - **Research archive is evidence-only.** Interpretations belong in RATIONALE.
-- **Isolate breadth-heavy research.** When SPEC research (a wide SOTA / prior-art scan) would swamp the working window, run it in a sub-agent that returns only the distilled RESEARCH entries, not the raw search trail. Guidance, not mandate — when breadth exceeds the window. (CE: context-isolation, explore-then-compact-handoff)
+- **Isolate breadth-heavy research.** When SPEC research (a wide SOTA / prior-art scan) would swamp the working window, run it in a sub-agent that returns only the distilled RESEARCH entries, not the raw search trail. Guidance, not mandate — when breadth exceeds the window. (context-engineering: context-isolation, explore-then-compact-handoff)
 
 ## Template
 

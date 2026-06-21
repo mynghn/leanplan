@@ -7,8 +7,8 @@ A user-invoked shell script reads the in-repo framework doc, writes it into the 
 ```mermaid
 flowchart LR
     SRC[upstream/docs/canonical-doc.md]
-    CHZ[chezmoi: dot_local/share/leanplan/leanplan.md]
-    RUN[runtime: ~/.local/share/leanplan/leanplan.md]
+    CHZ[chezmoi: dot_local/share/leanplan/framework-design.md]
+    RUN[runtime: ~/.local/share/leanplan/framework-design.md]
     SH[sync script]
 
     SH -->|1. read| SRC
@@ -35,7 +35,7 @@ Why: idempotent (no dependence on the prior runtime-copy shape); satisfies SPEC#
 
 ## Decision-4: chezmoi-apply-called-at-script-end
 
-The script calls `chezmoi apply "$HOME/.local/share/leanplan/leanplan.md"` at the end so that the source edit propagates to runtime in the same invocation.
+The script calls `chezmoi apply "$HOME/.local/share/leanplan/framework-design.md"` at the end so that the source edit propagates to runtime in the same invocation.
 
 Why: users should not need to know about the chezmoi source / runtime split; a single command does the full job per SPEC#O-1-single-invocation-sync.
 

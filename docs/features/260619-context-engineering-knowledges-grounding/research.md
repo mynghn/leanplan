@@ -13,14 +13,14 @@ Source: `~/.local/share/context-engineering-knowledge-base/` (skill copy at `~/.
 
 ## Principle → concept mapping (verified)
 
-Verified against `references/*.md`, `leanplan.md`, the adapter SKILLs, and the 15 entries.
+Verified against `references/*.md`, `framework-design.md`, the adapter SKILLs, and the 15 entries.
 
-- JIT loading (philosophy P1; `leanplan.md` §1.2 / §4) → `jit-loading`.
-- No flat task scripting (philosophy P2; `leanplan.md` §1.3) → `jit-loading`, `distractor-sensitivity`, `context-rot`. A frozen step-by-step script rots against current code into a stale distractor; re-deriving at task entry JIT-loads current reality.
+- JIT loading (philosophy P1; `framework-design.md` §1.2 / §4) → `jit-loading`.
+- No flat task scripting (philosophy P2; `framework-design.md` §1.3) → `jit-loading`, `distractor-sensitivity`, `context-rot`. A frozen step-by-step script rots against current code into a stale distractor; re-deriving at task entry JIT-loads current reality.
 - Small surface / attention discipline (philosophy P3; §6 prose rule) → `lost-in-the-middle`, `distractor-sensitivity`.
 - Archive verbose reasoning (philosophy P4; §4 surface/archive) → `jit-loading`, `context-as-working-set`.
 - Persist-by-migration-to-code (philosophy P7; §10) → `structured-note-taking`.
-- Grep-friendly anchored headings / ID+slug (`leanplan.md` §6; §8 / §9) → `jit-loading`, `literal-vs-latent-matching`. The anchor is the JIT-resolvable pointer; the grep-able exact slug is a literal lexical handle, not a latent-inference lookup.
+- Grep-friendly anchored headings / ID+slug (`framework-design.md` §6; §8 / §9) → `jit-loading`, `literal-vs-latent-matching`. The anchor is the JIT-resolvable pointer; the grep-able exact slug is a literal lexical handle, not a latent-inference lookup.
 - Isolation (not yet present) → `context-isolation`, `explore-then-compact-handoff`.
 - Stable→volatile load order (not yet present) → `prefix-cache-economics` (entry states "order stable-to-volatile").
 - Edge-placement in long artifacts (not yet present) → `lost-in-the-middle`. The "~100-line" trigger is a LeanPlan-local heuristic (reuses the §6 ToC>100 threshold); the concept itself states no line cutoff.
@@ -30,7 +30,7 @@ Verified against `references/*.md`, `leanplan.md`, the adapter SKILLs, and the 1
 
 - JIT self-violation: every stage adapter SKILL eager-loads `philosophy.md` (23 lines) + `artifact-contract.md` (126) + `<stage>.md` before acting. `impl` = 23 + 126 + 98 = **247 lines** loaded up front, while `impl.md` itself prescribes JIT-loading of artifact anchors. Sharpest case: `artifact-contract.md` (126 lines) loads at every stage even when structure is not being edited.
 - Isolation: `Agent` is in the `design` and `impl` adapter `allowed-tools`, absent from `specify` (the REQ→SPEC research edge); `requirement`/`plan` lack it too. No stage reference prescribes isolating breadth-heavy investigation into a sub-agent that returns only the distilled artifact.
-- Prefix-cache ordering: no stable→volatile load-order rule in `leanplan.md` §6 or in adapter authoring guidance.
+- Prefix-cache ordering: no stable→volatile load-order rule in `framework-design.md` §6 or in adapter authoring guidance.
 - Edge-placement: §6 has a ToC>100-line rule only; no rule re-anchors critical invariants near a long artifact's tail or orders high-stakes DAG cards at the edges.
 - Session-boundary: absent as a principle. §14 notes cross-session continuity is handled by harness + git, with no artifact planned.
 

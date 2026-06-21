@@ -1,18 +1,18 @@
 # LeanPlan
 
-A lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos.
+A lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work.
 
 ## What it is
 
 LeanPlan defines five stages — **REQUIREMENT → SPEC → DESIGN → TASK → code** — with surface/archive layering, JIT-loaded rationale, and a validator that enforces the contract. The framework is shaped around how LLM agents actually consume planning artifacts: limited useful context, weak long-range attention, stronger performance with JIT-loaded intent plus current code.
 
-The full framework design is in [`leanplan.md`](./leanplan.md).
+The full framework design is in [`framework-design.md`](./framework-design.md).
 
 ## Layout
 
 ```
 leanplan/
-├── leanplan.md                 framework design (the canonical doc)
+├── framework-design.md                 framework design (the canonical doc)
 ├── references/                 per-stage operational guidance
 ├── scripts/                    validate.py + scaffold + selftest + pre-commit hook
 ├── fixtures/                   valid (incl. a GAP-ack) / invalid examples

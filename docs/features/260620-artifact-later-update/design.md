@@ -22,7 +22,7 @@ flowchart TD
 ## Decision-1: revise-unified-editing-entry
 `/revise <KEY>` is a new sanctioned skill and the single entry for editing committed artifacts at any in-flight occasion — realizes `SPEC#O-1-update-invocable-from-any-in-flight-stage`. The impl Artifact Update Loop's editing core (identify-layer → edit → re-evaluate-downstream → scope-gate) is re-homed here; impl's six stop-the-line *triggers* stay in impl but now call `/revise` rather than running their own inline walk-up, so a mid-task drift during impl flows through the same entry as every other occasion. → `design-rationale.md#Decision-1-revise-unified-editing-entry`.
 
-- Files (skill-definition pattern in `research.md`): create `adapters/claude/revise/SKILL.md` and `references/revise.md`; add a dispatch row to `adapters/codex/leanplan/SKILL.md`; add a row to `leanplan.md` §12.
+- Files (skill-definition pattern in `research.md`): create `adapters/claude/revise/SKILL.md` and `references/revise.md`; add a dispatch row to `adapters/codex/leanplan/SKILL.md`; add a row to `framework-design.md` §12.
 - Skill name `/revise` is provisional — the one user-facing label worth confirming.
 
 ## Decision-2: in-place-default-re-derive-on-threshold

@@ -27,7 +27,7 @@ flowchart TB
 `/sharpen` is declared as a skill — a thin `adapters/claude/sharpen/SKILL.md` adapter over `references/sharpen.md` — invocable at any point in a round and sitting *off* the requirement→impl pipeline (a callable move, not a 6th stage). Being a skill is what enables mid-process pick-up. Realizes `SPEC#O-1-sharpen-invocable-mid-any-stage` and `SPEC#INV-3-opt-in-never-gates` (a skill is invoked, never a gate). See rationale at [design-rationale.md#Decision-1-sharpen-as-non-stage-skill].
 
 - **Adapter:** `name: sharpen`; `argument-hint: "[what shifted | a claim to check]"`; `allowed-tools: Read, AskUserQuestion, WebSearch, WebFetch, Write, Bash(validate.py)` — but Write is used **only** for `understanding.md`; the skill never edits a committed surface artifact (`SPEC#INV-1`).
-- **Registration:** add `sharpen` to `install.sh` `CLAUDE_SKILLS`; add a `sharpen` row to the Codex `## Dispatch` table; add the move to `leanplan.md` §12 as a non-pipeline skill (distinct from the five stage edges).
+- **Registration:** add `sharpen` to `install.sh` `CLAUDE_SKILLS`; add a `sharpen` row to the Codex `## Dispatch` table; add the move to `framework-design.md` §12 as a non-pipeline skill (distinct from the five stage edges).
 
 ## Decision-2: understanding-delta-archive
 
