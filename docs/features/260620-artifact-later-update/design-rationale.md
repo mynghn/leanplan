@@ -46,7 +46,7 @@ O-4 wants split/rename to strand nothing; the grounding shows the failure mode (
 
 Chosen split of mechanism:
 - **Rename is mechanical** → `leanplan-new --rename <old> <new>`: move the dir, rewrite intra-repo path references, re-validate. The reference-rewrite + re-validate is precisely the step the raw-`mv` improvisation skipped, so "no dangling path, nothing stranded" holds by construction.
-- **Split is judgment-heavy** → an LLM-driven revise sub-procedure that allocates the second feature *through* `leanplan-new` (dir creation stays in the one allocator), partitions anchors/artifacts, then propagates per Decision-2. `leanplan.md` §14 already lists divide-and-conquer for oversized work as open; this lands its in-flight half.
+- **Split is judgment-heavy** → an LLM-driven revise sub-procedure that allocates the second feature *through* `leanplan-new` (dir creation stays in the one allocator), partitions anchors/artifacts, then propagates per Decision-2. `framework-design.md` §14 already lists divide-and-conquer for oversized work as open; this lands its in-flight half.
 
 Alternative weighed: a standalone `leanplan-mv` separate from the allocator. Rejected — the REQUIREMENT names `leanplan-new` as *the* single allocator to route through; a second dir-touching tool reintroduces the two-homes problem Decision-1 avoids.
 

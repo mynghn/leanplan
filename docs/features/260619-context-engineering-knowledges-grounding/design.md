@@ -2,13 +2,13 @@
 
 ## Architecture
 
-Three-layer grounding that mirrors LeanPlan's own surface/archive/JIT layering (`leanplan.md` §4): the **surface** carries concept *names* only; a **mapping** resolves a name to its node; **nodes** carry the distilled definition + provenance + locally-resolving `Related` edges. The only coupling to the external CE knowledge base is refresh-time. The archive ships via the existing `references/` tree, so `install.sh` and `validate.py` are unchanged (verified — `research.md` → Portability + tooling baseline), satisfying `SPEC#INV-1-portable-self-contained` at distribution.
+Three-layer grounding that mirrors LeanPlan's own surface/archive/JIT layering (`framework-design.md` §4): the **surface** carries concept *names* only; a **mapping** resolves a name to its node; **nodes** carry the distilled definition + provenance + locally-resolving `Related` edges. The only coupling to the external CE knowledge base is refresh-time. The archive ships via the existing `references/` tree, so `install.sh` and `validate.py` are unchanged (verified — `research.md` → Portability + tooling baseline), satisfying `SPEC#INV-1-portable-self-contained` at distribution.
 
 ```mermaid
 flowchart TD
     subgraph surface [Surface · default hot path · name-hooks only]
       PH[philosophy.md]
-      LP[leanplan.md]
+      LP[framework-design.md]
       SK[stage refs + adapter skills]
     end
     subgraph mapping [Mapping · loaded on challenge]
@@ -38,7 +38,7 @@ A two-layer CE archive lives under `references/`: a mapping file `references/con
 
 ## Decision-2: surface-grounds-by-name-hook
 
-Load-bearing principles in `philosophy.md` and rules in `leanplan.md` (§1, §4, §6, §10) carry a parenthetical concept *name* (e.g. `(CE: jit-loading)`) — never inlined content; the mapping resolves each name to its node. The name set is the verified `research.md` → Principle → concept mapping. Realizes `SPEC#O-1-load-bearing-rule-names-its-principle`, `SPEC#INV-3-grounding-stays-off-the-hot-path`. See rationale at [design-rationale.md#Decision-2-surface-grounds-by-name-hook].
+Load-bearing principles in `philosophy.md` and rules in `framework-design.md` (§1, §4, §6, §10) carry a parenthetical concept *name* (e.g. `(CE: jit-loading)`) — never inlined content; the mapping resolves each name to its node. The name set is the verified `research.md` → Principle → concept mapping. Realizes `SPEC#O-1-load-bearing-rule-names-its-principle`, `SPEC#INV-3-grounding-stays-off-the-hot-path`. See rationale at [design-rationale.md#Decision-2-surface-grounds-by-name-hook].
 
 ## Decision-3: adapters-lazy-load-references
 
@@ -50,7 +50,7 @@ Each stage adapter SKILL default-loads only its `<stage>.md` (procedure + templa
 
 ## Decision-5: stable-to-volatile-load-order
 
-A `leanplan.md` §6 cross-cutting rule plus an adapter-authoring note prescribes ordering loaded context stable → volatile: universal references first, then the stage skill, then JIT artifact slices, then live code. Realizes `SPEC#O-3-framework-conforms-to-its-own-advice`. Why: orders the prompt for maximal prefix-cache reuse (grounds `prefix-cache-economics`); advisory and harness-dependent, so not validator-enforced.
+A `framework-design.md` §6 cross-cutting rule plus an adapter-authoring note prescribes ordering loaded context stable → volatile: universal references first, then the stage skill, then JIT artifact slices, then live code. Realizes `SPEC#O-3-framework-conforms-to-its-own-advice`. Why: orders the prompt for maximal prefix-cache reuse (grounds `prefix-cache-economics`); advisory and harness-dependent, so not validator-enforced.
 
 ## Decision-6: edge-placement-in-long-artifacts
 
@@ -58,7 +58,7 @@ The §6 prose rule extends: past the existing ToC>100-line threshold, an artifac
 
 ## Decision-7: session-boundary-principle
 
-A first-class principle joins `philosophy.md` (and `leanplan.md` §1 + a cross-cutting note): keep requirement→spec→design→plan continuous in one warm session; make a hard hand-off to a fresh session before impl; isolate noisy sub-tasks into sub-agents; light-compact at major pivots. Cross-session impl survival rests on harness task-state + git — no new per-feature artifact. The principle stays harness-agnostic; where a harness provides grounded session-management commands they realize it — on Claude Code, `/handoff <goal>` at the plan→impl cut and `/compact-focus` at in-session pivots, both grounded in the same CE concepts — named only in `leanplan.md` §13 (and the Claude adapter), never in the portable principle text, so a bare install still performs the boundary manually (`SPEC#INV-1-portable-self-contained`). Realizes `SPEC#O-3-framework-conforms-to-its-own-advice` (grounds `explore-execute-boundary`, `compaction-vs-eviction`, `explore-then-compact-handoff`, `context-isolation`, `prefix-cache-economics`). See rationale at [design-rationale.md#Decision-7-session-boundary-principle].
+A first-class principle joins `philosophy.md` (and `framework-design.md` §1 + a cross-cutting note): keep requirement→spec→design→plan continuous in one warm session; make a hard hand-off to a fresh session before impl; isolate noisy sub-tasks into sub-agents; light-compact at major pivots. Cross-session impl survival rests on harness task-state + git — no new per-feature artifact. The principle stays harness-agnostic; where a harness provides grounded session-management commands they realize it — on Claude Code, `/handoff <goal>` at the plan→impl cut and `/compact-focus` at in-session pivots, both grounded in the same CE concepts — named only in `framework-design.md` §13 (and the Claude adapter), never in the portable principle text, so a bare install still performs the boundary manually (`SPEC#INV-1-portable-self-contained`). Realizes `SPEC#O-3-framework-conforms-to-its-own-advice` (grounds `explore-execute-boundary`, `compaction-vs-eviction`, `explore-then-compact-handoff`, `context-isolation`, `prefix-cache-economics`). See rationale at [design-rationale.md#Decision-7-session-boundary-principle].
 
 ## Decision-8: dated-provenance-and-optional-refresh
 

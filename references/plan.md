@@ -43,7 +43,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
    - Every Completion is observable (you could write the verification).
    - Task cards are self-sufficient at cut-off (sentences complete without the anchor target).
    - DAG renders.
-   - For a plan past ~100 lines, high-stakes / blocking cards sit at the edges (top and tail), not buried mid-file, and critical feature-level Guidelines are re-anchored near the tail (edge-placement; `leanplan.md` §6, `artifact-contract.md` → Prose Style).
+   - For a plan past ~100 lines, high-stakes / blocking cards sit at the edges (top and tail), not buried mid-file, and critical feature-level Guidelines are re-anchored near the tail (edge-placement; `framework-design.md` §6, `artifact-contract.md` → Prose Style).
 
 ## Guardrails
 

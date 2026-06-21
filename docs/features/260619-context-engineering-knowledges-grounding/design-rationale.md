@@ -19,7 +19,7 @@ Invalidation triggers: the KB's own concept set changes shape (new axis, merged 
 
 The crux resolution. A concept *name* (`jit-loading`, `lost-in-the-middle`) is recognized context-engineering terminology, not a dependency — naming it is free and portable, and it is what every KB entry uses as its own `name:`. So the surface pays only a parenthetical; the definition lives one resolve-step away in the archive.
 
-Alternative — inline a sentence of the concept at each rule — rejected: multiplied across rules it reconstitutes the verbose surface the framework exists to avoid, and it duplicates content that then drifts from the node. The name is identity; the node is content (the same discipline as LeanPlan's own anchor "ID + slug, not restatement", `leanplan.md` §9).
+Alternative — inline a sentence of the concept at each rule — rejected: multiplied across rules it reconstitutes the verbose surface the framework exists to avoid, and it duplicates content that then drifts from the node. The name is identity; the node is content (the same discipline as LeanPlan's own anchor "ID + slug, not restatement", `framework-design.md` §9).
 
 Accepted tradeoff: a reader must take one hop (name → mapping → node) to get the definition. That hop is the point — it keeps the hot path lean and is loaded only on challenge.
 

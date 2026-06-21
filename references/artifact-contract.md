@@ -30,7 +30,7 @@ What loads when — each tier loads only via an explicit trigger from the layer 
 - **`research.md`** — loaded behind rationale, when raw evidence is needed.
 - **`understanding.md`** — off-pipeline delta log, not a challenge-loading tier; written by `sharpen`, consumed by `revise`.
 
-The full tier model (L0/L1/L2 labels, design reasoning) lives in `leanplan.md` §4.
+The full tier model (L0/L1/L2 labels, design reasoning) lives in `framework-design.md` §4.
 
 ## Stage Ownership
 

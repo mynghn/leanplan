@@ -57,7 +57,7 @@ flowchart LR
 ## Task: R1
 
 - **Goal**: Stand up `/revise <KEY>` as the one sanctioned, any-stage entry that injects a justified drift and propagates it (`SPEC#O-1-update-invocable-from-any-in-flight-stage`, `SPEC#O-2-change-propagated-downstream`) — the procedure intakes a `Delta` justification (`SPEC#INV-1-no-unjustified-mutation`, `DESIGN#Decision-4-justified-input-is-a-delta`), identifies the corrected artifact, walks only downstream of it (`SPEC#INV-3-change-stays-downstream-only`) re-evaluating in place by default and re-deriving on structural change (`DESIGN#Decision-2-in-place-default-re-derive-on-threshold`) while preserving anchor IDs (`SPEC#O-3-prior-work-preserved`), then re-validates (`SPEC#INV-2-committed-set-stays-consistent`). Skill shape per `DESIGN#Decision-1-revise-unified-editing-entry`.
-- **Repo**: `leanplan` — `references/revise.md`, `adapters/claude/revise/`, `adapters/codex/leanplan/`, `leanplan.md`
+- **Repo**: `leanplan` — `references/revise.md`, `adapters/claude/revise/`, `adapters/codex/leanplan/`, `framework-design.md`
 - **Completion**:
   - (a) invoking `/revise` at requirement, spec, design, plan, and impl — including mid-task — engages on the feature's committed artifacts (`SPEC#O-1-update-invocable-from-any-in-flight-stage`);
   - (b) a change injected upstream reaches every downstream artifact in the Delta's scope-of-impact, and a content search finds no surviving reference to the superseded version (`SPEC#O-2-change-propagated-downstream`);

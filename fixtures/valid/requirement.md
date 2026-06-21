@@ -2,7 +2,7 @@
 
 ## Problem
 
-The canonical doc lives in two places: a canonical in-repo source at `upstream/docs/canonical-doc.md` (where it is authored and evolved) and a runtime copy at `~/.local/share/leanplan/leanplan.md` (consumed by both Claude Code and Codex skill adapters). Today the two are kept in sync by a manual copy + apply step — easy to forget, silently leaves the runtime stale while skills assume alignment with the latest framework doc. As the canonical doc evolves, the drift risk compounds.
+The canonical doc lives in two places: a canonical in-repo source at `upstream/docs/canonical-doc.md` (where it is authored and evolved) and a runtime copy at `~/.local/share/leanplan/framework-design.md` (consumed by both Claude Code and Codex skill adapters). Today the two are kept in sync by a manual copy + apply step — easy to forget, silently leaves the runtime stale while skills assume alignment with the latest framework doc. As the canonical doc evolves, the drift risk compounds.
 
 ## Outcome
 

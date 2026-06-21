@@ -57,4 +57,4 @@ cp ~/.local/share/leanplan/scripts/templates/leanplan-leak-scan.yml <repo>/.gith
 
 ## Conventions enforced
 
-The contract validators uphold lives in `~/.local/share/leanplan/references/artifact-contract.md`. If a rule needs to change, update the contract first; validators must mirror it. The framework doc at `~/.local/share/leanplan/leanplan.md` is the source for evolving the framework itself.
+The contract validators uphold lives in `~/.local/share/leanplan/references/artifact-contract.md`. If a rule needs to change, update the contract first; validators must mirror it. The framework doc at `~/.local/share/leanplan/framework-design.md` is the source for evolving the framework itself.
