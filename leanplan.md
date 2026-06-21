@@ -2,19 +2,29 @@
 
 > Source of truth: this repo. Runtime install via chezmoi external (or `install.sh`) places the tree at `~/.local/share/leanplan/`.
 
-**LeanPlan** is a lean spec-driven-development framework for mid-scoped (one-deployment-sized) feature work in monorepos. Shaped around how LLM agents actually consume and act on planning artifacts — limited useful context, weak long-range attention over verbose instructions, stronger performance with JIT-loaded intent plus current code. Each artifact keeps only the durable state native to its stage — not every stage carries the same sections. Not adopted from pre-existing SDD frameworks (spec-kit, Kiro, IEEE 830).
+**LeanPlan** is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. It is shaped around how LLM agents actually consume and act on planning artifacts — limited useful context, weak long-range attention over verbose instructions, stronger performance with JIT-loaded intent plus current code. Each artifact keeps only the durable state native to its stage. Not adopted from pre-existing SDD frameworks (spec-kit, Kiro, IEEE 830).
+
+**This document is the framework's design + rationale archive** — the coordinate model, role segregation, design resolutions, naming rationale, research inputs, and roadmap. It is the *challenge-time* home: loaded only when the framework's **shape** is questioned, not during normal stage runs. The runtime homes own their content; this doc cites them rather than restating them (one prose home per fact):
+
+- **`philosophy.md`** — the behavior-shaping principles (the WHY) and the stage map. Loaded when a principle's intent or grounding is in question.
+- **`artifact-contract.md`** — the structural contract: feature layout, required shapes, anchors, drift guards, surface/archive layering, surface budget. Loaded before writing or editing artifact structure.
+- **`README.md`** — the front door: what LeanPlan is, install, quick start, contributing.
 
 ## 1. Philosophy
 
-1. **LLM-aware by construction.** Framework shape reflects how LLM agents consume and produce documents. Everything follows from this.
-2. **JIT loading, not initial heavy dump.** Minimal plan-doc length is the target; deep context lives in separately-loaded archives. (CE: jit-loading)
-3. **No flat task scripting.** Implementation agents reason at implement-time; plan docs provide intent + constraints, not step-by-step recipes. (CE: jit-loading, distractor-sensitivity)
-4. **Small surface for human reviewability.** Verbose docs get rubber-stamped; rubber-stamped docs leak over-specific instructions to implementation; agents get confused. Less surface should raise review fidelity — a deliberate, not-yet-measured bet (`artifact-contract.md` → Surface Budget). (CE: lost-in-the-middle, distractor-sensitivity)
-5. **Archive verbose reasoning separately.** Detailed investigation and rationale are preserved, but hidden from primary review surface. Accessed JIT by both humans and agents. (CE: jit-loading, context-as-working-set)
-6. **Target one-deployment scope.** Trivial changes skip the ceremony. Oversized work is split before entry.
-7. **Plan docs are in-feature artifacts only.** Their role is review surface + agent navigation during the plan-implement cycle. They do not aspire to long-surviving source-of-truth status — code is truth going forward. Evolving plan docs into a canonical system spec would add drift risk vs. code, perpetual maintenance burden, and cognitive load from competing sources of truth.
-8. **Persist by migration to code, not by doc evolution.** At implementation time, impl agent distills non-obvious WHYs from plan artifacts into the code itself — types, tests, annotations, commit messages, or inline comments. Plan docs become discardable once migrated. Distillation happens against final code reality, not predicted at plan-write time. (CE: structured-note-taking)
-9. **Session-boundary discipline.** Keep the planning spine (requirement→spec→design→plan) continuous in one warm session; make the hard hand-off to a fresh session at the plan→impl boundary; isolate breadth-heavy sub-tasks into sub-agents; light-compact at major pivots. Cross-session impl survival rests on harness task-state + git, not a new per-feature state artifact. (CE: explore-execute-boundary, compaction-vs-eviction, explore-then-compact-handoff, context-isolation, prefix-cache-economics)
+The behavior-shaping principles are owned by `philosophy.md` (the runtime home — loaded when a principle's intent or grounding is in question). This doc does not restate them; it records the *design reasoning* behind the framework's shape (§§2–4, §§8–12). The thesis the rest follow from: **LLM-aware by construction** — framework shape reflects how LLM agents consume and produce documents; everything below follows.
+
+Index only — numbering is kept stable so in-doc `principle N` / `§1.N` citations still resolve; the prose lives in `philosophy.md`:
+
+1. **LLM-aware by construction** — the thesis above (this doc's framing, not a numbered `philosophy.md` principle).
+2. **JIT loading, not initial heavy dump** → `philosophy.md` P1.
+3. **No flat task scripting** → `philosophy.md` P2.
+4. **Small surface for reviewability** → `philosophy.md` P3.
+5. **Archive verbose reasoning separately** → `philosophy.md` P4.
+6. **Target one-deployment scope** → `philosophy.md` P5.
+7. **Plan docs are in-feature artifacts only** → `philosophy.md` P6.
+8. **Persist by migration to code** → `philosophy.md` P7.
+9. **Session-boundary discipline** → `philosophy.md` P8.
 
 ## 2. Stages & coordinate model
 
@@ -72,89 +82,13 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 
 Each level loads only via explicit trigger (anchor link from the layer above). JIT by construction. (CE: jit-loading, context-as-working-set)
 
+The runtime-loadable form — which artifact loads when — is owned by `artifact-contract.md` → Surface / Archive layering; the table above is the design-level detail.
+
 ## 5. Artifact shapes
 
-All artifacts live as siblings at `docs/features/<KEY>/`, where `<KEY>` is the feature id, allocated by `leanplan-new` in one of three forms:
+The required sections, anchor patterns, and per-stage shapes for every artifact are the **structural contract**, owned by `artifact-contract.md` → Feature Layout / Required Shapes / Anchors (the runtime home — loaded before writing or editing artifact structure). This doc does not restate them; the *naming rationale* is §8 and the *design resolutions* that produced them are §9.
 
-- **Sequence** (default) — `NNNN-slug`: a zero-padded repo-local number (4 digits; `$LEANPLAN_ID_WIDTH` overrides) plus a kebab slug, e.g. `0007-anomaly-publisher`. The number is the highest existing `docs/features/*` sequence id + 1.
-- **Tracker key** — a bare external issue key, e.g. Jira `NEWCS-3595`, when the feature is anchored to a tracker item. No slug (the key is already unique).
-- **Date** — `YYMMDD-slug`, e.g. `260616-anomaly-publisher`, dated at creation (today, or an explicit override).
-
-Other / legacy dirs are skipped by the allocator and coexist; the validator stays naming-agnostic. A tracker reference that is *not* the id (or supplementary PRD / Slack refs) still lives as metadata in REQUIREMENT's `## Upstream`. Max one-level link depth across artifacts.
-
-### 5.1 REQUIREMENT — (HIGH, BIZ). Human-review surface.
-
-| Section | Required? |
-|---|---|
-| Problem | yes |
-| Outcome (biz future state + success signal folded in) | yes |
-| Non-goals | conditional — biz-level scope ambiguity |
-| Upstream | conditional — Jira / PRD / Slack refs when they exist (metadata; lives here even when a tracker key is also used as the feature id) |
-
-### 5.2 SPEC — (HIGH, TECH). Contract.
-
-| Section | Required? | Structure |
-|---|---|---|
-| Outcome (tech future state + episode-verifiable conditions) | yes | `## Outcome` header; items as `### O-<N>: <slug>` |
-| Invariants (continuous: SLA, non-blocking, integrity) | conditional | `## Invariants` header; items as `### INV-<N>: <slug>` |
-| Non-goals | conditional — tech-level scope ambiguity | bulleted |
-
-### 5.3 DESIGN — (LOW, TECH). Shape of the finished system.
-
-| Section | Required? |
-|---|---|
-| Architecture (Mermaid diagram + brief caption) | yes |
-| Decisions (per-decision `## Decision-<N>: <slug>` blocks; anchor → RATIONALE when non-trivial) | yes |
-
-Schemas and interfaces fold into individual Decisions. External boundaries shown as labeled diagram nodes/edges.
-
-### 5.4 DESIGN RATIONALE — archive L1.
-
-| | |
-|---|---|
-| Structure | per-decision anchored blocks (`## Decision-<N>: <slug>` matches DESIGN) |
-| Body | free-form, no prescribed inner sections |
-| When to create an entry | non-trivial decisions only |
-
-### 5.5 RESEARCH — archive L2.
-
-| | |
-|---|---|
-| Structure | per-topic anchored blocks (`## <descriptive topic name>`) |
-| Body | free-form — codebase investigation, SOTA articles, industry patterns, org history, etc. |
-| When to create an entry | research depth worth archiving for future reference |
-
-### 5.6 TASK — (LOW, TECH). Work navigation.
-
-**Doc-level sections:**
-
-| Section | Required? |
-|---|---|
-| Guidelines (feature-level work-stance rules — git/PR workflow, scope discipline, rollout procedure, coordination; e.g., base branch, "strictly additive changes", canary sequence) | conditional |
-| Dependency DAG (Mermaid; track subgraphs + prefixed task IDs) | yes |
-| Task entries | yes |
-
-**Task card fields** (per `## Task: <id>`):
-
-| Field | Required? | Content |
-|---|---|---|
-| Goal | yes | description of what to do — WHAT + HOW (when non-obvious) — with inline SPEC O / INV and DESIGN decision anchors colocated with the content they support (e.g., `Add anomaly publisher per SPEC#O-1-detected-anomaly-published, realized via outbox pattern per DESIGN#Decision-3-outbox-based-publisher`). Anchors carry ID + slug so the slug names the reference at-a-glance; agent JIT-loads full content when needed. Card is self-sufficient at cut-off boundary (sentence survives even if anchor target is discarded). |
-| Repo | yes | where the work lives |
-| Completion criteria | yes | observable verification + method inline when non-obvious. Continuous Invariants → ongoing mechanism (SLO / monitor / CI gate); episodic Outcomes → one-shot test. dev/prod split for infra/DB. |
-| Dependencies | yes | prior task IDs as **enablers** (what's unblocked when they land), not rigid gates. Impl agent re-evaluates at task entry. Truly-external notes only when needed. |
-| Guidelines | conditional | task-level work-stance rules — scope discipline, reuse discipline, procedural constraints; e.g., "strictly additive to Publisher", "use existing outbox only (no new impl)", "notify ops before touching prod config" |
-
-TASK is a navigation graph, not an execution script.
-
-### 5.7 UNDERSTANDING — off-pipeline archive.
-
-| | |
-|---|---|
-| Structure | append-only `## Delta-<N>: <slug>` blocks, one per mid-round understanding shift |
-| Body | conclusion-first: new understanding → killed assumption → why (disturbance + any verdict) → scope-of-impact as bare `SPEC#` / `DESIGN#` / `TASK#` citations |
-| When to create an entry | a `sharpen` move concludes the understanding moved; `revise` consumes the Delta as its justification |
-
-Not a surface→archive challenge-loading tier (§4) — it is the delta log of the off-pipeline `sharpen` / `revise` moves (§12). Shape owned by `artifact-contract.md` → UNDERSTANDING; don't restate it here.
+The seven per-artifact shapes — 5.1 REQUIREMENT, 5.2 SPEC, 5.3 DESIGN, 5.4 DESIGN RATIONALE, 5.5 RESEARCH, 5.6 TASK, 5.7 UNDERSTANDING — all resolve to `artifact-contract.md` → Required Shapes. The three feature-id forms (sequence / tracker-key / date) and the `## Upstream` rule live in `artifact-contract.md` → Feature Layout; their rationale is §9 ("Three feature-key forms").
 
 ## 6. Cross-cutting structural rules
 
@@ -186,19 +120,9 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 
 **Loading order (adapter-authoring).** Order loaded context stable → volatile so the durable prefix stays cache-warm and only late, volatile content shifts. Within a stage, the stable prefix is the content *always* loaded — the adapter + its stage reference — byte-identical across re-invocations *of that stage* (re-running `/design` reuses it); then the JIT artifact slice; then live code. The cross-stage shared prefix is intentionally just the one framework-identity line, so that part of the cache win is small-but-free, not a major lever. The *conditionally* loaded universals (`philosophy.md`, full `artifact-contract.md`) are a deliberate exception: **JIT wins over prefix-warmth** — they load only on challenge, and eagerly loading them to warm the cache would violate jit-loading for content most calls never touch. So "stable first" governs the always-present prefix; it does not promote the conditional universals out of their JIT slot. Adapter authors order skill-prompt content the same way. Write-time / adapter guidance, not validator-enforced. (CE: prefix-cache-economics, jit-loading)
 
-## 7. Drift guards (skill-prompt enforced at write time)
+## 7. Drift guards
 
-| Artifact | Guard |
-|---|---|
-| REQUIREMENT | No implementation *choices* (specific tech stack, internal architecture, chosen pattern). Biz-native vocabulary like "admin tool", "partner API", "batch integration" is fine — these are channels, not choices. Implementation details → SPEC / DESIGN. |
-| SPEC | If implementation can change without changing externally visible behavior, it doesn't belong in SPEC. Implication: specific tech names (Kafka, Redis) are realization → DESIGN; generic categories ("message queue", "event stream", "HTTP API") stay in SPEC. |
-| SPEC Outcome ↔ Invariants | Episode-triggered condition → Outcome item (`### O-<N>`). Continuous property that must hold regardless of implementation — including environmental bindings (existing backbone, compliance boundary, deployment envelope) — → Invariant (`### INV-<N>`). Chosen realization with real alternatives → DESIGN. If no alternative existed, it is not a choice — push back up to Invariants (avoids false optionality in DESIGN). |
-| DESIGN | Chosen tech stack + realization. No work ordering, no INFRAREQ / DBREQ procedure, no PR stacking — those are TASK. |
-| RATIONALE | Non-trivial decisions only. Trivial decisions carry only the one-line "why" inline in DESIGN. |
-| RESEARCH | Evidence and citations only. Interpretations belong in RATIONALE. |
-| TASK | No step-by-step edit instructions ("edit file X at line Y"). Impl agent re-derives against current code. |
-| TASK ↔ DESIGN (process vs. realization) | **Plan cards describe the *work*; DESIGN describes the *finished system*.** Task fields — Goal, Completion, Guidelines — carry process specifics (what outcome the task achieves, how to verify it, in what work-stance). Tech-realization specifics — field-by-field mappings, response/proto shapes, call/orchestration sequences, signatures, code paths, schemas — belong in a DESIGN Decision block. The plan card *anchors* into the Decision (`DESIGN#Decision-N-…`); it does not restate the Decision's content. Symmetric rule: when a downstream task needs to know "what does the system look like in this slice?", the answer must already live in DESIGN — so write it there at design time, not freshly in the task card. *Detection cue*: if a Goal bullet starts answering "after the work lands, the system looks like X" (rather than "this task achieves Y, verified by Z"), push the X to DESIGN. |
-| TASK Guidelines ↔ DESIGN | Guidelines describe the *work stance* (procedure, discipline, temporary mechanisms during the cycle); DESIGN describes the finished *system* (permanent structure and chosen realization). If it describes what exists *after* the work lands → DESIGN. If it describes how the work *proceeds* → Guideline. Compatibility behaviors (externally observable) → SPEC Invariants; testing specifics (what passes) → Completion criteria. |
+The per-artifact drift guards are part of the **structural contract**, owned by `artifact-contract.md` → Drift Guards (skill-prompt-enforced at write time; `validate.py`-checked where regex-detectable). This doc does not restate them; the reasoning for what is enforced versus deliberately dropped is §6 (Ceremonial) and §9 (resolutions).
 
 ## 8. Naming decisions
 
@@ -227,7 +151,7 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 
 ## 10. Plan → code distillation
 
-Persist-worthy insights migrate from plan artifacts into code at implementation time (principle 8). Plan docs become discardable once this migration completes. (CE: structured-note-taking)
+Persist-worthy insights migrate from plan artifacts into code at implementation time (principle 8). Plan docs become discardable once this migration completes. (CE: structured-note-taking) The *principle* is `philosophy.md` P7; this section is its design-level detail — the persistence hierarchy, the commit-vs-comment split, and squash durability.
 
 ### Hierarchy of persistence
 
@@ -310,13 +234,13 @@ Each skill enforces the relevant drift guards from §7 and naming conventions fr
 
 Framework ships incrementally; not every phase is required to start.
 
-| Phase | Addition | Cost |
+| Phase | Addition | Status |
 |---|---|---|
-| 1 (now) | 7 skill prompts (§12) — 1 standalone (`requirement`) + 4 edge + 2 off-pipeline (`sharpen`, `revise`) | low |
-| 2 | Bash validators + scaffolds + git hooks (structural safety nets) | medium |
-| 3 | CLI wrapper + per-feature progress state files | medium-high |
-| 4 | Harness-flavored capabilities (see below) | high |
-| 5 | Integrations (LSP, Jira deep-link, CI gates) | high |
+| 1 | 7 skill prompts (§12) — 1 standalone (`requirement`) + 4 edge + 2 off-pipeline (`sharpen`, `revise`) | ✅ shipped |
+| 2 | Bash validators + scaffolds + git hooks (structural safety nets) | ✅ shipped — `validate.py`, `leanplan-new`, `pre-commit` / `commit-msg` hooks |
+| 3 | CLI wrapper + per-feature progress state files | ◐ partial — `leanplan-new` shipped; progress-state files dropped as informational-only (§14; principle 7) |
+| 4 | Harness-flavored capabilities (see below) | ○ future (post-v1) |
+| 5 | Integrations (LSP, Jira deep-link, CI gates) | ○ future |
 
 **v1 criteria**: **scope division** (splitting oversized input before planning) + **requirement distillation** (REQUEST → REQUIREMENT from naive biz input). Both are prompt + orchestration; achievable by Phase 2–3.
 
@@ -347,9 +271,14 @@ Most require accumulated data across many shipped cycles; post-v1. Harness-like 
 
 ## 14. Open items
 
-- **REQUEST → REQUIREMENT edge (`distill`)**: `requirement` skill currently authors REQUIREMENT standalone (interactive with user). Future: when naive biz writings become an explicit REQUEST input artifact, add `distill` skill for the REQUEST → REQUIREMENT sharpening edge.
-- **Dogfooding on a real-world feature**: a tiny meta-feature (framework-doc sync script) was used to validate shapes during Phase 1 bring-up; the bundled `fixtures/valid/` is a generic descendant. A richer dogfood on a real business feature is still desirable to stress the framework against domain complexity.
+Genuinely open — not yet built or decided:
+
+- **REQUEST → REQUIREMENT edge (`distill`)**: `requirement` currently authors REQUIREMENT standalone (interactive with user). Future: when naive biz writings become an explicit REQUEST input artifact, add a `distill` skill for the REQUEST → REQUIREMENT sharpening edge.
 - **Divide-and-conquer for oversized work**: how to split inputs that exceed one-deployment scope. Framework assumes proper sizing for now.
-- **Earlier-stage one-deployment heuristics**: scope-sizing checks at SPEC time (O count) and DESIGN time (component count) remain deferred. The TASK-time DAG-size guardrail is now active in advisory mode (warn at >12 / >16 tasks; `--strict` escalates to error; `--allow-large` overrides). Hard-block heuristics at earlier stages would catch oversized work sooner but are unproven; revisit if oversized work becomes a recurring issue in practice.
-- **Phase 2 validator (shipped)**: `validate.py` at `~/.local/share/leanplan/scripts/validate.py` covers anchor integrity, bidirectional coverage, drift regex, duplicate-anchor detection, broken-citation detection, frontmatter discouragement, MUST/MUST NOT misuse, ASCII diagram detection, checkbox detection, and design ↔ rationale consistency. Includes `**GAP**` ack for deliberately-uncovered SPEC items.
-- **Cross-session continuity**: multi-session implementation work needs lightweight continuity state (inherited progress, task status). Out of scope for plan docs per principle 7 — handled at harness level (conversation state, task tracking) and by git commits carrying distilled WHYs per principle 8. No artifact addition planned.
+- **Earlier-stage one-deployment heuristics**: scope-sizing checks at SPEC time (O count) and DESIGN time (component count) remain deferred. The TASK-time DAG-size guardrail is active in advisory mode (warn at >12 / >16 tasks; `--strict` escalates to error; `--allow-large` overrides). Hard-block heuristics earlier would catch oversized work sooner but are unproven; revisit if it recurs in practice.
+- **Real business-domain dogfood**: the framework now self-hosts its own evolution — `docs/features/*` holds several shipped cycles (ce-grounding, artifact-later-update, lean-review-surfaces, understanding-sharpening, reflexive-surface-budget, …). A dogfood on a non-meta *business* feature is still desirable to stress it against domain complexity.
+
+Resolved / shipped — moved out of "open", kept for provenance:
+
+- **Phase 2 validator** — shipped (§13). `scripts/validate.py` covers anchor integrity, bidirectional coverage, drift regex, duplicate-anchor detection, broken-citation detection, frontmatter discouragement, MUST/MUST NOT misuse, ASCII diagram detection, checkbox detection, and design ↔ rationale consistency, plus the `**GAP**` ack for deliberately-uncovered SPEC items.
+- **Cross-session continuity** — decided: no plan-doc artifact. Multi-session impl rests on harness task-state + git commits carrying distilled WHYs (principles 7–8); no artifact addition planned.

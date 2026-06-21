@@ -1,6 +1,6 @@
 # LeanPlan Artifact Contract
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work in monorepos. This doc carries the structural rules — feature layout, anchor patterns (`O-<N>`, `INV-<N>`, `Decision-<N>`, `Task: <id>`), traceability, drift guards.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This doc carries the structural rules — feature layout, anchor patterns (`O-<N>`, `INV-<N>`, `Decision-<N>`, `Task: <id>`), traceability, drift guards.
 
 Companion: `philosophy.md` (principles), `<stage>.md` (per-stage procedure).
 
@@ -20,6 +20,17 @@ Archive artifacts, created when useful:
 - `design-rationale.md`
 - `research.md`
 - `understanding.md`
+
+## Surface / Archive layering
+
+What loads when — each tier loads only via an explicit trigger from the layer above (JIT by construction); the archive is lossless, so moving depth off the surface keeps it loadable:
+
+- **Surface** (`requirement.md`, `spec.md`, `design.md`, `plan.md`) — loaded by default at review + implement time.
+- **`design-rationale.md`** — loaded on challenge to a DESIGN decision (anchor link from DESIGN).
+- **`research.md`** — loaded behind rationale, when raw evidence is needed.
+- **`understanding.md`** — off-pipeline delta log, not a challenge-loading tier; written by `sharpen`, consumed by `revise`.
+
+The full tier model (L0/L1/L2 labels, design reasoning) lives in `leanplan.md` §4.
 
 ## Stage Ownership
 
