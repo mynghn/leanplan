@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# LeanPlan commit-msg hook — flag round-scoped keys leaked into the commit message.
+#
+# Installation (per repo):
+#   ln -s ~/.local/share/leanplan/scripts/commit-msg-leanplan  <repo>/.git/hooks/commit-msg
+#
+# Warn-by-default (diagnostics on stderr, commit proceeds); LEANPLAN_STRICT=1
+# blocks. A commit message is a durable artifact read without the planning docs,
+# so it must carry the reason in words, not a round-scoped anchor / citation.
+
+set -uo pipefail
+
+MSG_FILE="${1:-}"
+SCAN="${LEANPLAN_SCAN:-$HOME/.local/share/leanplan/scripts/scan-leaks}"
+
+[ -f "$SCAN" ] || exit 0                       # detector not installed; don't obstruct
+command -v python3 >/dev/null 2>&1 || exit 0   # python3 unavailable; don't obstruct
+[ -n "$MSG_FILE" ] && [ -f "$MSG_FILE" ] || exit 0
+
+strict_flag=""
+[ "${LEANPLAN_STRICT:-0}" = "1" ] && strict_flag="--strict"
+
+# Strip the comment lines git itself will drop, via git's own cleanup so the
+# configured core.commentChar (including `auto`) is honored literally. A raw
+# `grep -v "^$char"` treats a regex-special char (`.`, `[`, `*`) as a pattern and
+# can silently wipe the whole body, defeating the scan. (This matches git's editor
+# strip/default cleanup; a `git commit -m` line that begins with the comment char
+# is kept by git's whitespace cleanup but stripped here — a narrow over-strip we
+# accept to avoid false positives on the common editor path.)
+msg_body="$(git stripspace --strip-comments <"$MSG_FILE" 2>/dev/null || cat "$MSG_FILE")"
+
+# shellcheck disable=SC2086
+out=$(python3 "$SCAN" $strict_flag --text "$msg_body" 2>&1)
+ec=$?
+
+if [ "$ec" -eq 0 ] && ! printf '%s' "$out" | grep -qE '^(WARNING|ERROR):'; then
+    exit 0
+fi
+printf '%s\n' "$out" >&2
+if [ "${LEANPLAN_STRICT:-0}" = "1" ]; then
+    echo "leanplan commit-msg: round-scoped key in message — blocking (strict mode)" >&2
+    exit "$ec"
+else
+    echo "leanplan commit-msg: diagnostics above — commit proceeds (set LEANPLAN_STRICT=1 to block)" >&2
+    exit 0
+fi

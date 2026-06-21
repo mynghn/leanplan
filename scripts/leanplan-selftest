@@ -13,6 +13,7 @@ DEFAULT_FIXTURE="$(cd "$SCRIPT_DIR/.." && pwd)/fixtures/valid"
 
 FIXTURE="${LEANPLAN_FIXTURE:-$DEFAULT_FIXTURE}"
 VALIDATE="${LEANPLAN_VALIDATE:-$SCRIPT_DIR/validate.py}"
+SCAN="${LEANPLAN_SCAN:-$SCRIPT_DIR/scan-leaks}"
 
 if [ ! -d "$FIXTURE" ]; then
     echo "error: fixture not found at $FIXTURE (set LEANPLAN_FIXTURE to override)" >&2
@@ -20,6 +21,10 @@ if [ ! -d "$FIXTURE" ]; then
 fi
 if [ ! -x "$VALIDATE" ] && ! [ -f "$VALIDATE" ]; then
     echo "error: validate.py not found at $VALIDATE" >&2
+    exit 2
+fi
+if [ ! -x "$SCAN" ] && ! [ -f "$SCAN" ]; then
+    echo "error: scan-leaks not found at $SCAN" >&2
     exit 2
 fi
 
@@ -59,6 +64,32 @@ assert_case() {
     else
         printf 'FAIL %s  (expected exit=%d with output ~ %q; got exit=%d)\n' \
             "$label" "$expected_ec" "$expected_stderr_substr" "$ec"
+        printf '  --- output ---\n%s\n  --- end ---\n' "$out"
+        fail=$((fail + 1))
+    fi
+}
+
+# scan_case: write CONTENT to a temp non-artifact file, run scan-leaks over it,
+# and check exit code + an expected output substring. The leak detector's
+# regression backstop — assert_case's role, for scan-leaks instead of validate.py.
+scan_case() {
+    local label="$1" content="$2" expected_ec="$3" expected_substr="$4"
+    local extra_flags="${5:-}"
+
+    local f="$TMP/scan-input.txt"
+    printf '%s\n' "$content" > "$f"
+
+    local out ec
+    # shellcheck disable=SC2086
+    out=$(python3 "$SCAN" "$f" $extra_flags 2>&1)
+    ec=$?
+
+    if [ "$ec" -eq "$expected_ec" ] && printf '%s' "$out" | grep -qF -- "$expected_substr"; then
+        printf 'PASS %s\n' "$label"
+        pass=$((pass + 1))
+    else
+        printf 'FAIL %s  (expected exit=%d with output ~ %q; got exit=%d)\n' \
+            "$label" "$expected_ec" "$expected_substr" "$ec"
         printf '  --- output ---\n%s\n  --- end ---\n' "$out"
         fail=$((fail + 1))
     fi
@@ -146,6 +177,52 @@ assert_case "requirement drift (--strict)"    1 "implementation choice in REQUIR
 assert_case "task step drift (--strict)"      1 "looks like line-level scripting"       inject_task_step_drift    "--strict"
 assert_case "surface bloat (--strict)"        1 "soft cap"                               inject_surface_bloat      "--strict"
 assert_case "outcome-only task reason"        0 "validation passed"                     inject_outcome_only_task  "--strict"
+
+# scan-leaks defect injection: round-scoped keys leaked into a non-artifact file
+# must be caught (Decision-3 verification). Exit semantics mirror validate.py —
+# a leak warns (exit 0) by default and escalates to error (exit 1) under --strict;
+# the grey zone (feature ids, readable scope labels, bare numbers) stays clean,
+# and the inline directive suppresses even under --strict.
+scan_case "scan: bare anchor INV-1 leak (warn)"     'satisfies INV-1 in this code'                0 "INV-1"
+scan_case "scan: bare anchor INV-1 leak (strict)"   'satisfies INV-1 in this code'                1 "INV-1"       "--strict"
+scan_case "scan: citation SPEC#INV-1 leak (strict)" 'see SPEC#INV-1-durable-artifacts here'       1 "SPEC#INV-1"  "--strict"
+scan_case "scan: feature id + scope label clean"    'docs(lean-review-surfaces): feature 0004-x'  0 "clean"
+scan_case "scan: bare number + commit sha clean"    'retry after 2; pinned at 6184aa2'            0 "clean"
+scan_case "scan: inline directive suppresses"       'satisfies INV-1  # leanplan-allow-key'       0 "clean"       "--strict"
+
+# Every anchor kind + a non-SPEC citation must be caught — not only INV-1 / SPEC#,
+# else a regex edit dropping an alternation regresses with the suite still green.
+scan_case "scan: bare anchor O-1 leak (strict)"        'see the O-1 baseline here'               1 "O-1"               "--strict"
+scan_case "scan: bare anchor Decision-2 leak (strict)" 'following Decision-2 we chose X'          1 "Decision-2"        "--strict"
+scan_case "scan: bare anchor Delta-3 leak (strict)"    'per Delta-3 the assumption changed'       1 "Delta-3"           "--strict"
+scan_case "scan: citation DESIGN# leak (strict)"       'see DESIGN#Decision-2-narrow here'        1 "DESIGN#Decision-2" "--strict"
+
+# --text is the commit-msg hook's only input path; exercise it, the exit-2 input
+# error contract, and the anchor-inside-citation dedup directly.
+out=$(python3 "$SCAN" --strict --text 'satisfies INV-1 here' 2>&1); ec=$?
+if [ "$ec" -eq 1 ] && printf '%s' "$out" | grep -qF -- "INV-1"; then
+    printf 'PASS %s\n' "scan: --text mode leak (strict)"; pass=$((pass + 1))
+else
+    printf 'FAIL %s  (expected exit=1 with INV-1; got exit=%d)\n  --- output ---\n%s\n  --- end ---\n' \
+        "scan: --text mode leak (strict)" "$ec" "$out"; fail=$((fail + 1))
+fi
+
+out=$(python3 "$SCAN" "$TMP/nonexistent-$$.txt" 2>&1); ec=$?
+if [ "$ec" -eq 2 ]; then
+    printf 'PASS %s\n' "scan: missing file -> exit 2"; pass=$((pass + 1))
+else
+    printf 'FAIL %s  (expected exit=2; got exit=%d)\n  --- output ---\n%s\n  --- end ---\n' \
+        "scan: missing file -> exit 2" "$ec" "$out"; fail=$((fail + 1))
+fi
+
+out=$(python3 "$SCAN" --json --text 'see SPEC#INV-1-durable here' 2>&1)
+ntok=$(printf '%s' "$out" | grep -c '"token"')
+if [ "$ntok" -eq 1 ]; then
+    printf 'PASS %s\n' "scan: citation dedup (single token)"; pass=$((pass + 1))
+else
+    printf 'FAIL %s  (expected 1 token, got %d)\n  --- output ---\n%s\n  --- end ---\n' \
+        "scan: citation dedup (single token)" "$ntok" "$out"; fail=$((fail + 1))
+fi
 
 printf '\nselftest: %d passed, %d failed\n' "$pass" "$fail"
 exit "$fail"

@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""Scan durable outputs for leaked round-scoped LeanPlan keys.
+
+`scan-leaks` is the narrow backstop sibling of validate.py. validate.py checks a
+feature dir's internal structure; scan-leaks checks that durable outputs *outside*
+the feature dir carry no round-scoped navigation handle used as a reference — the
+in-round anchor tokens and cross-artifact citations that resolve only against a
+round's planning docs and dangle once those are discarded.
+
+It is deliberately narrow: only the high-precision token class (anchors +
+citations). Feature ids (`0004`, `260620-slug`), readable scope labels
+(`docs(<slug>)`), and bare numbers do not match the pattern at all, so the SPEC's
+allowed grey zone passes untouched with no allow-list to maintain. See the
+narrow-leak-detector decision in
+docs/features/260620-round-scoped-key-leakage/design.md.
+
+Callers decide what to scan and exclude docs/features/** themselves (round-scoped
+anchors legitimately resolve there). Git hooks feed staged file paths; the GitHub
+Action feeds PR / comment text via --text or stdin.
+
+Usage:
+  scan-leaks PATH [PATH ...]        # scan files; PATH '-' reads stdin
+  scan-leaks --text "msg body"      # scan a literal string (repeatable)
+  printf '%s' "$MSG" | scan-leaks   # scan stdin when no PATH/--text is given
+  scan-leaks PATH --strict --json
+
+Exit codes mirror validate.py: 0 when clean or when leaks are warnings (default),
+1 when leaks are present under --strict / $LEANPLAN_STRICT=1, 2 on input error.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import sys
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+
+# Round-scoped token vocabulary. Source of truth: the anchor + cross-artifact
+# citation grammar in references/artifact-contract.md ("## Anchors"). This mirrors
+# validate.py's ANCHOR_RE / CITATION_RE *kinds*, narrowed to the leak-relevant
+# high-precision class; keep all three in sync if the contract's vocabulary moves.
+#
+# Bare anchor tokens — the `<kind>-<N>` anchors only. `Task: <id>` is intentionally
+# absent: bare "Task:" is low precision (it occurs in ordinary prose), so a task
+# handle is flagged only in citation form (`TASK#…`), per the same decision.
+ANCHOR_TOKEN_RE = re.compile(r"\b(?:O|INV|Decision|Delta)-\d+\b")
+# Cross-artifact citations — `<ARTIFACT>#<target>`. The `:` in the target class
+# covers `Task:`-style ids in the target. An `<ARTIFACT>#…` citation essentially
+# never occurs by accident, so the broad target class stays high precision.
+CITATION_RE = re.compile(
+    r"\b(?:SPEC|DESIGN|TASK|RATIONALE|RESEARCH|UNDERSTANDING)#[A-Za-z0-9:_-]+"
+)
+# Inline escape hatch for the rare legitimate match: a line carrying this directive
+# is exempt from flagging. Warn-mode absorbs the rest.
+SUPPRESS_DIRECTIVE = "leanplan-allow-key"
+
+
+@dataclass
+class Leak:
+    level: str
+    path: str
+    line: int
+    token: str
+    message: str
+
+
+def scan_text(label: str, text: str, level: str) -> list[Leak]:
+    leaks: list[Leak] = []
+    for lineno, line in enumerate(text.splitlines(), start=1):
+        if SUPPRESS_DIRECTIVE in line:
+            continue
+        citation_spans: list[tuple[int, int]] = []
+        found: list[tuple[int, str]] = []
+        for match in CITATION_RE.finditer(line):
+            citation_spans.append((match.start(), match.end()))
+            found.append((match.start(), match.group()))
+        for match in ANCHOR_TOKEN_RE.finditer(line):
+            start, end = match.start(), match.end()
+            # An anchor already inside a citation (the inner anchor of an
+            # `<ARTIFACT>#…` match) is reported as that citation; don't double-flag.
+            if any(cs <= start and end <= ce for cs, ce in citation_spans):
+                continue
+            found.append((start, match.group()))
+        for _start, token in sorted(found):
+            leaks.append(
+                Leak(
+                    level,
+                    label,
+                    lineno,
+                    token,
+                    f"round-scoped key in durable output: '{token}' — write the "
+                    f"constraint in words, not the key (suppress this line with "
+                    f"`{SUPPRESS_DIRECTIVE}` if the match is legitimate)",
+                )
+            )
+    return leaks
+
+
+def gather_inputs(paths: list[str], texts: list[str]) -> list[tuple[str, str]]:
+    inputs: list[tuple[str, str]] = []
+    for raw in paths:
+        if raw == "-":
+            inputs.append(("<stdin>", sys.stdin.read()))
+            continue
+        path = Path(raw)
+        if not path.is_file():
+            raise FileNotFoundError(raw)
+        inputs.append((raw, path.read_text(encoding="utf-8", errors="replace")))
+    for index, text in enumerate(texts):
+        label = "<text>" if len(texts) == 1 else f"<text:{index + 1}>"
+        inputs.append((label, text))
+    # No explicit input: read piped stdin so `... | scan-leaks` works.
+    if not inputs and not sys.stdin.isatty():
+        data = sys.stdin.read()
+        if data:
+            inputs.append(("<stdin>", data))
+    return inputs
+
+
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog="scan-leaks",
+        description="Flag round-scoped LeanPlan keys leaked into durable outputs.",
+    )
+    parser.add_argument("paths", nargs="*", help="files to scan ('-' reads stdin)")
+    parser.add_argument(
+        "--text",
+        action="append",
+        metavar="STR",
+        help="scan a literal string instead of a file (repeatable)",
+    )
+    parser.add_argument("--json", action="store_true", help="emit JSON")
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="escalate leaks to errors and exit non-zero (also honored via $LEANPLAN_STRICT=1)",
+    )
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str]) -> int:
+    args = parse_args(argv)
+    strict = args.strict or os.environ.get("LEANPLAN_STRICT") == "1"
+    level = "error" if strict else "warning"
+    try:
+        inputs = gather_inputs(args.paths, args.text or [])
+    except FileNotFoundError as exc:
+        print(f"scan-leaks: error: not a readable file: {exc}", file=sys.stderr)
+        return 2
+    if not inputs:
+        print("scan-leaks: nothing to scan (pass a PATH, --text, or pipe stdin)", file=sys.stderr)
+        return 2
+
+    leaks: list[Leak] = []
+    for label, text in inputs:
+        leaks.extend(scan_text(label, text, level))
+
+    if args.json:
+        print(json.dumps([asdict(leak) for leak in leaks], ensure_ascii=False, indent=2))
+    elif not leaks:
+        print("scan-leaks: clean")
+    else:
+        for leak in leaks:
+            print(f"{leak.level.upper()}: {leak.path}:{leak.line}: {leak.message}")
+
+    return 1 if (strict and leaks) else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))
