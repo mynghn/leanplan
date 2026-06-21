@@ -31,7 +31,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 4. **Re-reason** against current code: does the plan still apply? Any of the six stop-the-line triggers hit? If yes, run the Artifact Update Loop and surface to the user before coding.
 5. **Implement** the smallest meaningful change that realizes Goal + passes Completion criteria. No speculative scope; no drive-by refactors beyond what the task requires.
 6. **Verify each Completion criterion explicitly** — not "tests pass", but each specific criterion the card named.
-7. **Distill WHYs** per the hierarchy below at close-out.
+7. **Distill WHYs** at close-out — migrate each non-obvious WHY into the strongest durable form. Load `~/.local/share/leanplan/references/impl-closeout.md` for the tier hierarchy and the commit-message / PR-body promotion rules; JIT — fetch only now, at close-out, not before. (CE: jit-loading)
 8. **Confirm plan artifacts are non-load-bearing**: the WHYs they carried have migrated; discarding the plan would not lose context for future readers.
 9. **Key-leak self-check** before commit — run the detector, don't eyeball it: `python3 ~/.local/share/leanplan/scripts/scan-leaks --strict <staged files>` for code, and `--text "<message/PR body>"` (or piped stdin) for the prose you're about to commit. It flags round-scoped tokens — in-round anchors, `SPEC#…`-style citations, the feature id used as a standing concept — and skips `docs/features/**`, where anchors resolve. Replace any hit with the constraint in words, or add `leanplan-allow-key` on the line for a legitimate match.
 10. **Commit** with subject matching the change. Body carries distilled change rationale (alternatives, tradeoffs). For squash-merge teams, populate the PR body with the same content.
@@ -59,42 +59,6 @@ On any trigger:
 3. **Resume implementation** only after `/revise` completes and the feature re-validates.
 
 Never patch the current task around an upstream wrongness — that silent drift is exactly what `/revise`'s justified, downstream-only discipline exists to prevent.
-
-## Distillation Hierarchy
-
-At close-out, migrate non-obvious WHYs from plan anchors into the strongest durable form available. Prefer higher tiers:
-
-| Tier | Form | Use when |
-|---|---|---|
-| 1 | **Types / signatures / module structure** | The WHY is a constraint the compiler or IDE can enforce. |
-| 2 | **Tests** (unit, property, integration) | The WHY is a behavioral guarantee; the test name + body carry the reason. |
-| 3 | **Enforced annotations** (custom lint, archunit, API linter) | The WHY is a cross-cutting rule. |
-| 4 | **Commit message** | Change-scoped WHY — why this commit exists, alternatives considered, tradeoffs accepted. |
-| 5 | **PR body** | Change rationale that must survive squash-merge. |
-| 6 | **Inline comment** | Last resort — subtle invariant, workaround, non-obvious constraint that requires adjacency to the code. |
-
-**Substance, not the key.** Whichever tier you promote a WHY into, carry the constraint *in words* — never the round-local handle that points at it. An in-round anchor (`O-N` / `INV-N` / `Decision-N`), a `SPEC#…`-style cross-artifact citation, or the feature id is plan-scoped (philosophy.md P6) and dangles once the plan is discarded; a durable form reading only "satisfies the round's anchor" *feels* migrated but has carried the handle, not the reason. Write the reason itself (e.g. "tokens must never be stored in clear").
-
-### Commit message vs. inline comment
-
-| Commit message | Inline comment |
-|---|---|
-| "Why this *change* was made" | "Why this *code* is shaped this way" |
-| Alternatives rejected, tradeoffs accepted | Constraints the reader needs *while reading*, subtle invariants, workarounds |
-| Investigative access (`git blame`, `git log`) | Adjacent access (eyes on the code) |
-| Survives refactors | Dies with the line |
-
-### Squash-durability promotion rule
-
-Local commit messages are erased by squash-merge workflows. Persist by rationale kind:
-
-| Rationale kind | Durable target |
-|---|---|
-| Local ("why this code is shaped this way") | code / tests / types / inline comment |
-| Change ("why this commit exists", alternatives considered) | **PR body** or squash-commit message |
-| Cross-feature architecture | runbook / org ADR / structural code (types, module boundaries) |
-
-PR body is particularly durable — visible in GitHub history post-squash, linkable from future investigations. Don't rely on local commit messages for change rationale in squash-merge teams.
 
 ## Guardrails
 
