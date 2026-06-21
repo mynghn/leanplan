@@ -33,7 +33,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 6. **Verify each Completion criterion explicitly** — not "tests pass", but each specific criterion the card named.
 7. **Distill WHYs** per the hierarchy below at close-out.
 8. **Confirm plan artifacts are non-load-bearing**: the WHYs they carried have migrated; discarding the plan would not lose context for future readers.
-9. **Key-leak self-check** before commit: scan your own staged durable outputs — commit message, PR body, code, comments — for round-scoped tokens (in-round anchors, `SPEC#…`-style citations, or the feature id used as a standing concept) and replace any with the constraint in words.
+9. **Key-leak self-check** before commit — run the detector, don't eyeball it: `python3 ~/.local/share/leanplan/scripts/scan-leaks --strict <staged files>` for code, and `--text "<message/PR body>"` (or piped stdin) for the prose you're about to commit. It flags round-scoped tokens — in-round anchors, `SPEC#…`-style citations, the feature id used as a standing concept — and skips `docs/features/**`, where anchors resolve. Replace any hit with the constraint in words, or add `leanplan-allow-key` on the line for a legitimate match.
 10. **Commit** with subject matching the change. Body carries distilled change rationale (alternatives, tradeoffs). For squash-merge teams, populate the PR body with the same content.
 11. **Hand off** to the next unblocked task in the DAG, or raise any stop-the-line item that surfaced mid-task.
 
