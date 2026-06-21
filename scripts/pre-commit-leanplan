@@ -22,6 +22,10 @@ SHARE="$HOME/.local/share/leanplan/scripts"
 VALIDATE="${LEANPLAN_VALIDATE:-$SHARE/validate.py}"
 SCAN="${LEANPLAN_SCAN:-$SHARE/scan-leaks}"
 
+# Both checks shell out to python3; if it's unavailable, don't obstruct the commit
+# (mirrors the per-tool `[ -f ... ]` guards below).
+command -v python3 >/dev/null 2>&1 || exit 0
+
 strict_flag=""
 [ "${LEANPLAN_STRICT:-0}" = "1" ] && strict_flag="--strict"
 

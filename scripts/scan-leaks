@@ -52,7 +52,7 @@ ANCHOR_TOKEN_RE = re.compile(r"\b(?:O|INV|Decision|Delta)-\d+\b")
 # covers `Task:`-style ids in the target. An `<ARTIFACT>#…` citation essentially
 # never occurs by accident, so the broad target class stays high precision.
 CITATION_RE = re.compile(
-    r"\b(?:REQUIREMENT|SPEC|DESIGN|TASK|RATIONALE|RESEARCH|UNDERSTANDING)#[A-Za-z0-9:_-]+"
+    r"\b(?:SPEC|DESIGN|TASK|RATIONALE|RESEARCH|UNDERSTANDING)#[A-Za-z0-9:_-]+"
 )
 # Inline escape hatch for the rare legitimate match: a line carrying this directive
 # is exempt from flagging. Warn-mode absorbs the rest.

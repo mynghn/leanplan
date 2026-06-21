@@ -190,5 +190,39 @@ scan_case "scan: feature id + scope label clean"    'docs(lean-review-surfaces):
 scan_case "scan: bare number + commit sha clean"    'retry after 2; pinned at 6184aa2'            0 "clean"
 scan_case "scan: inline directive suppresses"       'satisfies INV-1  # leanplan-allow-key'       0 "clean"       "--strict"
 
+# Every anchor kind + a non-SPEC citation must be caught — not only INV-1 / SPEC#,
+# else a regex edit dropping an alternation regresses with the suite still green.
+scan_case "scan: bare anchor O-1 leak (strict)"        'see the O-1 baseline here'               1 "O-1"               "--strict"
+scan_case "scan: bare anchor Decision-2 leak (strict)" 'following Decision-2 we chose X'          1 "Decision-2"        "--strict"
+scan_case "scan: bare anchor Delta-3 leak (strict)"    'per Delta-3 the assumption changed'       1 "Delta-3"           "--strict"
+scan_case "scan: citation DESIGN# leak (strict)"       'see DESIGN#Decision-2-narrow here'        1 "DESIGN#Decision-2" "--strict"
+
+# --text is the commit-msg hook's only input path; exercise it, the exit-2 input
+# error contract, and the anchor-inside-citation dedup directly.
+out=$(python3 "$SCAN" --strict --text 'satisfies INV-1 here' 2>&1); ec=$?
+if [ "$ec" -eq 1 ] && printf '%s' "$out" | grep -qF -- "INV-1"; then
+    printf 'PASS %s\n' "scan: --text mode leak (strict)"; pass=$((pass + 1))
+else
+    printf 'FAIL %s  (expected exit=1 with INV-1; got exit=%d)\n  --- output ---\n%s\n  --- end ---\n' \
+        "scan: --text mode leak (strict)" "$ec" "$out"; fail=$((fail + 1))
+fi
+
+out=$(python3 "$SCAN" "$TMP/nonexistent-$$.txt" 2>&1); ec=$?
+if [ "$ec" -eq 2 ]; then
+    printf 'PASS %s\n' "scan: missing file -> exit 2"; pass=$((pass + 1))
+else
+    printf 'FAIL %s  (expected exit=2; got exit=%d)\n  --- output ---\n%s\n  --- end ---\n' \
+        "scan: missing file -> exit 2" "$ec" "$out"; fail=$((fail + 1))
+fi
+
+out=$(python3 "$SCAN" --json --text 'see SPEC#INV-1-durable here' 2>&1)
+ntok=$(printf '%s' "$out" | grep -c '"token"')
+if [ "$ntok" -eq 1 ]; then
+    printf 'PASS %s\n' "scan: citation dedup (single token)"; pass=$((pass + 1))
+else
+    printf 'FAIL %s  (expected 1 token, got %d)\n  --- output ---\n%s\n  --- end ---\n' \
+        "scan: citation dedup (single token)" "$ntok" "$out"; fail=$((fail + 1))
+fi
+
 printf '\nselftest: %d passed, %d failed\n' "$pass" "$fail"
 exit "$fail"
