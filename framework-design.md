@@ -129,7 +129,7 @@ These in-artifact rules are the **structural contract**, owned by `artifact-cont
 
 Native to this doc — design-level authoring guidance not in the contract:
 
-- **Edge-placement in long artifacts.** Past the >100-line ToC threshold, re-anchor critical invariants near the tail and order high-stakes DAG cards at the edges — U-shaped recall favors the edges over the middle, so the highest-stakes items sit where attention is strongest. Write-time guidance, not validator-enforced. (context-engineering: lost-in-the-middle)
+- **Edge-placement in long artifacts.** Past the >100-line ToC threshold, re-anchor critical invariants near the tail and order high-stakes DAG cards at the edges — U-shaped recall favors the edges over the middle, so the highest-stakes items sit where attention is strongest. Re-anchoring places the bare anchor *pointer*, never restated prose (`artifact-contract.md` → One Prose Home Per Fact), so edge-placement-for-recall composes with state-each-fact-once rather than contradicting it. Write-time guidance, not validator-enforced. (context-engineering: lost-in-the-middle)
 
 ### Ceremonial — moved to skill prompts or dropped
 
