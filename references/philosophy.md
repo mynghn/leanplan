@@ -24,3 +24,4 @@ REQUIREMENT (biz WHAT) → SPEC (tech contract, generic categories only) → DES
 - `sharpen.md` — the off-pipeline understanding-sharpening move; invoked mid-round on a disturbance, reads committed artifacts but never edits them.
 - `revise.md` — the off-pipeline later-update move; invoked at any in-flight occasion to inject a justified drift and propagate it downstream-only. sharpen's repair-half complement: it edits committed artifacts, but only against a recorded justification.
 - `leanplan.md` — full framework design (coordinate model, edge semantics, validator design, stop-the-line catalog). Load only when challenged on framework shape.
+- `context-engineering.md` — the name→node map resolving the `(CE: <slug>)` grounding hooks that trail the principles above to their context-engineering concept node (definition, sources, related edges). Load only when a hook is challenged.
