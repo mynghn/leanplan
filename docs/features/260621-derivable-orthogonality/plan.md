@@ -71,8 +71,8 @@ One track (framework-doc rework). M1 lands the model; M2 writes the naming autho
 
 ## Task: M6
 
-- **Goal**: Hand the costly rename off as its own tracked effort per `DESIGN#Decision-4-lock-decisions-sweep-as-separate-effort` — open a tracking issue that names `framework-design.md` §8 as the naming authority and scopes the ~1,000-site sweep (artifacts, edges, items, anchors, `validate.py`, fixtures, adapters, every shipped feature), so L's lean review surface isn't buried under it (`SPEC#INV-2-model-surface-not-inflated`) while the scheme still propagates framework-wide (`SPEC#O-3-model-vocabulary-coherent-and-derivable`).
+- **Goal**: Hand the costly rename off as its own tracked effort per `DESIGN#Decision-4-lock-decisions-sweep-as-separate-effort` — the framework-wide rename is tracked in **#34** (`backlog`), which names `framework-design.md` §8 as the naming authority and scopes the ~1,000-site sweep (artifacts, edges, items, anchors, `validate.py`, fixtures, adapters, every shipped feature); this task keeps that hand-off current — confirm #34's §8 pointer once L's §8 lands — so L's lean review surface isn't buried under it (`SPEC#INV-2-model-surface-not-inflated`) while the scheme still propagates framework-wide (`SPEC#O-3-model-vocabulary-coherent-and-derivable`).
 - **Repo**: leanplan (worktree `leanplan-do`)
 - **Completion**:
-  - A tracking issue exists, cites §8 as the authority, and scopes the sweep with its occurrence counts; L closes without executing the rename (`SPEC#INV-2-model-surface-not-inflated`).
+  - #34 exists, cites §8 as the authority, and scopes the sweep with its occurrence counts; L closes without executing the rename (`SPEC#INV-2-model-surface-not-inflated`).
 - **Dependencies**: M2, M5.
