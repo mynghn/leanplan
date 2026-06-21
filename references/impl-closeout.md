@@ -1,6 +1,6 @@
 # LeanPlan Implementation — Close-Out Distillation
 
-On-demand companion to `impl.md`, loaded at procedure step 7 (close-out). Carries the distillation tier hierarchy and the commit-message / PR-body promotion rules — the lookup detail consumed only once close-out is reached, kept out of the always-loaded implementation reference (CE: jit-loading).
+On-demand companion to `impl.md`, loaded at procedure step 7 (close-out). Carries the distillation tier hierarchy and the commit-message / PR-body promotion rules — the lookup detail consumed only once close-out is reached, kept out of the always-loaded implementation reference (context-engineering: jit-loading).
 
 ## Distillation Hierarchy
 

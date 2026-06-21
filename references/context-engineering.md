@@ -1,6 +1,6 @@
 # Context-Engineering Grounding — name → node map
 
-LeanPlan's load-bearing rules each name the context-engineering concept they implement, as a `(CE: <slug>)` hook. This file resolves every such name to its vendored node and records which rule rests on it; the node carries the definition, sources, and `Related` edges. Load it only when a hook is challenged — it sits off the default hot path. Links: `[[<slug>]]` resolves to `context-engineering/<slug>.md`.
+LeanPlan's load-bearing rules each name the context-engineering concept they implement, as a `(context-engineering: <slug>)` hook. This file resolves every such name to its vendored node and records which rule rests on it; the node carries the definition, sources, and `Related` edges. Load it only when a hook is challenged — it sits off the default hot path. Links: `[[<slug>]]` resolves to `context-engineering/<slug>.md`.
 
 Everything here defends one thing — a lean, high-signal working set against the three axes of context degradation ([[three-axes-of-context-degradation]]). The axes are the *why*; the rules below are the *how*.
 
@@ -12,7 +12,7 @@ Everything here defends one thing — a lean, high-signal working set against th
 
 ## Grounded rules → concept
 
-Each load-bearing rule, by where it lives, and the concept(s) its `(CE: …)` hook names:
+Each load-bearing rule, by where it lives, and the concept(s) its `(context-engineering: …)` hook names:
 
 - **JIT-load intent + current code; lazy-load references** — philosophy P1; `leanplan.md` §1.2 / §4; stage adapters → [[jit-loading]]. Carry pointers, resolve to content at the moment of need.
 - **No flat task scripting; re-derive at task entry** — philosophy P2; `leanplan.md` §1.3 → [[jit-loading]], [[distractor-sensitivity]]. A frozen step-by-step script rots against current code into a stale distractor; re-deriving JIT-loads current reality. Applied **reflexively**: the stage procedures in the skill references are themselves a default flow + load-bearing gates, not a rigid script (each reference's Procedure says so).

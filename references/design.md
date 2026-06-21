@@ -63,7 +63,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 - **One prose home — cite, don't restate.** DESIGN references an upstream SPEC `O` / `INV` by anchor (e.g. `satisfies SPEC#INV-3-non-blocking-handover`) instead of re-stating it. Within DESIGN, the Architecture caption owns boundaries and flow only; it doesn't restate a `Decision`, and the `Decision` blocks own realization claims (`artifact-contract.md` → One Prose Home Per Fact).
 - **RATIONALE is free-form.** No prescribed inner sections. Capture reasoning, don't fill a form.
 - **RESEARCH is evidence-only.** Interpretations belong in RATIONALE.
-- **Isolate breadth-heavy investigation.** When code investigation (a wide cross-module / SOTA scan) would swamp the working window, run it in a sub-agent that returns only the distilled findings — a RESEARCH entry or the conclusions — keeping the raw trail out. Guidance, not mandate — when breadth exceeds the window. (CE: context-isolation, explore-then-compact-handoff)
+- **Isolate breadth-heavy investigation.** When code investigation (a wide cross-module / SOTA scan) would swamp the working window, run it in a sub-agent that returns only the distilled findings — a RESEARCH entry or the conclusions — keeping the raw trail out. Guidance, not mandate — when breadth exceeds the window. (context-engineering: context-isolation, explore-then-compact-handoff)
 
 ## Hand-off
 

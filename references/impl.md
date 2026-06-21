@@ -14,7 +14,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 - Cited anchors from the card (SPEC O/INV, DESIGN Decisions, optional Guidelines) — JIT-loaded only as needed.
 - Current code at the affected paths.
 - DESIGN RATIONALE — JIT only, when a stop-the-line trigger is under review.
-- `artifact-contract.md` — JIT only, before writing or editing an artifact's structure or anchors (e.g. in the Artifact Update Loop); `philosophy.md` only when a principle's intent is in question. (CE: jit-loading)
+- `artifact-contract.md` — JIT only, before writing or editing an artifact's structure or anchors (e.g. in the Artifact Update Loop); `philosophy.md` only when a principle's intent is in question. (context-engineering: jit-loading)
 
 ## Output
 
@@ -31,7 +31,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 4. **Re-reason** against current code: does the plan still apply? Any of the six stop-the-line triggers hit? If yes, run the Artifact Update Loop and surface to the user before coding.
 5. **Implement** the smallest meaningful change that realizes Goal + passes Completion criteria. No speculative scope; no drive-by refactors beyond what the task requires.
 6. **Verify each Completion criterion explicitly** — not "tests pass", but each specific criterion the card named.
-7. **Distill WHYs** at close-out — migrate each non-obvious WHY into the strongest durable form. Load `~/.local/share/leanplan/references/impl-closeout.md` for the tier hierarchy and the commit-message / PR-body promotion rules; JIT — fetch only now, at close-out, not before. (CE: jit-loading)
+7. **Distill WHYs** at close-out — migrate each non-obvious WHY into the strongest durable form. Load `~/.local/share/leanplan/references/impl-closeout.md` for the tier hierarchy and the commit-message / PR-body promotion rules; JIT — fetch only now, at close-out, not before. (context-engineering: jit-loading)
 8. **Confirm plan artifacts are non-load-bearing**: the WHYs they carried have migrated; discarding the plan would not lose context for future readers.
 9. **Key-leak self-check** before commit — run the detector, don't eyeball it: `python3 ~/.local/share/leanplan/scripts/scan-leaks --strict <staged files>` for code, and `--text "<message/PR body>"` (or piped stdin) for the prose you're about to commit. It flags round-scoped tokens — in-round anchors, `SPEC#…`-style citations, the feature id used as a standing concept — and skips `docs/features/**`, where anchors resolve. Replace any hit with the constraint in words, or add `leanplan-allow-key` on the line for a legitimate match.
 10. **Commit** with subject matching the change. Body carries distilled change rationale (alternatives, tradeoffs). For squash-merge teams, populate the PR body with the same content.
@@ -67,4 +67,4 @@ Never patch the current task around an upstream wrongness — that silent drift 
 - **Default no comments.** A new inline comment is justified only when a WHY cannot be encoded in a higher form (type / test / annotation / commit / PR body).
 - **Smallest meaningful change.** No speculative scope, no drive-by refactors.
 - **Distillation is not optional.** Every WHY the task relied on must have a durable home before the task is considered complete; don't leave plan docs as the only holder of important WHYs.
-- **Isolate breadth-heavy investigation.** When broad code investigation would swamp the working window, run it in a sub-agent that returns only the distilled conclusions, keeping the raw trail out. Guidance, not mandate — when breadth exceeds the window. (CE: context-isolation, explore-then-compact-handoff)
+- **Isolate breadth-heavy investigation.** When broad code investigation would swamp the working window, run it in a sub-agent that returns only the distilled conclusions, keeping the raw trail out. Guidance, not mandate — when breadth exceeds the window. (context-engineering: context-isolation, explore-then-compact-handoff)

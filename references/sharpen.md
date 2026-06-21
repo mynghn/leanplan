@@ -11,11 +11,11 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 - The disturbance — what shifted, or the external claim to check (`$ARGUMENTS`). If nothing has formed yet to be disturbed, stop: drawing an understanding out of a blank-slate arrival is the requirement stage's draw-out front-step (`requirement.md` Procedure step 3), not this move's.
 - The in-flight stage's working context — the understanding being sharpened. Preserved across the move.
 - Committed artifacts at the affected layers — read to reflect against, **never edited**. JIT-load only the anchors the disturbance touches.
-- `docs/features/<KEY>/understanding.md` — the append-only delta archive; the move's only write target (`artifact-contract.md` → UNDERSTANDING). (CE: jit-loading)
+- `docs/features/<KEY>/understanding.md` — the append-only delta archive; the move's only write target (`artifact-contract.md` → UNDERSTANDING). (context-engineering: jit-loading)
 
 ## Output
 
-- When the understanding moved: one appended `Delta-<N>: <slug>` block in `understanding.md` — durable past the session that found it, retrievable by later stages and any subsequent artifact revision. (CE: structured-note-taking)
+- When the understanding moved: one appended `Delta-<N>: <slug>` block in `understanding.md` — durable past the session that found it, retrievable by later stages and any subsequent artifact revision. (context-engineering: structured-note-taking)
 - When it did not: a no-op close — no delta, no edit.
 - Either way, zero edits to any committed artifact.
 

@@ -134,7 +134,7 @@ The rule binds **every seam**, not only DESIGN→SPEC:
 - **Within DESIGN.** The Architecture caption owns boundaries and flow; `Decision` blocks own realization claims — the caption doesn't restate a Decision.
 - **Within TASK.** Inline `Completion` citations are the canonical forward-coverage home; a forward-coverage table, if kept, is a derived view of them, not a re-authored mapping — and only the deliberately-uncovered subset carries the reserved `**GAP**` marker.
 
-Each stage doc carries its seam's operational instance; the per-artifact Drift Guards below are instances of this rule, not separate ones. Each avoided restatement removes a near-miss distractor; the surviving bare anchor is a literal lexical handle, not a latent lookup. (CE: distractor-sensitivity, literal-vs-latent-matching)
+Each stage doc carries its seam's operational instance; the per-artifact Drift Guards below are instances of this rule, not separate ones. Each avoided restatement removes a near-miss distractor; the surviving bare anchor is a literal lexical handle, not a latent lookup. (context-engineering: distractor-sensitivity, literal-vs-latent-matching)
 
 ## Prose Style
 
@@ -155,7 +155,7 @@ The surface artifacts (REQUIREMENT, SPEC, DESIGN, TASK) are designed for **revie
 - **Archive is lossless.** Moving reasoning to RATIONALE or evidence to RESEARCH removes it from the *review surface*, not from existence — it stays JIT-loadable on challenge. **Lean ≠ information loss.** This is the contract that lets the surface stay small without the team fearing lost context.
 - **The framework's own references apply this reflexively.** This budget caps user surface artifacts; the stage references themselves (`requirement.md` … `impl.md`) follow the same surface/tier discipline — stance, procedure, guardrails, and author-time calibration (worked examples, templates) stay always-loaded, while step-scoped lookup detail defers to an on-demand companion loaded at its consuming step. Advisory, not a validator-enforced gate.
 
-Grounded in the small-surface and LLM-aware principles (`philosophy.md` P3). The "lean surface is reviewed better" claim rests on the well-established code-review finding that defect detection drops sharply past a few hundred lines; that lean LeanPlan surfaces specifically review better is a deliberate, not-yet-measured bet. (CE: context-rot, effective-vs-advertised-context, distractor-sensitivity)
+Grounded in the small-surface and LLM-aware principles (`philosophy.md` P3). The "lean surface is reviewed better" claim rests on the well-established code-review finding that defect detection drops sharply past a few hundred lines; that lean LeanPlan surfaces specifically review better is a deliberate, not-yet-measured bet. (context-engineering: context-rot, effective-vs-advertised-context, distractor-sensitivity)
 
 ## Drift Guards
 

@@ -10,6 +10,8 @@
 - **`artifact-contract.md`** — the structural contract: feature layout, required shapes, anchors, drift guards, surface/archive layering, surface budget. Loaded before writing or editing artifact structure.
 - **`README.md`** — the front door: what LeanPlan is, install, quick start, contributing.
 
+This doc's `(context-engineering: <slug>)` grounding hooks resolve via `context-engineering.md` (the name→node map; load only when a hook is challenged).
+
 ## 1. Philosophy
 
 The behavior-shaping principles are owned by `philosophy.md` (the runtime home — loaded when a principle's intent or grounding is in question). This doc does not restate them; it records the *design reasoning* behind the framework's shape (§§2–4, §§8–12). The thesis the rest follow from: **LLM-aware by construction** — framework shape reflects how LLM agents consume and produce documents; everything below follows.
@@ -17,14 +19,14 @@ The behavior-shaping principles are owned by `philosophy.md` (the runtime home �
 Index only — numbering is kept stable so in-doc `principle N` / `§1.N` citations still resolve; the prose lives in `philosophy.md`:
 
 1. **LLM-aware by construction** — the thesis above (this doc's framing, not a numbered `philosophy.md` principle).
-2. **JIT loading, not initial heavy dump** → `philosophy.md` P1.
-3. **No flat task scripting** → `philosophy.md` P2.
-4. **Small surface for reviewability** → `philosophy.md` P3.
-5. **Archive verbose reasoning separately** → `philosophy.md` P4.
+2. **JIT loading, not initial heavy dump** → `philosophy.md` P1. (context-engineering: jit-loading)
+3. **No flat task scripting** → `philosophy.md` P2. (context-engineering: jit-loading, distractor-sensitivity)
+4. **Small surface for reviewability** → `philosophy.md` P3. (context-engineering: lost-in-the-middle, distractor-sensitivity)
+5. **Archive verbose reasoning separately** → `philosophy.md` P4. (context-engineering: jit-loading, context-as-working-set)
 6. **Target one-deployment scope** → `philosophy.md` P5.
 7. **Plan docs are in-feature artifacts only** → `philosophy.md` P6.
-8. **Persist by migration to code** → `philosophy.md` P7.
-9. **Session-boundary discipline** → `philosophy.md` P8.
+8. **Persist by migration to code** → `philosophy.md` P7. (context-engineering: structured-note-taking)
+9. **Session-boundary discipline** → `philosophy.md` P8. (context-engineering: explore-execute-boundary, compaction-vs-eviction, explore-then-compact-handoff, context-isolation, prefix-cache-economics)
 
 ## 2. Stages & coordinate model
 
@@ -80,7 +82,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 | Archive L1 | DESIGN RATIONALE | when challenging a DESIGN decision |
 | Archive L2 | RESEARCH | when L1 is insufficient — need raw evidence |
 
-Each level loads only via explicit trigger (anchor link from the layer above). JIT by construction. (CE: jit-loading, context-as-working-set)
+Each level loads only via explicit trigger (anchor link from the layer above). JIT by construction. (context-engineering: jit-loading, context-as-working-set)
 
 The runtime-loadable form — which artifact loads when — is owned by `artifact-contract.md` → Surface / Archive layering; the table above is the design-level detail.
 
@@ -96,12 +98,12 @@ The seven per-artifact shapes — 5.1 REQUIREMENT, 5.2 SPEC, 5.3 DESIGN, 5.4 DES
 
 | Rule | Purpose |
 |---|---|
-| Grep-friendly anchored headings (`## O-<N>: <slug>`, `## INV-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`, `## Delta-<N>: <slug>`) | Enable anchor-based JIT linking across artifacts; the grep-able ID+slug is a literal lexical handle agents/humans locate by exact match, not latent inference. (CE: jit-loading, literal-vs-latent-matching) |
+| Grep-friendly anchored headings (`## O-<N>: <slug>`, `## INV-<N>: <slug>`, `## Decision-<N>: <slug>`, `## Task: <id>`, `## Delta-<N>: <slug>`) | Enable anchor-based JIT linking across artifacts; the grep-able ID+slug is a literal lexical handle agents/humans locate by exact match, not latent inference. (context-engineering: jit-loading, literal-vs-latent-matching) |
 | Sibling layout at `docs/features/<KEY>/`, one-level link depth max | Prevent nested partial-read failures |
 | Declarative present tense; MUST / MUST NOT reserved for true invariants | Language signals re-reasoning invitation vs. commands |
-| Conclusion-first prose; prefer bullet / ordered lists over dense paragraphs | Reviewer grasps the artifact from headings + lead lines (review fidelity); agent attends to front-loaded claims over buried ledes. Write-time guidance, not validator-enforced; stage shapes (REQUIREMENT user-stories) are instances. See `artifact-contract.md` → Prose Style. (CE: lost-in-the-middle, distractor-sensitivity) |
-| Edge-placement in long artifacts: past the >100-line ToC threshold, re-anchor critical invariants near the tail and order high-stakes DAG cards at the edges | U-shaped recall favors the edges over the middle, so the highest-stakes items sit where attention is strongest; the >100-line trigger reuses the §6 ToC threshold (a LeanPlan-local heuristic, not a cutoff the concept states). Write-time guidance, not validator-enforced. (CE: lost-in-the-middle) |
-| Surface budget: keep REQUIREMENT / SPEC / DESIGN / TASK tight; push depth to RATIONALE / RESEARCH or split an oversized feature. Soft per-stage *prose*-line caps are advisory — Mermaid/code/blank lines excluded, so diagrams never read as bloat (the values live once in `artifact-contract.md` → Surface Budget, enforced by `validate.py`) | Surface artifacts are designed for review fidelity, not completeness — a lean surface is reviewed carefully, a verbose one rubber-stamped, and over-specific detail leaks into impl. *Direction, not a hard cap*: an advisory backstop for pathological bloat, mirroring the DAG-size guardrail (`validate.py` warns, `--strict` escalates, `--allow-large` suppresses). Archive is **lossless** — moving content off the surface keeps it JIT-loadable. (CE: context-rot, effective-vs-advertised-context, distractor-sensitivity) |
+| Conclusion-first prose; prefer bullet / ordered lists over dense paragraphs | Reviewer grasps the artifact from headings + lead lines (review fidelity); agent attends to front-loaded claims over buried ledes. Write-time guidance, not validator-enforced; stage shapes (REQUIREMENT user-stories) are instances. See `artifact-contract.md` → Prose Style. (context-engineering: lost-in-the-middle, distractor-sensitivity) |
+| Edge-placement in long artifacts: past the >100-line ToC threshold, re-anchor critical invariants near the tail and order high-stakes DAG cards at the edges | U-shaped recall favors the edges over the middle, so the highest-stakes items sit where attention is strongest; the >100-line trigger reuses the §6 ToC threshold (a LeanPlan-local heuristic, not a cutoff the concept states). Write-time guidance, not validator-enforced. (context-engineering: lost-in-the-middle) |
+| Surface budget: keep REQUIREMENT / SPEC / DESIGN / TASK tight; push depth to RATIONALE / RESEARCH or split an oversized feature. Soft per-stage *prose*-line caps are advisory — Mermaid/code/blank lines excluded, so diagrams never read as bloat (the values live once in `artifact-contract.md` → Surface Budget, enforced by `validate.py`) | Surface artifacts are designed for review fidelity, not completeness — a lean surface is reviewed carefully, a verbose one rubber-stamped, and over-specific detail leaks into impl. *Direction, not a hard cap*: an advisory backstop for pathological bloat, mirroring the DAG-size guardrail (`validate.py` warns, `--strict` escalates, `--allow-large` suppresses). Archive is **lossless** — moving content off the surface keeps it JIT-loadable. (context-engineering: context-rot, effective-vs-advertised-context, distractor-sensitivity) |
 | Mermaid for diagrams (no ASCII fallback) | Clean diffs; agents edit reliably; GitHub renders natively |
 | Verification mapping (bidirectional) — every SPEC Outcome item (O) and Invariant (INV) maps to ≥ 1 TASK completion criterion; every TASK cites ≥ 1 SPEC O, INV, DESIGN Decision, or doc Guideline as its reason | Catches both unverified requirements (SPEC → TASK gap) and orphan implementation work (TASK without plan justification) |
 
@@ -118,7 +120,7 @@ The seven per-artifact shapes — 5.1 REQUIREMENT, 5.2 SPEC, 5.3 DESIGN, 5.4 DES
 
 Documents carry durable state. Skills and prompts carry stage behavior.
 
-**Loading order (adapter-authoring).** Order loaded context stable → volatile so the durable prefix stays cache-warm and only late, volatile content shifts. Within a stage, the stable prefix is the content *always* loaded — the adapter + its stage reference — byte-identical across re-invocations *of that stage* (re-running `/design` reuses it); then the JIT artifact slice; then live code. The cross-stage shared prefix is intentionally just the one framework-identity line, so that part of the cache win is small-but-free, not a major lever. The *conditionally* loaded universals (`philosophy.md`, full `artifact-contract.md`) are a deliberate exception: **JIT wins over prefix-warmth** — they load only on challenge, and eagerly loading them to warm the cache would violate jit-loading for content most calls never touch. So "stable first" governs the always-present prefix; it does not promote the conditional universals out of their JIT slot. Adapter authors order skill-prompt content the same way. Write-time / adapter guidance, not validator-enforced. (CE: prefix-cache-economics, jit-loading)
+**Loading order (adapter-authoring).** Order loaded context stable → volatile so the durable prefix stays cache-warm and only late, volatile content shifts. Within a stage, the stable prefix is the content *always* loaded — the adapter + its stage reference — byte-identical across re-invocations *of that stage* (re-running `/design` reuses it); then the JIT artifact slice; then live code. The cross-stage shared prefix is intentionally just the one framework-identity line, so that part of the cache win is small-but-free, not a major lever. The *conditionally* loaded universals (`philosophy.md`, full `artifact-contract.md`) are a deliberate exception: **JIT wins over prefix-warmth** — they load only on challenge, and eagerly loading them to warm the cache would violate jit-loading for content most calls never touch. So "stable first" governs the always-present prefix; it does not promote the conditional universals out of their JIT slot. Adapter authors order skill-prompt content the same way. Write-time / adapter guidance, not validator-enforced. (context-engineering: prefix-cache-economics, jit-loading)
 
 ## 7. Drift guards
 
@@ -151,7 +153,7 @@ The per-artifact drift guards are part of the **structural contract**, owned by 
 
 ## 10. Plan → code distillation
 
-Persist-worthy insights migrate from plan artifacts into code at implementation time (principle 8). Plan docs become discardable once this migration completes. (CE: structured-note-taking) The *principle* is `philosophy.md` P7; this section is its design-level detail — the persistence hierarchy, the commit-vs-comment split, and squash durability.
+Persist-worthy insights migrate from plan artifacts into code at implementation time (principle 8). Plan docs become discardable once this migration completes. (context-engineering: structured-note-taking) The *principle* is `philosophy.md` P7; this section is its design-level detail — the persistence hierarchy, the commit-vs-comment split, and squash durability.
 
 ### Hierarchy of persistence
 
@@ -255,7 +257,7 @@ Claude Code / Codex already provide: cross-session memory, parallel sub-agents, 
 - **Domain glue** (INFRAREQ / DBREQ via Jira MCP, submodule handling) — Phase 3
 - **CLI wrapper** (thin shell over the above) — Phase 3+
 
-**Session management** is the worked example of this split. The **session-boundary discipline** (§1.9, `philosophy.md` P8) names the *behavior* — keep the planning spine warm, hard-cut to a fresh frame at plan→impl, isolate noisy sub-tasks, light-compact at pivots — portably, naming no command. Where a harness supplies grounded session-management *mechanisms*, they realize it: on Claude Code, `/handoff <goal>` at the plan→impl cut (a goal-scoped fresh-session brief) and `/compact-focus` at in-session pivots, both grounded in the same CE concepts (`explore-execute-boundary`, `compaction-vs-eviction`, `explore-then-compact-handoff`, `prefix-cache-economics`). A bare install — no such commands, no external KB — performs the boundary by hand; the principle never depends on them.
+**Session management** is the worked example of this split. The **session-boundary discipline** (§1.9, `philosophy.md` P8) names the *behavior* — keep the planning spine warm, hard-cut to a fresh frame at plan→impl, isolate noisy sub-tasks, light-compact at pivots — portably, naming no command. Where a harness supplies grounded session-management *mechanisms*, they realize it: on Claude Code, `/handoff <goal>` at the plan→impl cut (a goal-scoped fresh-session brief) and `/compact-focus` at in-session pivots, both grounded in the same context-engineering concepts (`explore-execute-boundary`, `compaction-vs-eviction`, `explore-then-compact-handoff`, `prefix-cache-economics`). A bare install — no such commands, no external KB — performs the boundary by hand; the principle never depends on them.
 
 ### Beyond safety nets — long-term harness ambitions (Phase 4+)
 

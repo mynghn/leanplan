@@ -9,7 +9,7 @@ allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(ls *)
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the DESIGN stage (SPEC → DESIGN edge).
 
-Load `~/.local/share/leanplan/references/design.md` — it is authoritative for the procedure + template (Architecture-first rule, non-trivial-only rationale anchoring, SPEC O/INV coverage check with TASK-direct realization path for trivial items). Load these on demand, not up front (CE: jit-loading):
+Load `~/.local/share/leanplan/references/design.md` — it is authoritative for the procedure + template (Architecture-first rule, non-trivial-only rationale anchoring, SPEC O/INV coverage check with TASK-direct realization path for trivial items). Load these on demand, not up front (context-engineering: jit-loading):
 
 - `~/.local/share/leanplan/references/artifact-contract.md` — **before writing or editing an artifact's structure or anchors**: DESIGN shape, `Decision-<N>: <slug>` anchor pattern, free-form RATIONALE rule, RESEARCH-as-evidence rule.
 - `~/.local/share/leanplan/references/philosophy.md` — **when a principle's intent or grounding is in question**: the framework principles shaping what "good" looks like.
