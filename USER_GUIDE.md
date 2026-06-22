@@ -14,7 +14,7 @@ Read only as deep as you need:
 4. **Adoption** helps teams decide fit, choose a first project, and avoid misuse in [`docs/user-guide/adoption.md`](./docs/user-guide/adoption.md).
 5. **Reference** gives compact lookup tables for commands, artifacts, transitions, validation modes, and failure signals in [`docs/user-guide/reference.md`](./docs/user-guide/reference.md).
 
-If this is your first LeanPlan run, start with Quickstart and stop when your first feature plan is validated and ready to implement.
+If this is your first LeanPlan run, start with Quickstart and continue until the first task has landed. If you only want to evaluate planning, you can stop after validation.
 
 ## Quickstart
 
@@ -47,19 +47,21 @@ How you know this step is complete: the feature directory exists and you know it
 
 #### 2. Capture Requirements
 
-Ask your agent to run the LeanPlan Requirements stage for the feature:
+Ask your agent to run the LeanPlan Requirements stage for the allocated feature:
 
 ```text
-$leanplan requirements "short feature title"
+$leanplan requirements <KEY>
 ```
 
 In Claude Code, use the installed LeanPlan slash command for the same stage, for example:
 
 ```text
-/requirements "short feature title"
+/requirements <KEY>
 ```
 
-What you do: explain the user problem, boundaries, desired outcome, and any constraints the agent should preserve.
+Use the `<KEY>` printed by `leanplan-new`. Passing the title again asks the Requirements stage to allocate a new feature, which is useful only when you skipped Step 1 and want the agent to create the directory for you.
+
+What you do: give the agent the existing feature key, then explain the user problem, boundaries, desired outcome, and any constraints it should preserve.
 
 What the agent does: turns that input into a compact Requirements artifact plus any archive notes needed to keep rationale without bloating the surface artifact.
 

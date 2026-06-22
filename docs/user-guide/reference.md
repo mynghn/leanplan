@@ -12,6 +12,9 @@ $leanplan specify <KEY>
 $leanplan design <KEY>
 $leanplan tasks <KEY>
 $leanplan implement <KEY> <task-id>
+$leanplan sharpen <what-shifted>
+$leanplan revise <KEY> [Delta-N | what drifted]
+$leanplan validate docs/features/<KEY>
 ```
 
 Claude Code slash-command form:
@@ -23,7 +26,7 @@ Claude Code slash-command form:
 /tasks <KEY>
 /implement <KEY> <task-id>
 /sharpen <what-shifted>
-/revise <KEY>
+/revise <KEY> [Delta-N | what drifted]
 ```
 
 Utility scripts:
