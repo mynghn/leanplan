@@ -9,7 +9,7 @@ round's planning docs and dangle once those are discarded.
 
 It is deliberately narrow: only the high-precision token class (anchors +
 citations). Feature ids (`0004`, `260620-slug`), readable scope labels
-(`docs(<slug>)`), and bare numbers do not match the pattern at all, so the SPEC's
+(`docs(<slug>)`), and bare numbers do not match the pattern at all, so the Spec's
 allowed grey zone passes untouched with no allow-list to maintain. See the
 narrow-leak-detector decision in
 docs/features/260620-round-scoped-key-leakage/design.md.
@@ -46,15 +46,16 @@ from pathlib import Path
 # validate.py's ANCHOR_RE / CITATION_RE *kinds*, narrowed to the leak-relevant
 # high-precision class; keep all three in sync if the contract's vocabulary moves.
 #
-# Bare anchor tokens — the `<kind>-<N>` anchors only. `Task: <id>` is intentionally
-# absent: bare "Task:" is low precision (it occurs in ordinary prose), so a task
-# handle is flagged only in citation form (`TASK#…`), per the same decision.
-ANCHOR_TOKEN_RE = re.compile(r"\b(?:O|INV|Decision|Delta)-\d+\b")
+# Bare anchor tokens — the `<kind>-<N>` anchors only. `T: <id>` is intentionally
+# absent: bare "T:" is low precision (it occurs in ordinary prose), so a task
+# handle is flagged only in citation form (`Tasks#…`), per the same decision.
+# Delta is listed before D because `D` is a prefix of `Delta` (ordering-sensitive).
+ANCHOR_TOKEN_RE = re.compile(r"\b(?:B|C|Delta|D)-\d+\b")
 # Cross-artifact citations — `<ARTIFACT>#<target>`. The `:` in the target class
-# covers `Task:`-style ids in the target. An `<ARTIFACT>#…` citation essentially
+# covers `T:`-style ids in the target. An `<ARTIFACT>#…` citation essentially
 # never occurs by accident, so the broad target class stays high precision.
 CITATION_RE = re.compile(
-    r"\b(?:SPEC|DESIGN|TASK|RATIONALE|RESEARCH|UNDERSTANDING)#[A-Za-z0-9:_-]+"
+    r"\b(?:Spec|Design|Tasks|Rationale|Research|Understanding)#[A-Za-z0-9:_-]+"
 )
 # Inline escape hatch for the rare legitimate match: a line carrying this directive
 # is exempt from flagging. Warn-mode absorbs the rest.

@@ -1,4 +1,4 @@
-# LP-EXAMPLE — DESIGN
+# LP-EXAMPLE — Design
 
 ## Architecture
 
@@ -17,34 +17,34 @@ flowchart LR
     SH -->|4. report hash delta| OUT[stdout]
 ```
 
-## Decision-1: sync-as-shell-script-in-canonical-scripts
+## D-1: sync-as-shell-script-in-canonical-scripts
 
 Implement the sync as a POSIX shell script committed at `dot_local/share/leanplan/scripts/executable_sync-leanplan.sh`. Applied via chezmoi to `~/.local/share/leanplan/scripts/sync-leanplan.sh` with the executable bit set.
 
 Why inline: chezmoi already manages the destination tree; colocating the tool with its target means one repo, one install path. A shell script matches the zero-dependency bar.
 
-## Decision-2: in-repo-path-hard-coded
+## D-2: in-repo-path-hard-coded
 
-The script hard-codes `$HOME/projects/upstream/docs/canonical-doc.md` as the in-repo source. See rationale at [design-rationale.md#Decision-2-in-repo-path-hard-coded].
+The script hard-codes `$HOME/projects/upstream/docs/canonical-doc.md` as the in-repo source. See rationale at [design-rationale.md#D-2-in-repo-path-hard-coded].
 
-## Decision-3: header-note-reinsertion-between-title-and-body
+## D-3: header-note-reinsertion-between-title-and-body
 
 The script reads the in-repo doc line-by-line, emits the title line (H1), then a blank line, then the runtime drift-marker header note, then the remainder (`tail -n +2`). The header is injected between the title and the body rather than stripping a prior runtime-copy header — the in-repo source is authoritative and always lacks the header.
 
-Why: idempotent (no dependence on the prior runtime-copy shape); satisfies SPEC#INV-2-header-note-preservation regardless of how many times the script has run.
+Why: idempotent (no dependence on the prior runtime-copy shape); satisfies Spec#C-2-header-note-preservation regardless of how many times the script has run.
 
-## Decision-4: chezmoi-apply-called-at-script-end
+## D-4: chezmoi-apply-called-at-script-end
 
 The script calls `chezmoi apply "$HOME/.local/share/leanplan/framework-design.md"` at the end so that the source edit propagates to runtime in the same invocation.
 
-Why: users should not need to know about the chezmoi source / runtime split; a single command does the full job per SPEC#O-1-single-invocation-sync.
+Why: users should not need to know about the chezmoi source / runtime split; a single command does the full job per Spec#B-1-single-invocation-sync.
 
-## Decision-5: hash-check-via-shasum
+## D-5: hash-check-via-shasum
 
 Report staleness by comparing SHA-256 digests of the runtime file before and after the sync, via `shasum -a 256`.
 
 Why: available on macOS and Linux by default; hash compares are simpler than text diffs and tolerant of trailing-whitespace noise.
 
-## Decision-6: atomicity-via-chezmoi-source-write-then-apply
+## D-6: atomicity-via-chezmoi-source-write-then-apply
 
-The chezmoi source write is a single redirection (atomic from bash's POV for small files). `chezmoi apply` writes the runtime file via temp-file-then-rename (atomic on POSIX). See rationale at [design-rationale.md#Decision-6-atomicity-via-chezmoi-source-write-then-apply].
+The chezmoi source write is a single redirection (atomic from bash's POV for small files). `chezmoi apply` writes the runtime file via temp-file-then-rename (atomic on POSIX). See rationale at [design-rationale.md#D-6-atomicity-via-chezmoi-source-write-then-apply].

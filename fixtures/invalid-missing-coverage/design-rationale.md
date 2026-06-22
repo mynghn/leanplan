@@ -1,6 +1,6 @@
-# LP-EXAMPLE — DESIGN RATIONALE
+# LP-EXAMPLE — Design Rationale
 
-## Decision-2: in-repo-path-hard-coded
+## D-2: in-repo-path-hard-coded
 
 Alternatives considered:
 
@@ -16,9 +16,9 @@ Invalidation triggers (revisit when):
 - Cross-machine use becomes needed (start working from another laptop, CI integration).
 - Team-publish happens — at which point the source may live inside a project `.claude/skills/` or be distributed differently.
 
-## Decision-6: atomicity-via-chezmoi-source-write-then-apply
+## D-6: atomicity-via-chezmoi-source-write-then-apply
 
-SPEC#INV-3-atomicity-under-failure says the runtime copy is "either unchanged or fully updated — never half-written". The implementation gives two atomicity windows:
+Spec#C-3-atomicity-under-failure says the runtime copy is "either unchanged or fully updated — never half-written". The implementation gives two atomicity windows:
 
 1. **Source write (`> $SOURCE`)** — bash redirects atomically for small files (< pipe buffer); race with other writers isn't a concern in personal-phase.
 2. **`chezmoi apply`** — chezmoi writes the target via temp-file-then-rename, atomic on POSIX.

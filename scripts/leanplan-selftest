@@ -39,12 +39,9 @@ trap 'rm -rf "$TMP"' EXIT
 pass=0
 fail=0
 
-# task_file: returns the TASK artifact filename present in the fixture
-# (task.md or plan.md). Used so the selftest works during the v2 migration.
+# task_file: returns the Tasks artifact filename present in the fixture (tasks.md).
 task_file() {
-    if [ -f "$1/plan.md" ]; then echo "plan.md"
-    elif [ -f "$1/task.md" ]; then echo "task.md"
-    else echo "plan.md"; fi
+    if [ -f "$1/tasks.md" ]; then echo "tasks.md"; else echo "tasks.md"; fi
 }
 
 assert_case() {
@@ -148,7 +145,7 @@ inject_baseline() { :; }
 inject_broken_anchor() {
     local f
     f=$(task_file "$1")
-    sed -i.bak 's/SPEC#O-1-single-invocation-sync/SPEC#O-99-bogus/g' "$1/$f"
+    sed -i.bak 's/Spec#B-1-single-invocation-sync/Spec#B-99-bogus/g' "$1/$f"
     rm -f "$1/$f.bak"
 }
 
@@ -156,7 +153,7 @@ inject_duplicate_delta() {
     # Append-only integrity: re-emitting an existing Delta id (the easy mistake
     # when /sharpen is re-invoked across stateless sessions) must be caught.
     cat > "$1/understanding.md" <<'U'
-# LP-EXAMPLE — UNDERSTANDING
+# LP-EXAMPLE — Understanding
 
 ## Delta-1: premise-falsified
 The understanding now is X; prior assumption Y is killed.
@@ -169,13 +166,13 @@ U
 inject_coverage_hole() {
     local f
     f=$(task_file "$1")
-    # Remove every reference to the second outcome anchor (both citation and bare-ID forms).
-    sed -i.bak -E '/SPEC#O-2/d; /O-2 staleness-reporting/d' "$1/$f"
+    # Remove every reference to the second behavior anchor (both citation and bare-ID forms).
+    sed -i.bak -E '/Spec#B-2/d; /B-2 staleness-reporting/d' "$1/$f"
     rm -f "$1/$f.bak"
 }
 
 inject_req_drift() {
-    printf '\nThe system uses Kafka for event streaming.\n' >> "$1/requirement.md"
+    printf '\nThe system uses Kafka for event streaming.\n' >> "$1/requirements.md"
 }
 
 inject_task_step_drift() {
@@ -185,113 +182,113 @@ inject_task_step_drift() {
 }
 
 inject_surface_bloat() {
-    # Pad spec.md well past its ~110-line soft cap (SPEC) with filler lines, to trip the
+    # Pad spec.md well past its ~110-line soft cap (Spec) with filler lines, to trip the
     # surface-budget guardrail (advisory; escalates to error under --strict).
     local i
     for i in $(seq 1 200); do printf '<!-- filler %d -->\n' "$i" >> "$1/spec.md"; done
 }
 
 inject_outcome_only_task() {
-    # Append a task whose ONLY reason citation is an Outcome anchor (no Invariant,
+    # Append a task whose ONLY reason citation is a Behavior anchor (no Constraint,
     # no Decision). Regression guard for the reverse-coverage matcher: it must accept
-    # Outcome-only tasks (the contract permits them; trivial-realization features
+    # Behavior-only tasks (the contract permits them; trivial-realization features
     # rely on them). Previously the matcher keyed on the dropped 'AC' token and
-    # rejected this, masked only because every fixture task also cited INV/DESIGN.
+    # rejected this, masked only because every fixture task also cited C/Design.
     local f
     f=$(task_file "$1")
-    cat >> "$1/$f" <<'TASK'
+    cat >> "$1/$f" <<'CARD'
 
-## Task: S9
+## T: S9
 
-**Goal**: Outcome-only task — realizes the published contract per `SPEC#O-1-single-invocation-sync`.
+**Goal**: Behavior-only task — realizes the published contract per `Spec#B-1-single-invocation-sync`.
 
 **Repo**: leanplan
 
 **Completion**:
-- Observable proof per `SPEC#O-1-single-invocation-sync`.
+- Observable proof per `Spec#B-1-single-invocation-sync`.
 
 **Dependencies**: none
-TASK
+CARD
 }
 
 inject_understanding_citation_ok() {
     # A revised artifact cites the Delta that justified it, and the delta exists,
-    # so the inbound UNDERSTANDING#Delta-N citation must RESOLVE (parity with
-    # SPEC#/DESIGN#). Guards the auditable-justification link: a revised artifact
+    # so the inbound Understanding#Delta-N citation must RESOLVE (parity with
+    # Spec#/Design#). Guards the auditable-justification link: a revised artifact
     # can cite the delta that justified it and have that link checked.
     cat > "$1/understanding.md" <<'U'
-# LP-EXAMPLE — UNDERSTANDING
+# LP-EXAMPLE — Understanding
 
 ## Delta-1: premise-falsified
 The understanding now is X; prior assumption Y is killed.
 U
-    printf '\nRevised per `UNDERSTANDING#Delta-1-premise-falsified`.\n' >> "$1/design.md"
+    printf '\nRevised per `Understanding#Delta-1-premise-falsified`.\n' >> "$1/design.md"
 }
 
 inject_understanding_citation_broken() {
-    # An inbound UNDERSTANDING# citation with no matching delta must now ERROR.
+    # An inbound Understanding# citation with no matching delta must now ERROR.
     # Before C this was unconditionally skipped (always passed); the skip is gone.
-    printf '\nRevised per `UNDERSTANDING#Delta-9-nonexistent`.\n' >> "$1/design.md"
+    printf '\nRevised per `Understanding#Delta-9-nonexistent`.\n' >> "$1/design.md"
 }
 
 inject_retired_anchor() {
     # Retire-by-note on a heading must keep the anchor's ID resolvable: marking
-    # O-1's heading (retired) must NOT break its inbound plan.md citation or the
-    # "at least one O anchor" check — a retired item's ID must keep resolving so
+    # B-1's heading (retired) must NOT break its inbound tasks.md citation or the
+    # "at least one B anchor" check — a retired item's ID must keep resolving so
     # prior work stays reconstructable, not silently deleted.
-    sed -i.bak -E 's/^(#{2,4} O-1: single-invocation-sync)$/\1 (retired)/' "$1/spec.md"
+    sed -i.bak -E 's/^(#{2,4} B-1: single-invocation-sync)$/\1 (retired)/' "$1/spec.md"
     rm -f "$1/spec.md.bak"
 }
 
 inject_retired_task() {
-    # Retiring a TASK card heading must keep it parseable so its ID still resolves
-    # (no silent drop — the asymmetric risk the Task: retire form would otherwise
-    # carry). The appended card is cited via TASK#Task:Z9, which resolves only if
+    # Retiring a Tasks card heading must keep it parseable so its ID still resolves
+    # (no silent drop — the asymmetric risk the T: retire form would otherwise
+    # carry). The appended card is cited via Tasks#T:Z9, which resolves only if
     # the (retired)-marked heading is still parsed.
     local f
     f=$(task_file "$1")
-    cat >> "$1/$f" <<'TASK'
+    cat >> "$1/$f" <<'CARD'
 
-## Task: Z9 (retired)
+## T: Z9 (retired)
 
-**Goal**: Superseded task kept for history, per `SPEC#O-1-single-invocation-sync`.
+**Goal**: Superseded task kept for history, per `Spec#B-1-single-invocation-sync`.
 
 **Completion**:
-- n/a — retired; superseding work covers `SPEC#O-1-single-invocation-sync`.
+- n/a — retired; superseding work covers `Spec#B-1-single-invocation-sync`.
 
 **Dependencies**: none
 
-Superseded; retained for traceability — see `TASK#Task:Z9`.
-TASK
+Superseded; retained for traceability — see `Tasks#T:Z9`.
+CARD
 }
 
 inject_retired_sole_coverage() {
-    # A live SPEC outcome whose ONLY covering task is retired must FAIL coverage:
+    # A live Spec behavior whose ONLY covering task is retired must FAIL coverage:
     # retire-by-note keeps the superseded card for history, but a dead task grants
-    # no forward-coverage credit — else retiring the last task of a live outcome
+    # no forward-coverage credit — else retiring the last task of a live behavior
     # silently passes a real coverage hole.
-    cat >> "$1/spec.md" <<'SPEC'
+    cat >> "$1/spec.md" <<'ITEM'
 
-### O-9: retired-sole-coverage
-When the only task covering an outcome is retired, coverage must fail.
-SPEC
+### B-9: retired-sole-coverage
+When the only task covering a behavior is retired, coverage must fail.
+ITEM
     local f
     f=$(task_file "$1")
-    cat >> "$1/$f" <<'TASK'
+    cat >> "$1/$f" <<'CARD'
 
-## Task: R9 (retired)
+## T: R9 (retired)
 
-**Goal**: Superseded — once covered `SPEC#O-9-retired-sole-coverage`.
+**Goal**: Superseded — once covered `Spec#B-9-retired-sole-coverage`.
 
 **Completion**:
-- n/a — retired; per `SPEC#O-9-retired-sole-coverage`.
+- n/a — retired; per `Spec#B-9-retired-sole-coverage`.
 
 **Dependencies**: none
-TASK
+CARD
 }
 
 inject_remove_gap() {
-    # Strip the **GAP** ack from the only GAP-acked item (INV-3) so it becomes a
+    # Strip the **GAP** ack from the only GAP-acked item (C-3) so it becomes a
     # real coverage hole. Locks that the GAP-ack branch actually FLIPS the verdict:
     # the same item passes WITH the ack (baseline) and must FAIL without it. No
     # other fixture isolates this — proves _gap_acknowledged_targets is load-bearing.
@@ -303,7 +300,7 @@ inject_remove_gap() {
 
 inject_design_links_absent_rationale() {
     # Delete design-rationale.md entirely while design.md still links it
-    # (Decision-2, Decision-6). The design->rationale link check must fire even
+    # (D-2, D-6). The design->rationale link check must fire even
     # when the whole rationale file is ABSENT (not just missing a block) — guards
     # the fix that dropped the early-return which silently passed this worse case.
     rm -f "$1/design-rationale.md"
@@ -316,17 +313,17 @@ assert_case "baseline (clean fixture)"        0 "validation passed"             
 assert_case "broken anchor"                   1 "broken citation"                       inject_broken_anchor
 assert_case "duplicate delta anchor"          1 "duplicate anchor: Delta-1"             inject_duplicate_delta
 assert_case "coverage hole"                   1 "is not covered by any task"            inject_coverage_hole
-assert_case "requirement drift (--strict)"    1 "implementation choice in REQUIREMENT"  inject_req_drift          "--strict"
+assert_case "requirement drift (--strict)"    1 "implementation choice in Requirements"  inject_req_drift          "--strict"
 assert_case "task step drift (--strict)"      1 "looks like line-level scripting"       inject_task_step_drift    "--strict"
 assert_case "surface bloat (--strict)"        1 "soft cap"                               inject_surface_bloat      "--strict"
-assert_case "outcome-only task reason"        0 "validation passed"                     inject_outcome_only_task  "--strict"
+assert_case "behavior-only task reason"       0 "validation passed"                     inject_outcome_only_task  "--strict"
 assert_case "understanding citation resolves"  0 "validation passed"                     inject_understanding_citation_ok
-assert_case "broken understanding citation"    1 "broken citation: UNDERSTANDING#Delta-9-nonexistent" inject_understanding_citation_broken
+assert_case "broken understanding citation"    1 "broken citation: Understanding#Delta-9-nonexistent" inject_understanding_citation_broken
 assert_case "retired anchor still resolves"    0 "validation passed"                     inject_retired_anchor
 assert_case "retired task still resolves"      0 "validation passed"                     inject_retired_task
-assert_case "retired task grants no coverage"  1 "is not covered by any task: SPEC#O-9-retired-sole-coverage" inject_retired_sole_coverage
-assert_case "gap ack removed -> coverage hole" 1 "is not covered by any task: SPEC#INV-3-atomicity-under-failure" inject_remove_gap
-assert_case "design links absent rationale"    1 "DESIGN links to missing rationale block" inject_design_links_absent_rationale
+assert_case "retired task grants no coverage"  1 "is not covered by any task: Spec#B-9-retired-sole-coverage" inject_retired_sole_coverage
+assert_case "gap ack removed -> coverage hole" 1 "is not covered by any task: Spec#C-3-atomicity-under-failure" inject_remove_gap
+assert_case "design links absent rationale"    1 "Design links to missing rationale block" inject_design_links_absent_rationale
 
 # scan-leaks defect injection: round-scoped keys leaked into a non-artifact file
 # must be caught — defect-injection coverage for the per-surface leak backstop.
@@ -334,27 +331,28 @@ assert_case "design links absent rationale"    1 "DESIGN links to missing ration
 # a leak warns (exit 0) by default and escalates to error (exit 1) under --strict;
 # the grey zone (feature ids, readable scope labels, bare numbers) stays clean,
 # and the inline directive suppresses even under --strict.
-scan_case "scan: bare anchor INV-1 leak (warn)"     'satisfies INV-1 in this code'                0 "INV-1"
-scan_case "scan: bare anchor INV-1 leak (strict)"   'satisfies INV-1 in this code'                1 "INV-1"       "--strict"
-scan_case "scan: citation SPEC#INV-1 leak (strict)" 'see SPEC#INV-1-durable-artifacts here'       1 "SPEC#INV-1"  "--strict"
+scan_case "scan: bare anchor C-1 leak (warn)"       'satisfies C-1 in this code'                  0 "C-1"
+scan_case "scan: bare anchor C-1 leak (strict)"     'satisfies C-1 in this code'                  1 "C-1"         "--strict"
+scan_case "scan: citation Spec#C-1 leak (strict)"   'see Spec#C-1-durable-artifacts here'         1 "Spec#C-1"    "--strict"
 scan_case "scan: feature id + scope label clean"    'docs(lean-review-surfaces): feature 0004-x'  0 "clean"
 scan_case "scan: bare number + commit sha clean"    'retry after 2; pinned at 6184aa2'            0 "clean"
-scan_case "scan: inline directive suppresses"       'satisfies INV-1  # leanplan-allow-key'       0 "clean"       "--strict"
+scan_case "scan: inline directive suppresses"       'satisfies C-1  # leanplan-allow-key'         0 "clean"       "--strict"
 
-# Every anchor kind + a non-SPEC citation must be caught — not only the kinds above,
+# Every anchor kind + a non-Spec citation must be caught — not only the kinds above,
 # else a regex edit dropping an alternation regresses with the suite still green.
-scan_case "scan: bare anchor O-1 leak (strict)"        'see the O-1 baseline here'               1 "O-1"               "--strict"
-scan_case "scan: bare anchor Decision-2 leak (strict)" 'following Decision-2 we chose X'          1 "Decision-2"        "--strict"
+# D-2 then Delta-3 also guard the Delta-before-D alternation order (D is a prefix of Delta).
+scan_case "scan: bare anchor B-1 leak (strict)"        'see the B-1 baseline here'               1 "B-1"               "--strict"
+scan_case "scan: bare anchor D-2 leak (strict)"        'following D-2 we chose X'                1 "D-2"               "--strict"
 scan_case "scan: bare anchor Delta-3 leak (strict)"    'per Delta-3 the assumption changed'       1 "Delta-3"           "--strict"
-scan_case "scan: citation DESIGN# leak (strict)"       'see DESIGN#Decision-2-narrow here'        1 "DESIGN#Decision-2" "--strict"
+scan_case "scan: citation Design# leak (strict)"       'see Design#D-2-narrow here'              1 "Design#D-2"        "--strict"
 
 # --text is the commit-msg hook's only input path; exercise it, the exit-2 input
 # error contract, and the anchor-inside-citation dedup directly.
-out=$(python3 "$SCAN" --strict --text 'satisfies INV-1 here' 2>&1); ec=$?
-if [ "$ec" -eq 1 ] && printf '%s' "$out" | grep -qF -- "INV-1"; then
+out=$(python3 "$SCAN" --strict --text 'satisfies C-1 here' 2>&1); ec=$?
+if [ "$ec" -eq 1 ] && printf '%s' "$out" | grep -qF -- "C-1"; then
     printf 'PASS %s\n' "scan: --text mode leak (strict)"; pass=$((pass + 1))
 else
-    printf 'FAIL %s  (expected exit=1 with INV-1; got exit=%d)\n  --- output ---\n%s\n  --- end ---\n' \
+    printf 'FAIL %s  (expected exit=1 with C-1; got exit=%d)\n  --- output ---\n%s\n  --- end ---\n' \
         "scan: --text mode leak (strict)" "$ec" "$out"; fail=$((fail + 1))
 fi
 
@@ -366,7 +364,7 @@ else
         "scan: missing file -> exit 2" "$ec" "$out"; fail=$((fail + 1))
 fi
 
-out=$(python3 "$SCAN" --json --text 'see SPEC#INV-1-durable here' 2>&1)
+out=$(python3 "$SCAN" --json --text 'see Spec#C-1-durable here' 2>&1)
 ntok=$(printf '%s' "$out" | grep -c '"token"')
 if [ "$ntok" -eq 1 ]; then
     printf 'PASS %s\n' "scan: citation dedup (single token)"; pass=$((pass + 1))
