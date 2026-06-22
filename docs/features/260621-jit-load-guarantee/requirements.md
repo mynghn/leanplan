@@ -4,8 +4,8 @@
 
 LeanPlan defers detail off the immediate card in two different ways, and only one of them is safe today.
 
-- **Isolated for brevity, but still always needed.** A task's cited SPEC Outcome/Invariant (what it realizes) and DESIGN Decision (how) are pushed off the card to keep it lean, but the work genuinely depends on them. These must reach the point of use.
-- **Deliberately hidden until really needed.** RATIONALE and RESEARCH sit in the archive tier, loaded only on challenge — genuinely optional, and fine to never load when the work doesn't need them.
+- **Isolated for brevity, but still always needed.** A task's cited Spec Outcome/Invariant (what it realizes) and Design Decision (how) are pushed off the card to keep it lean, but the work genuinely depends on them. These must reach the point of use.
+- **Deliberately hidden until really needed.** Rationale and Research sit in the archive tier, loaded only on challenge — genuinely optional, and fine to never load when the work doesn't need them.
 
 The framework's surface/archive layering already draws this line — surface = needed-by-default, archive = load-on-challenge. The gap is that **nothing makes the first kind actually load.** Surface artifacts cite anchors instead of restating detail, trusting just-in-time loading — but an implementation agent can act on a citation's short name (slug) alone, and when it does, leanness silently becomes **under-specification**: it proceeds on a compressed label and misses the cited constraint.
 
@@ -21,9 +21,9 @@ For the **always-needed class** — content isolated off the card only for brevi
 
 User stories:
 
-- **The needed load is part of the work, not a courtesy** — when an agent's action depends on a load-bearing citation (a SPEC O/INV it realizes, a DESIGN Decision it builds), consulting that content before acting is a required step of the work.
+- **The needed load is part of the work, not a courtesy** — when an agent's action depends on a load-bearing citation (a Spec B/C it realizes, a Design Decision it builds), consulting that content before acting is a required step of the work.
 - **A skipped needed-load is catchable** — an implementation that acted on a load-bearing citation it never opened is detectable after the fact, rather than passing as silently compliant.
-- **Optional stays optional** — archive citations (RATIONALE / RESEARCH) remain load-on-challenge; the work is never forced to open content it doesn't need.
+- **Optional stays optional** — archive citations (Rationale / Research) remain load-on-challenge; the work is never forced to open content it doesn't need.
 
 System policies:
 
@@ -37,7 +37,7 @@ Confirmed when: an implementation that acts on a load-bearing cited constraint d
 ## Non-goals
 
 - The static content-boundary / coordinate-model work — that is the sibling feature `derivable-orthogonality`.
-- **Guaranteeing the deliberately-deferred class.** RATIONALE / RESEARCH (and any genuinely-optional, load-on-challenge content) stay skippable by design — forcing them to load would defeat the deferral that keeps the surface lean.
+- **Guaranteeing the deliberately-deferred class.** Rationale / Research (and any genuinely-optional, load-on-challenge content) stay skippable by design — forcing them to load would defeat the deferral that keeps the surface lean.
 - Restating anchor content back onto the surface (the "embed full context in the card" approach) — that abandons the leanness bet; the goal is to make the *needed* load reliable, not to remove the need for it.
 - Changing **what** any artifact contains or its stage role.
 

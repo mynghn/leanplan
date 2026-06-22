@@ -1,6 +1,6 @@
-# 260619-context-engineering-knowledges-grounding — RESEARCH
+# 260619-context-engineering-knowledges-grounding — Research
 
-Evidence only. Interpretations live in DESIGN RATIONALE. Gathered 2026-06-19 via a cold audit (LeanPlan internals + the then-14 KB entries; two breadth-heavy scans run in isolated sub-agents, conclusions distilled here). Re-measured 2026-06-20 at vendoring — the KB had grown to 15 (see CE knowledge base below).
+Evidence only. Interpretations live in Design Rationale. Gathered 2026-06-19 via a cold audit (LeanPlan internals + the then-14 KB entries; two breadth-heavy scans run in isolated sub-agents, conclusions distilled here). Re-measured 2026-06-20 at vendoring — the KB had grown to 15 (see CE knowledge base below).
 
 ## CE knowledge base — structure and edge graph
 
@@ -9,7 +9,7 @@ Source: `~/.local/share/context-engineering-knowledge-base/` (skill copy at `~/.
 - 15 entries + `INDEX.md` (14 at the 2026-06-19 audit; `explore-execute-boundary` was added to the KB after the audit — see closure note below). Slugs: `attention-sinks`, `compaction-vs-eviction`, `context-as-working-set`, `context-isolation`, `context-rot`, `distractor-sensitivity`, `effective-vs-advertised-context`, `explore-execute-boundary`, `explore-then-compact-handoff`, `jit-loading`, `literal-vs-latent-matching`, `lost-in-the-middle`, `prefix-cache-economics`, `structured-note-taking`, `three-axes-of-context-degradation`.
 - Entry frontmatter fields: `name`, `description`, `last_refreshed` (ISO date; all 15 dated 2026-06-19), `sources` (list of `title — author/venue — URL`). Body carries `Related: [[slug]]` edges. `INDEX.md` has no frontmatter (heading + `- [slug](knowledge/slug.md) — desc` bullets).
 - `three-axes-of-context-degradation` is an index over three axes: **position** (`lost-in-the-middle`, `attention-sinks`), **length** (`context-rot`, `effective-vs-advertised-context`), **noise** (`distractor-sensitivity`, `literal-vs-latent-matching`).
-- Edge-graph closure: the transitive closure over `Related` edges from the concepts this feature cites reaches **all 15** entries. `three-axes-of-context-degradation` links all six axis members; `compaction-vs-eviction` links `effective-vs-advertised-context` + `prefix-cache-economics`; `explore-then-compact-handoff` links `explore-execute-boundary` (its temporal sibling). No proper subset of the 15 is link-closed. (Re-measured 2026-06-20 at vendoring: the 2026-06-19 audit counted 14; `explore-execute-boundary` was added to the KB afterward and `explore-then-compact-handoff` gained an edge to it, extending the closure by one. `explore-execute-boundary`'s own edges all resolve in-set, so 15 is closed. Per `DESIGN#Decision-1` invalidation trigger — "the KB's concept set changes shape" — the full closure is vendored.)
+- Edge-graph closure: the transitive closure over `Related` edges from the concepts this feature cites reaches **all 15** entries. `three-axes-of-context-degradation` links all six axis members; `compaction-vs-eviction` links `effective-vs-advertised-context` + `prefix-cache-economics`; `explore-then-compact-handoff` links `explore-execute-boundary` (its temporal sibling). No proper subset of the 15 is link-closed. (Re-measured 2026-06-20 at vendoring: the 2026-06-19 audit counted 14; `explore-execute-boundary` was added to the KB afterward and `explore-then-compact-handoff` gained an edge to it, extending the closure by one. `explore-execute-boundary`'s own edges all resolve in-set, so 15 is closed. Per `Design#D-1` invalidation trigger — "the KB's concept set changes shape" — the full closure is vendored.)
 
 ## Principle → concept mapping (verified)
 
@@ -29,7 +29,7 @@ Verified against `references/*.md`, `framework-design.md`, the adapter SKILLs, a
 ## Self-conformance gaps (measured)
 
 - JIT self-violation: every stage adapter SKILL eager-loads `philosophy.md` (23 lines) + `artifact-contract.md` (126) + `<stage>.md` before acting. `impl` = 23 + 126 + 98 = **247 lines** loaded up front, while `impl.md` itself prescribes JIT-loading of artifact anchors. Sharpest case: `artifact-contract.md` (126 lines) loads at every stage even when structure is not being edited.
-- Isolation: `Agent` is in the `design` and `impl` adapter `allowed-tools`, absent from `specify` (the REQ→SPEC research edge); `requirement`/`plan` lack it too. No stage reference prescribes isolating breadth-heavy investigation into a sub-agent that returns only the distilled artifact.
+- Isolation: `Agent` is in the `design` and `impl` adapter `allowed-tools`, absent from `specify` (the REQ→Spec research edge); `requirement`/`plan` lack it too. No stage reference prescribes isolating breadth-heavy investigation into a sub-agent that returns only the distilled artifact.
 - Prefix-cache ordering: no stable→volatile load-order rule in `framework-design.md` §6 or in adapter authoring guidance.
 - Edge-placement: §6 has a ToC>100-line rule only; no rule re-anchors critical invariants near a long artifact's tail or orders high-stakes DAG cards at the edges.
 - Session-boundary: absent as a principle. §14 notes cross-session continuity is handled by harness + git, with no artifact planned.

@@ -1,8 +1,8 @@
-# 260621-reflexive-surface-budget — RESEARCH
+# 260621-reflexive-surface-budget — Research
 
 ## Stage-reference inventory (worktree source, 2026-06-21)
 
-Always-loaded stage references, prose line counts: requirement.md 96, specify.md 80, design.md 70, plan.md 95, impl.md 106. On-demand companions: artifact-contract.md 157, philosophy.md 26, context-engineering.md 28. Off-pipeline: sharpen.md 45, revise.md 57. (Runtime `~/.local/share/leanplan/references/` was stale vs source for design.md and impl.md — a pull/reinstall updates it.)
+Always-loaded stage references, prose line counts: requirements.md 96, specify.md 80, design.md 70, tasks.md 95, impl.md 106. On-demand companions: artifact-contract.md 157, philosophy.md 26, context-engineering.md 28. Off-pipeline: sharpen.md 45, revise.md 57. (Runtime `~/.local/share/leanplan/references/` was stale vs source for design.md and impl.md — a pull/reinstall updates it.)
 
 impl.md's close-out detail is three tables: Distillation Hierarchy (L67–76), Commit-message-vs-inline-comment (L80–85), Squash-durability-promotion (L89–97); span ~L63–97, ~35 lines. Referenced only by procedure steps 7–8 and 10 (close-out / commit). The Stop-The-Line Triggers (L40–49) and Artifact Update Loop (L51–61) are consumed at step 4 (re-reason, early/mid-impl) — not close-out — so they stay inline.
 

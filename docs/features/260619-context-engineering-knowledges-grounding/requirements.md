@@ -38,4 +38,4 @@ A newcomer can take any load-bearing rule, follow it to the principle it impleme
 ## Upstream
 
 - Synthesis brief: `leanplan-ce-grounding-brief.md` (originating direction).
-- Prior design reports: `leanplan-ce-revision-plan.md`, `ce-grounding-redesign-plan.md`.
+- Prior design reports: `leanplan-ce-revision-tasks.md`, `ce-grounding-redesign-tasks.md`.
