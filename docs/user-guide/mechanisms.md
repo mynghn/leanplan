@@ -1,6 +1,6 @@
 # LeanPlan Mechanisms
 
-This page explains why LeanPlan behaves the way it does. It is user-facing explanation, not canonical agent procedure. The agent-facing rules still live in `references/*.md` and the runtime adapters.
+This page explains why LeanPlan behaves the way it does. It is user-facing explanation, not canonical agent procedure. The agent-facing rules still live in `references/*.md` and the runtime adapters; each mechanism below links back to its canonical sources.
 
 LeanPlan's mechanisms are not separate tricks. They mostly serve two framework goals:
 
@@ -12,6 +12,8 @@ LeanPlan's mechanisms are not separate tricks. They mostly serve two framework g
 LLMs are sensitive to what is loaded, where the important facts sit, and how much distracting context surrounds the current decision. LeanPlan is shaped to give the agent a compact working set, then reload detail only when a stage or task needs it.
 
 ### Just-in-time loading
+
+Canonical references: [`philosophy.md` → JIT loading](../../references/philosophy.md#behavior-shaping-principles), [`implement.md` → Procedure](../../references/implement.md#procedure), [`framework-design.md` → Surface/archive layering](../../framework-design.md#4-surfacearchive-layering).
 
 What you see: the agent reads the current stage artifact, specific cited anchors, and relevant code instead of loading every LeanPlan reference and every archive file up front.
 
@@ -26,6 +28,8 @@ How to work with it:
 When to challenge it: if the agent cannot make a safe decision without repeatedly opening an archive, promote the needed constraint into the surface artifact that owns it. A fact that is always needed should not hide behind a challenge path.
 
 ### Stage ownership
+
+Canonical references: [`artifact-contract.md` → Stage Ownership](../../references/artifact-contract.md#stage-ownership), [`framework-design.md` → Role segregation](../../framework-design.md#3-role-segregation).
 
 What you see: each artifact owns a different kind of fact.
 
@@ -43,6 +47,8 @@ When to challenge it: if a downstream artifact starts restating upstream content
 
 ### No flat task scripts
 
+Canonical references: [`philosophy.md` → No flat task scripting](../../references/philosophy.md#behavior-shaping-principles), [`artifact-contract.md` → Tasks shape](../../references/artifact-contract.md#tasks-tasksmd), [`tasks.md` → Stage stance](../../references/tasks.md).
+
 What you see: task cards describe goals, constraints, dependencies, and completion evidence rather than step-by-step edit recipes.
 
 Why it exists: implementation happens against current code, not the code that existed when the plan was written. A detailed script can become stale before the task starts, then distract the agent from re-reading the real implementation. LeanPlan wants the task to preserve intent while forcing the agent to re-reason at task entry.
@@ -57,6 +63,8 @@ When to challenge it: if a task is so vague that two implementers would do diffe
 
 ### Stop-the-line moments
 
+Canonical references: [`implement.md` → Stop-The-Line Triggers](../../references/implement.md#stop-the-line-triggers), [`implement.md` → Artifact Update Loop](../../references/implement.md#artifact-update-loop), [`framework-design.md` → Challenge mechanism](../../framework-design.md#9-key-design-resolutions).
+
 What you see: the agent pauses when it finds contradictions, missing verification paths, invalid dependencies, externally visible behavior changes, unprovable constraints, or scope expansion.
 
 Why it exists: LLMs can keep moving through a broken premise very convincingly. LeanPlan makes certain drift visible instead of letting the agent silently patch around it. The pause protects the plan from becoming a polished explanation of the wrong work.
@@ -70,6 +78,8 @@ How to work with it:
 When to challenge it: if the pause is caused by uncertainty rather than real drift, answer the decision directly and continue. Stop-the-line is meant to prevent known wrongness, not to turn every ambiguity into a planning ceremony.
 
 ### Sharpen and revise
+
+Canonical references: [`sharpen.md`](../../references/sharpen.md), [`revise.md`](../../references/revise.md), [`framework-design.md` → Skill responsibilities](../../framework-design.md#12-skill-responsibilities).
 
 What you see: LeanPlan gives two off-pipeline moves for moments when understanding shifts.
 
@@ -89,6 +99,8 @@ LeanPlan keeps the visible plan small because small review surfaces get read. Br
 
 ### Surface and archive layering
 
+Canonical references: [`artifact-contract.md` → Surface / Archive layering](../../references/artifact-contract.md#surface--archive-layering), [`framework-design.md` → Surface/archive layering](../../framework-design.md#4-surfacearchive-layering), [`philosophy.md` → Archive verbose reasoning](../../references/philosophy.md#behavior-shaping-principles).
+
 What you see: Requirements, Spec, Design, and Tasks stay compact, while deeper rationale can live in supporting archive material such as design rationale or research notes.
 
 Why it exists: reviewers and agents need the current decision path quickly. They also need a way to recover deeper reasoning when a decision is challenged. Surface/archive layering keeps both: the surface stays reviewable, and the archive remains available on demand.
@@ -102,6 +114,8 @@ How to work with it:
 When to challenge it: if the surface is so short that reviewers cannot tell what was decided, promote the missing decision into the surface. If the surface is carrying history, debate, or backup evidence, archive it and leave a pointed citation.
 
 ### Surface budget pushback
+
+Canonical references: [`artifact-contract.md` → Surface Budget](../../references/artifact-contract.md#surface-budget), [`validate.py` → surface-budget guardrail](../../scripts/validate.py), [`framework-design.md` → Open items](../../framework-design.md#14-open-items).
 
 What you see: the agent or validator may push back when a surface artifact grows past its soft prose budget, or when the task DAG starts looking too large for one deployment-sized change.
 
@@ -118,6 +132,8 @@ When to challenge it: if a warning is caused by legitimate reference material su
 
 ### One prose home plus traceability
 
+Canonical references: [`artifact-contract.md` → One Prose Home Per Fact](../../references/artifact-contract.md#one-prose-home-per-fact), [`artifact-contract.md` → Traceability](../../references/artifact-contract.md#traceability), [`framework-design.md` → References carry ID + slug](../../framework-design.md#9-key-design-resolutions).
+
 What you see: later artifacts cite earlier anchors instead of copying their content.
 
 Why it exists: brevity fails if every artifact repeats the same fact. Restatement creates drift and makes review harder because the reader must compare versions. Traceability preserves the relationship without multiplying prose.
@@ -131,6 +147,8 @@ How to work with it:
 When to challenge it: if a citation is decorative and the task would mean the same thing without it, improve the task. If a citation points to an anchor whose substance no longer matches the work, revise the plan rather than treating the anchor as a label.
 
 ### Conclusion-first prose
+
+Canonical references: [`artifact-contract.md` → Prose Style](../../references/artifact-contract.md#prose-style), [`framework-design.md` → Cross-cutting structural rules](../../framework-design.md#6-cross-cutting-structural-rules).
 
 What you see: good LeanPlan artifacts lead with the claim, decision, or task outcome, then give support.
 
@@ -146,6 +164,8 @@ When to challenge it: if you have to reread a section to discover what it decide
 
 ### Validation as a guardrail
 
+Canonical references: [`validate.py`](../../scripts/validate.py), [`artifact-contract.md` → Required Shapes](../../references/artifact-contract.md#required-shapes), [`artifact-contract.md` → Anchors](../../references/artifact-contract.md#anchors).
+
 What you see: `validate.py` checks feature artifacts and reports missing sections, broken references, coverage gaps, and size guardrail warnings.
 
 Why it exists: LeanPlan's review surface depends on structure. Lightweight validation catches shape drift before an agent or reviewer relies on a plan that no longer has the required anchors, coverage, or dependency shape.
@@ -159,6 +179,8 @@ How to work with it:
 When to challenge it: validation cannot decide whether the product judgment is good or whether the implementation is elegant. It protects the contract; humans still own intent, tradeoffs, and review quality.
 
 ### Brevity is not information loss
+
+Canonical references: [`artifact-contract.md` → Surface Budget](../../references/artifact-contract.md#surface-budget), [`philosophy.md` → Persist by migration to code](../../references/philosophy.md#behavior-shaping-principles), [`implement.md` → Distill WHYs](../../references/implement.md#procedure).
 
 What you see: LeanPlan cuts surface prose aggressively, but it does not ask the team to forget why decisions were made.
 
