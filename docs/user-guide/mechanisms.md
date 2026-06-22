@@ -47,7 +47,7 @@ When to challenge it: if a downstream artifact starts restating upstream content
 
 ### No flat task scripts
 
-Canonical references: [`philosophy.md` → No flat task scripting](../../references/philosophy.md#behavior-shaping-principles), [`artifact-contract.md` → Tasks shape](../../references/artifact-contract.md#tasks-tasksmd), [`tasks.md` → Stage stance](../../references/tasks.md).
+Canonical references: [`philosophy.md` → No flat task scripting](../../references/philosophy.md#behavior-shaping-principles), [`artifact-contract.md` → Tasks shape](../../references/artifact-contract.md#tasks-tasksmd), [`tasks.md` → Stage stance](../../references/tasks.md), [`implement.md` → Re-reason, don't execute](../../references/implement.md#guardrails).
 
 What you see: task cards describe goals, constraints, dependencies, and completion evidence rather than step-by-step edit recipes.
 
@@ -115,7 +115,7 @@ When to challenge it: if the surface is so short that reviewers cannot tell what
 
 ### Surface budget pushback
 
-Canonical references: [`artifact-contract.md` → Surface Budget](../../references/artifact-contract.md#surface-budget), [`validate.py` → surface-budget guardrail](../../scripts/validate.py), [`framework-design.md` → Open items](../../framework-design.md#14-open-items).
+Canonical references: [`artifact-contract.md` → Surface Budget](../../references/artifact-contract.md#surface-budget), [`validate.py` → surface-budget guardrail](../../scripts/validate.py).
 
 What you see: the agent or validator may push back when a surface artifact grows past its soft prose budget, or when the task DAG starts looking too large for one deployment-sized change.
 
