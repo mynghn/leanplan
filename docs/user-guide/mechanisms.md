@@ -101,6 +101,21 @@ How to work with it:
 
 When to challenge it: if the surface is so short that reviewers cannot tell what was decided, promote the missing decision into the surface. If the surface is carrying history, debate, or backup evidence, archive it and leave a pointed citation.
 
+### Surface budget pushback
+
+What you see: the agent or validator may push back when a surface artifact grows past its soft prose budget, or when the task DAG starts looking too large for one deployment-sized change.
+
+Why it exists: the budget is a tripwire, not a target. LeanPlan uses it to catch artifacts that are becoming hard to review or that may be hiding more than one feature. The right response is not automatic deletion; it is a deliberate choice about where the extra material belongs.
+
+How to work with it:
+
+- Ask what prose belongs in an archive, what belongs on the surface, and what should be removed as duplication.
+- Split the feature when the size is evidence that the work is no longer one deployable slice.
+- Use strict validation when the team wants budget warnings to block CI or pre-commit.
+- Use `--allow-large` only when the larger surface is intentional and still reviewable.
+
+When to challenge it: if a warning is caused by legitimate reference material such as a Mermaid diagram or fenced schema, make sure it is being counted correctly before shrinking the artifact. If the artifact is over budget because every line carries load-bearing intent, the better fix may be feature splitting, not prose compression.
+
 ### One prose home plus traceability
 
 What you see: later artifacts cite earlier anchors instead of copying their content.
