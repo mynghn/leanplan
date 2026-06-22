@@ -46,7 +46,7 @@ The full tier model (L0/L1/L2 labels, design reasoning) lives in `framework-desi
 
 ## Anchors
 
-Anchor headings live at any of H2 / H3 / H4 to fit document structure. The text after the heading marker must match exactly:
+Anchor headings live at any of H2 / H3 / H4 to fit document structure — the markdown fragment derives from the heading text, not its level, so an anchor can move between levels without breaking a citation. The text after the heading marker must match exactly:
 
 - `O-<N>: <slug>` — Outcome item (episode-verifiable)
 - `INV-<N>: <slug>` — Invariant (continuous property)
