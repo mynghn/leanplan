@@ -139,7 +139,7 @@ Native to this doc — design-level authoring guidance not in the contract:
 | Universal ToC | conditional only when file > 100 lines; minimized artifacts rarely cross that |
 | Drift guards (per-artifact) | skill-prompt-enforced at write time |
 | Deviation / challenge protocol | operationalized in-framework via §9 Challenge mechanism + Artifact update loop + §10 Plan → code distillation — no external CLAUDE.md dependency |
-| Universal ops rules (INFRAREQ / DBREQ, PR stacking, subagent parallelism, language) | skill-prompt level |
+| Universal ops rules (infrastructure / database request filing, PR stacking, subagent parallelism, language) | skill-prompt level |
 | One-deployment guardrail | advisory in default mode — TASK-time DAG-size check warns at >12 tasks and >16 tasks; `--strict` (or `LEANPLAN_STRICT=1`) escalates to error; `--allow-large` overrides. Earlier-stage heuristics (SPEC O count, DESIGN component count) are deferred — see open items. |
 
 Documents carry durable state. Skills and prompts carry stage behavior.
@@ -175,13 +175,13 @@ Decisions unchanged by the rename:
 
 | Element | Name | Rationale |
 |---|---|---|
-| TASK operational rules (doc-level + task-card) | **Guidelines** | 작업 지침 — operational guidance the doer follows while executing; altitude-distinct from §1 *Philosophy* (framework-level foundational stance) and SPEC continuous items (runtime system-level) |
+| TASK operational rules (doc-level + task-card) | **Guidelines** | work instructions — operational guidance the doer follows while executing; altitude-distinct from §1 *Philosophy* (framework-level foundational stance) and SPEC continuous items (runtime system-level) |
 | Feature directory id | **`<KEY>`** — one of `NNNN-slug` (sequence), `PROJ-123` (tracker key), or `YYMMDD-slug` (date) | Three id forms, all allocated by `leanplan-new`, cover the common ways teams anchor a feature: a repo-local sequence number for stable cross-feature ordering with no tracker coupling (the default; slug carries human identity inline, spec-kit lineage); a bare external tracker key (e.g. Jira) when the feature *is* that issue and the team wants it legible in the path; a `YYMMDD` date when chronological grouping is the natural key. Earlier LeanPlan demoted tracker keys to REQUIREMENT `## Upstream` to keep identity repo-owned — that is now the default, not the only option (see §9). The `<KEY>` token is kept in path templates (redefined, not renamed) — a sweep-rename would churn ~70 sites against the principle-4 small-surface value, and the precision win here is the single normative definition, not the placeholder's spelling. |
 
 ## 9. Key design resolutions
 
 - **RESEARCH as both edge and L2 archive.** Originally edge-only (cognitive process, no artifact). Promoted to an L2 archive file when depth is worth preserving. Evidence lives here; interpretation stays in RATIONALE.
-- **External blockers promoted to tasks.** When a blocker requires explicit action (filing INFRAREQ, submitting DBREQ), that request becomes a first-class task in the DAG. Avoids hidden "waiting state". Truly out-of-control external blockers remain as dependency notes.
+- **External blockers promoted to tasks.** When a blocker requires explicit action (filing an infrastructure or database request — a ticket to another team), that request becomes a first-class task in the DAG. Avoids hidden "waiting state". Truly out-of-control external blockers remain as dependency notes.
 - **DAG tracks explicit.** Cross-repo vs. in-repo edges carry different meanings. Mermaid subgraphs + track-prefixed task IDs (P / A / D / I) surface this.
 - **Outcome/Invariant split (formerly "AC split").** Traditional "Acceptance Criteria" conflates episode-verifiable ("when X, Y happens") with continuous constraints ("p99 < 5s"). Split: former → Outcome items (`### O-<N>`); latter → Invariants (`### INV-<N>`). Different observability downstream (test vs. SLO dashboard). "AC" (Acceptance Criteria, traditional SDLC term) dropped in favor of O/INV — precise, symmetric, unambiguous.
 - **References carry ID + slug (identity, not restatement).** Anchors look like `SPEC#O-1-detected-anomaly-published`. ID enables stable citation across slug edits; slug names the reference at-a-glance so agents and humans can orient without JIT-loading every hop. This is the reference's *identity*, not a restatement of its *content* (the item's conditions and constraints). Agent still JIT-loads full content when needed. At the code-migration boundary (principle 8), distill semantic content into commit/comment body; ID becomes an optional in-cycle breadcrumb (e.g., `(O-1)`) that gracefully decays when plan doc is discarded.
@@ -296,7 +296,7 @@ Claude Code / Codex already provide: cross-session memory, parallel sub-agents, 
 - **Validators** (drift regex, anchor integrity, SPEC → TASK coverage) — Phase 2
 - **Lifecycle glue** (slash commands binding skills + validators) — Phase 2–3
 - **Progress state files** (per-feature YAML, git-persisted) — Phase 2–3 — *informational only*; cross-session impl survival rests on harness task-state + git, not a per-feature session-state artifact (session-boundary principle, §1.9; principle 7)
-- **Domain glue** (INFRAREQ / DBREQ via Jira MCP, submodule handling) — Phase 3
+- **Domain glue** (infrastructure / database request tickets via Jira MCP, submodule handling) — Phase 3
 - **CLI wrapper** (thin shell over the above) — Phase 3+
 
 **Session management** is the worked example of this split. The **session-boundary discipline** (§1.9, `philosophy.md` P8) names the *behavior* — keep the planning spine warm, hard-cut to a fresh frame at plan→impl, isolate noisy sub-tasks, light-compact at pivots — portably, naming no command. Where a harness supplies grounded session-management *mechanisms*, they realize it: on Claude Code, `/handoff <goal>` at the plan→impl cut (a goal-scoped fresh-session brief) and `/compact-focus` at in-session pivots, both grounded in the same context-engineering concepts (`explore-execute-boundary`, `compaction-vs-eviction`, `explore-then-compact-handoff`, `prefix-cache-economics`). A bare install — no such commands, no external KB — performs the boundary by hand; the principle never depends on them.

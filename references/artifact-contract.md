@@ -162,7 +162,7 @@ Grounded in the small-surface and LLM-aware principles (`philosophy.md` P3). The
 
 - REQUIREMENT has no implementation choices.
 - SPEC has no chosen stack or internal realization. Generic categories (message queue, event stream, HTTP API) only.
-- DESIGN has no work ordering, no INFRAREQ / DBREQ procedure, no PR stacking — those belong in TASK. DESIGN **does** carry tech-realization specifics (field mappings, response shapes, signatures, call sequences, schemas) so plan tasks can anchor in.
+- DESIGN has no work ordering, no infrastructure / database request procedure, no PR stacking — those belong in TASK. DESIGN **does** carry tech-realization specifics (field mappings, response shapes, signatures, call sequences, schemas) so plan tasks can anchor in.
 - TASK has no line-by-line edit script. Implementation agents re-derive against current code at task entry.
 - **TASK fields carry process specifics, not tech-realization specifics (the Product↔Process cut, `framework-design.md` §2).** Plan cards describe the *work* (Goal: what outcome / Completion: how to verify / Guidelines: work-stance). Tech-realization details — proto/response field mappings, controller orchestration sequences, method signatures, code paths, schemas — belong in a DESIGN `Decision-<N>` block. The task card anchors via `DESIGN#Decision-<N>-<slug>`; it does not restate the Decision's content. Symmetric guard with the DESIGN row above. Detection cue: a Goal bullet that answers "after the work lands, the system looks like X" is drift — push X to DESIGN; keep "this task achieves Y, verified by Z" in the card.
 - MUST and MUST NOT are reserved for true invariants.

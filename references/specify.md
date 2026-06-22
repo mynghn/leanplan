@@ -48,7 +48,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
     - ❌ folding latency/no-loss *into* the O ("published within 5s and never dropped") — buries two continuous properties in an episodic item; they lose their SLO/monitor home.
 - **What a SPEC is NOT** test: implementation can change without observable change → cut or push to DESIGN.
 - **Generic-category tech only.** Specific stack names → DESIGN.
-- **No false optionality.** If a property has no real alternative realization, it's an Invariant, not a DESIGN choice. Don't fake optionality.
+- **No false optionality.** If a property has no real alternative realization, it's an Invariant, not a DESIGN choice.
 - **SPEC `O` / `INV` is the observable canonical home.** An INV realizing a REQUIREMENT system-policy states the observable form and leaves the *intent* to REQUIREMENT (`artifact-contract.md` → One Prose Home Per Fact).
 - **Stable IDs.** `N` is stable across slug edits. Append new items with higher numbers; supersede by retire-by-note, not deletion — the global rule, in `artifact-contract.md` → Anchors.
 - **Research archive is evidence-only.** Interpretations belong in RATIONALE.

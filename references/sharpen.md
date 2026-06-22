@@ -10,7 +10,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
 - The disturbance — what shifted, or the external claim to check (`$ARGUMENTS`). If nothing has formed yet to be disturbed, stop: drawing an understanding out of a blank-slate arrival is the requirement stage's draw-out front-step (`requirement.md` Procedure step 3), not this move's.
 - The in-flight stage's working context — the understanding being sharpened. Preserved across the move.
-- Committed artifacts at the affected layers — read to reflect against, **never edited**. JIT-load only the anchors the disturbance touches.
+- Committed artifacts at the affected stages — read to reflect against, **never edited**. JIT-load only the anchors the disturbance touches.
 - `docs/features/<KEY>/understanding.md` — the append-only delta archive; the move's only write target (`artifact-contract.md` → UNDERSTANDING). (context-engineering: jit-loading)
 
 ## Output
