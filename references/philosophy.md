@@ -4,7 +4,7 @@ LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployme
 
 ## Stage map
 
-REQUIREMENT (biz outcome) → SPEC (Machine contract, generic categories only) → DESIGN (chosen realization) → TASK (`plan.md` work cards) → code. Archive companions: DESIGN RATIONALE (WHY behind decisions), RESEARCH (evidence behind WHY).
+REQUIREMENT (world outcome) → SPEC (Machine contract, generic categories only) → DESIGN (chosen realization) → TASK (`plan.md` work cards) → code. Archive companions: DESIGN RATIONALE (WHY behind decisions), RESEARCH (evidence behind WHY).
 
 ## Behavior-shaping principles
 

@@ -65,7 +65,7 @@ flowchart LR
 
 Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations. Not shown: the off-pipeline `sharpen` / `revise` moves and their `understanding.md` delta archive (§5.7, §12), which sit beside the pipeline rather than on it.
 
-REQUEST (pre-REQUIREMENT immature biz request) is acknowledged but deferred. Framework currently assumes REQUIREMENT is well-formed via human-agent interaction.
+REQUEST (pre-REQUIREMENT immature problem-world request) is acknowledged but deferred. Framework currently assumes REQUIREMENT is well-formed via human-agent interaction.
 
 ## 3. Role segregation
 
@@ -73,7 +73,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 
 | Stage | Owns | Coordinate |
 |---|---|---|
-| REQUIREMENT | **biz outcome** — the business outcome wanted, non-technical | (World, Contract) |
+| REQUIREMENT | **world outcome** — what the problem-world wants, non-technical | (World, Contract) |
 | SPEC | **observable contract** — externally-observable behaviors the system must expose; generic-category abstraction | (Machine, Contract) |
 | DESIGN | **internal realization** — shape of the finished system; components, chosen stack, schemas, boundaries | (Machine, Realization) |
 | DESIGN RATIONALE | **decision WHY** — reasoning behind DESIGN decisions (alternatives, forces, invalidation hints) | archive L1 |
@@ -83,7 +83,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 
 **How the model derives each seam.** The three axes (§2) each adjudicate exactly one high-traffic boundary, so an author places a fact — or catches a misplacement — by reasoning from the axis, no memorized per-seam rule:
 
-- **World ↔ Machine derives REQUIREMENT ↔ SPEC.** REQUIREMENT states what the problem-world wants (the biz intent — "retain the at-risk customer"); SPEC states what our machine must observably do. An observable, testable predicate authored in REQUIREMENT belongs in SPEC; a bare world-intent authored in SPEC belongs in REQUIREMENT — derivable from the axis, no side-rule. (The *means* to that end — "offer a discount" — is World·Realization, a *World Design* (§2), so it stays out of both.)
+- **World ↔ Machine derives REQUIREMENT ↔ SPEC.** REQUIREMENT states what the problem-world wants (the world intent — "retain the at-risk customer"); SPEC states what our machine must observably do. An observable, testable predicate authored in REQUIREMENT belongs in SPEC; a bare world-intent authored in SPEC belongs in REQUIREMENT — derivable from the axis, no side-rule. (The *means* to that end — "offer a discount" — is World·Realization, a *World Design* (§2), so it stays out of both.)
 - **Contract ↔ Realization derives SPEC ↔ DESIGN.** SPEC states the externally-observable contract (consumers care); DESIGN chooses the internal realization. Swapping Kafka → SQS is a DESIGN change, not a SPEC rewrite — observable-outside vs. internal-inside, an absolute cut, not a relative WHAT/HOW ladder.
 - **Product ↔ Process derives DESIGN ↔ TASK.** DESIGN is the finished system (the Product); TASK is the work that builds it (the Process). A finished-system shape ("after this lands, the system looks like X") in a task card is drift — push it to DESIGN; a work-ordering step in DESIGN belongs in TASK. Time-ordering then falls out of this axis (not the reverse): the Process side is the only time-ordered artifact — once the work lands TASK becomes archival, while the Product-side artifacts describe reality going forward.
 
@@ -91,7 +91,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 
 - **WHY / evidence layering.** Each layer exists so the layer above stays clean: the Contract/Realization artifacts (REQ, SPEC, DESIGN) carry the system's truths; WHY (RATIONALE) explains the choices; evidence (RESEARCH) grounds the explanations. TASK is the bridge from plan to code.
 - **Surface vs. archive.** REQ / SPEC / DESIGN / TASK are the visible review surface — loaded by default. RATIONALE and RESEARCH are hidden archives — loaded only when challenge is triggered from the surface.
-- **Audience.** REQUIREMENT is primarily human-facing (biz reviewers, PM); agents use it as evaluation criteria only. DESIGN + TASK are primarily implementation-agent-facing. SPEC is shared. RATIONALE + RESEARCH are JIT for agents or humans challenging decisions.
+- **Audience.** REQUIREMENT is primarily human-facing (product reviewers, PM); agents use it as evaluation criteria only. DESIGN + TASK are primarily implementation-agent-facing. SPEC is shared. RATIONALE + RESEARCH are JIT for agents or humans challenging decisions.
 
 ## 4. Surface/archive layering
 
@@ -167,7 +167,7 @@ Archives **Rationale · Research · Understanding** (`Delta-`) keep their names;
 **How each name derives:**
 
 - **A skill shares its artifact's root** — a verb where English has one (`specify`→Spec, `design`→Design), the bare noun where it doesn't (`requirements`, `tasks`). Every skill name is then predictable from its artifact, retiring the old `plan`-edge / `TASK`-artifact / `plan.md`-file triple — three names for one element.
-- **Section names derive from the 2×2.** Requirements and Spec are both the **Contract** row (§2), so each splits into an episodic and a continuous half by World/Machine altitude: **Outcome / Guarantee** (World) and **Behavior / Constraint** (Machine). "Behavior" is the framework's own definition of a SPEC item — *externally-observable behavior* — which kills the old same-name "Outcome on both artifacts" confusion; **Guarantee** gives Requirements' continuous biz properties (today's loose "system policies") a real home.
+- **Section names derive from the 2×2.** Requirements and Spec are both the **Contract** row (§2), so each splits into an episodic and a continuous half by World/Machine altitude: **Outcome / Guarantee** (World) and **Behavior / Constraint** (Machine). "Behavior" is the framework's own definition of a SPEC item — *externally-observable behavior* — which kills the old same-name "Outcome on both artifacts" confusion; **Guarantee** gives Requirements' continuous domain properties (today's loose "system policies") a real home.
 - **Anchors are the shortest unambiguous initial** — `B-`, `C-`, `D-`, `T:` (colon, since Task IDs are track-keyed `A1` / `P1`, not sequence numbers). `Delta-` stays spelled (`D-` is taken by Decision; it is the rarely-cited archive item). The artifact namespace in each citation already implies the item type, so short prefixes cost no legibility; the structural detail (heading levels, fragment resolution, track prefixes) stays in `artifact-contract.md` → Anchors.
 - **`plan` is rejected as an artifact name** despite being the obvious word: it is the *activity*, not a node — the whole Requirements→Spec→Design→Tasks spine *is* "the plan", so naming one node "Plan" puts an edge concept on a node (the conflation §2 cleans up) and collides with agent **plan-mode** (an unfixable external clash). **Tasks** names stage 4 by its content; its plural also fixes today's stage(`TASK`)/item(`Task:`) clash.
 
@@ -260,8 +260,8 @@ Skills map to **edges** (transformations between stages), not to nodes — with 
 
 | Skill | Edge | Produces | Scope |
 |---|---|---|---|
-| `requirement` | (standalone) → REQUIREMENT | REQUIREMENT | Author REQUIREMENT interactively — Problem, Outcome (biz future state + success signal folded), conditional Non-goals and Upstream. Biz-framed, no implementation choices. Currently a standalone skill; future: may become a REQUEST → REQUIREMENT edge (`distill`) when naive biz writings are formalized as REQUEST input (§14). |
-| `specify` | REQUIREMENT → SPEC | SPEC | Derive tech contract (Outcome items + conditional Invariants, Non-goals). Generic-category abstraction only. Headers `## Outcome` / `## Invariants`; items `### O-<N>: <slug>` and `### INV-<N>: <slug>`. Enforce "what a spec is NOT" drift guard. Split episode-verifiable (Outcome) from continuous (Invariants). Research activity on REQ → SPEC edge; archive notable findings as RESEARCH entries when depth is worth preserving. |
+| `requirement` | (standalone) → REQUIREMENT | REQUIREMENT | Author REQUIREMENT interactively — Problem, Outcome (problem-world future state + success signal folded), conditional Non-goals and Upstream. World-framed, no implementation choices. Currently a standalone skill; future: may become a REQUEST → REQUIREMENT edge (`distill`) when naive problem-world writings are formalized as REQUEST input (§14). |
+| `specify` | REQUIREMENT → SPEC | SPEC | Derive the observable contract (Outcome items + conditional Invariants, Non-goals). Generic-category abstraction only. Headers `## Outcome` / `## Invariants`; items `### O-<N>: <slug>` and `### INV-<N>: <slug>`. Enforce "what a spec is NOT" drift guard. Split episode-verifiable (Outcome) from continuous (Invariants). Research activity on REQ → SPEC edge; archive notable findings as RESEARCH entries when depth is worth preserving. |
 | `design` | SPEC → DESIGN | DESIGN (+ RATIONALE, RESEARCH as needed) | Architecture diagram (Mermaid) + Decisions (`## Decision-<N>: <slug>`). Anchor non-trivial decisions to RATIONALE. Every SPEC O + INV is realized by ≥ 1 Decision, Architecture element, or (for trivial realization) a directly-cited TASK Completion criterion — not only Decisions. Write RATIONALE entries for non-trivial decisions and RESEARCH entries along the SPEC → DESIGN research activity. Drift guard: chosen realization only; no work ordering or ops process text. |
 | `plan` | DESIGN → TASK | TASK | DAG with track subgraphs + prefixed IDs. Task cards with Goal (WHAT + HOW + inline anchors), Repo, Completion, Dependencies, conditional Guidelines. Verify bidirectional mapping: every SPEC O + INV maps to ≥ 1 completion criterion AND every TASK cites ≥ 1 SPEC O / INV / DESIGN Decision / doc Guideline reason. |
 | `impl` | TASK → code | working software | Load task refs, inspect current code, re-reason against current reality, challenge prior DESIGN when contradicted (stop-the-line *triggers* detect the drift and delegate the walk-up/edit to `/revise` per §9 / §12), verify completion criteria, distill WHYs to code per §10 (types > tests > annotations > commit messages > inline comments; change rationale → PR body for squash-safety). |
@@ -286,7 +286,7 @@ Framework ships incrementally; not every phase is required to start.
 | 4 | Harness-flavored capabilities (see below) | ○ future (post-v1) |
 | 5 | Integrations (LSP, Jira deep-link, CI gates) | ○ future |
 
-**v1 criteria**: **scope division** (splitting oversized input before planning) + **requirement distillation** (REQUEST → REQUIREMENT from naive biz input). Both are prompt + orchestration; achievable by Phase 2–3.
+**v1 criteria**: **scope division** (splitting oversized input before planning) + **requirement distillation** (REQUEST → REQUIREMENT from naive problem-world input). Both are prompt + orchestration; achievable by Phase 2–3.
 
 ### What frontier harnesses provide vs. what we build
 
@@ -317,10 +317,10 @@ Most require accumulated data across many shipped cycles; post-v1. Harness-like 
 
 Genuinely open — not yet built or decided:
 
-- **REQUEST → REQUIREMENT edge (`distill`)**: `requirement` currently authors REQUIREMENT standalone (interactive with user). Future: when naive biz writings become an explicit REQUEST input artifact, add a `distill` skill for the REQUEST → REQUIREMENT sharpening edge.
+- **REQUEST → REQUIREMENT edge (`distill`)**: `requirement` currently authors REQUIREMENT standalone (interactive with user). Future: when naive problem-world writings become an explicit REQUEST input artifact, add a `distill` skill for the REQUEST → REQUIREMENT sharpening edge.
 - **Divide-and-conquer for oversized work**: how to split inputs that exceed one-deployment scope. Framework assumes proper sizing for now.
 - **Earlier-stage one-deployment heuristics**: scope-sizing checks at SPEC time (O count) and DESIGN time (component count) remain deferred. The TASK-time DAG-size guardrail is active in advisory mode (warn at >12 / >16 tasks; `--strict` escalates to error; `--allow-large` overrides). Hard-block heuristics earlier would catch oversized work sooner but are unproven; revisit if it recurs in practice.
-- **Real business-domain dogfood**: the framework now self-hosts its own evolution — `docs/features/*` holds several shipped cycles (ce-grounding, artifact-later-update, lean-review-surfaces, understanding-sharpening, reflexive-surface-budget, …). A dogfood on a non-meta *business* feature is still desirable to stress it against domain complexity.
+- **Real product-domain dogfood**: the framework now self-hosts its own evolution — `docs/features/*` holds several shipped cycles (ce-grounding, artifact-later-update, lean-review-surfaces, understanding-sharpening, reflexive-surface-budget, …). A dogfood on a non-meta *product* feature is still desirable to stress it against domain complexity.
 
 Resolved / shipped — moved out of "open", kept for provenance:
 

@@ -49,7 +49,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 - **Intent + constraints, not scripts.** No step-by-step edit instructions ("edit file X at line Y"). The impl agent re-derives against current code at task entry.
 - **Process specifics belong here; tech-realization specifics belong in DESIGN.** A task card describes the *work* — what outcome it achieves, how to verify it, in what work-stance. The *finished system's shape* (field mappings, response/proto shapes, controller orchestration sequences, signatures, code paths, schemas) belongs in a DESIGN `Decision-<N>` block. Anchor the Decision (`DESIGN#Decision-<N>-<slug>`) from the Goal; do not restate it.
-  - ✅ healthy in Goal: *"BFF facade for ListMyCoupons — thin delegation to D2 (`DESIGN#Decision-13-cross-domain-wrapping`); itinerary-aware logic stays in socar-server (`SPEC#INV-2-shared-business-policy`)."*
+  - ✅ healthy in Goal: *"BFF facade for ListMyCoupons — thin delegation to D2 (`DESIGN#Decision-13-cross-domain-wrapping`); itinerary-aware logic stays in socar-server (`SPEC#INV-2-shared-domain-policy`)."*
   - ✅ healthy in Completion: *"(a) authed + valid spec → response with `is_available` accurate; (b) anon → UNAUTHENTICATED; (c) parity with app channel for identical input."*
   - ❌ drift in Goal: *"Request mapping: `web.{a, b, c}` → `domain.{a', b', c'}`; response mapping: `repeated PriceItem price_items=1 ...`; controller orchestration: `resolve(ctx) → checkPaymentCard → checkApprovedDriver → previewV2`."* — push these to DESIGN.
 - **Conclusion-first Goal.** Lead with the outcome this task achieves; the how and the anchors follow. The Goal's bottom line is graspable from its first clause (`artifact-contract.md` → Prose Style).
