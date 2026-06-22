@@ -1,21 +1,21 @@
-# 260620-round-scoped-key-leakage — DESIGN RATIONALE
+# 260620-round-scoped-key-leakage — Design Rationale
 
-## Decision-1: guidance-carries-substance
+## D-1: guidance-carries-substance
 
-Guidance is the only universal arm, so the rule's substance must live there regardless of what we mechanize. The impl agent authors on surfaces no git hook or CI can see — runtime logs, runbooks, external wikis, the body of a Slack post — and guidance travels with the agent to all of them. So even in a world with a perfect mechanical gate, the guidance edit is load-bearing.
+Guidance is the only universal arm, so the rule's substance must live there regardless of what we mechanize. The implementation agent authors on surfaces no git hook or CI can see — runtime logs, runbooks, external wikis, the body of a Slack post — and guidance travels with the agent to all of them. So even in a world with a perfect mechanical gate, the guidance edit is load-bearing.
 
 Why extend P7 rather than add a 9th principle: the leak is a *failure mode* of P7 ("persist by migration to code"), not a new axis of behavior. P7 already says "distill non-obvious WHYs into durable forms"; it simply never said "carry the substance, not the round-local key." Adding a standalone "round-scoped vs durable identifiers" principle was the alternative — rejected to keep philosophy.md lean (8 tight principles; a new one for a single failure mode dilutes the set). The distinction it would name is real but is better attached to P7, whose hierarchy is exactly where the migration happens, and cross-linked to P6 (transience) which is *why* the key dangles.
 
-Why this closes the observed gap: the existing impl close-out already had "distill WHYs" and "confirm plan artifacts non-load-bearing," yet leaks happened — because an agent can satisfy "I migrated the WHY" by writing "satisfies INV-1", which *feels* migrated but smuggles the round-local key. The explicit guard ("substance, not the key") plus a concrete close-out self-check names the failure the prior wording allowed.
+Why this closes the observed gap: the existing implementation close-out already had "distill WHYs" and "confirm plan artifacts non-load-bearing," yet leaks happened — because an agent can satisfy "I migrated the WHY" by writing "satisfies C-1", which *feels* migrated but smuggles the round-local key. The explicit guard ("substance, not the key") plus a concrete close-out self-check names the failure the prior wording allowed.
 
 Invalidation triggers: if leaks persist on non-code surfaces despite the guidance, the distinction is under-weighted as a P7 clause and should be elevated to a standalone principle. If the self-check proves to be dead weight an agent rubber-stamps, lean harder on the mechanical arm instead of adding more prose.
 
-## Decision-2: narrow-leak-detector
+## D-2: narrow-leak-detector
 
 Match enforcement *strength* to detection *precision*. Two token classes leak, with very different precision:
 
-- **Anchor tokens and citations** (`INV-1`, `SPEC#INV-1-…`) are near-zero false-positive in durable code or prose — `-` is not an identifier character in mainstream languages, and an `<ARTIFACT>#<anchor>` citation essentially never occurs by accident. High precision → safe to mechanize.
-- **Feature ids** (`0004`, `260620-…`, bare tracker keys) are low precision and sit in the grey zone the SPEC explicitly excluded: a readable scope slug (`docs(lean-review-surfaces)`) and a PR↔issue numeric link are legitimate. A hard grep here generates false positives that erode trust until the gate is disabled wholesale.
+- **Anchor tokens and citations** (`C-1`, `Spec#C-1-…`) are near-zero false-positive in durable code or prose — `-` is not an identifier character in mainstream languages, and an `<ARTIFACT>#<anchor>` citation essentially never occurs by accident. High precision → safe to mechanize.
+- **Feature ids** (`0004`, `260620-…`, bare tracker keys) are low precision and sit in the grey zone the Spec explicitly excluded: a readable scope slug (`docs(lean-review-surfaces)`) and a PR↔issue numeric link are legitimate. A hard grep here generates false positives that erode trust until the gate is disabled wholesale.
 
 So the detector covers only the high-precision class. A useful property falls out for free: because the narrow pattern matches neither readable slugs nor bare numbers, the grey-zone *needs no special-case exclusion logic* — the allowed cases simply don't match. The alternative (a broad grep with a curated allow-list to carve the grey zone back out) was rejected as both noisier and more code.
 
@@ -25,7 +25,7 @@ The dogfooding check: LeanPlan's own distillation hierarchy ranks durable forms 
 
 Invalidation triggers: if the false-positive rate is non-trivial even on the narrow class, tighten toward citations-only or lean on the suppression directive. If feature-id leaks prove costly in practice, revisit the broad scope deliberately — with the grey-zone allow-list that entails — rather than by reflex.
 
-## Decision-3: per-surface-backstop
+## D-3: per-surface-backstop
 
 Guidance is universal but unobservable; a mechanical check is observable but necessarily per-surface. Each integration point exists because it sees a surface the others can't:
 

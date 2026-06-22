@@ -4,7 +4,7 @@ A lean, LLM-aware spec-driven-development framework for one-deployment-sized fea
 
 ## What it is
 
-LeanPlan defines five stages — **REQUIREMENT → SPEC → DESIGN → TASK → code** — that keep each artifact lean by pushing verbose rationale into separately-loaded archives, with a validator that enforces the contract. The framework is shaped around how LLM agents actually consume planning artifacts: limited useful context, weak long-range attention, and stronger performance when intent is loaded just-in-time alongside current code.
+LeanPlan defines five stages — **Requirements → Spec → Design → Tasks → code** — that keep each artifact lean by pushing verbose rationale into separately-loaded archives, with a validator that enforces the contract. The framework is shaped around how LLM agents actually consume planning artifacts: limited useful context, weak long-range attention, and stronger performance when intent is loaded just-in-time alongside current code.
 
 The full framework design is in [`framework-design.md`](./framework-design.md).
 
@@ -43,11 +43,11 @@ Add this to your chezmoi source's `.chezmoiexternal.toml`:
 Then add `symlink_*.tmpl` source files for each adapter target so chezmoi creates the runtime-registry symlinks. For Claude Code skills:
 
 ```
-dot_claude/skills/symlink_requirement.tmpl   →  {{ .chezmoi.homeDir }}/.local/share/leanplan/adapters/claude/requirement
+dot_claude/skills/symlink_requirements.tmpl  →  {{ .chezmoi.homeDir }}/.local/share/leanplan/adapters/claude/requirements
 dot_claude/skills/symlink_specify.tmpl       →  ... /adapters/claude/specify
 dot_claude/skills/symlink_design.tmpl        →  ... /adapters/claude/design
-dot_claude/skills/symlink_plan.tmpl          →  ... /adapters/claude/plan
-dot_claude/skills/symlink_impl.tmpl          →  ... /adapters/claude/impl
+dot_claude/skills/symlink_tasks.tmpl         →  ... /adapters/claude/tasks
+dot_claude/skills/symlink_implement.tmpl     →  ... /adapters/claude/implement
 dot_claude/skills/symlink_sharpen.tmpl       →  ... /adapters/claude/sharpen
 dot_claude/skills/symlink_revise.tmpl        →  ... /adapters/claude/revise
 ```
@@ -99,7 +99,7 @@ Editing the runtime tree is supported (it is a real working copy), but understan
 Open an issue or PR. The validator should pass on every commit:
 
 ```bash
-python3 scripts/validate.py fixtures/valid                # exit 0 (includes a GAP-acked SPEC item)
+python3 scripts/validate.py fixtures/valid                # exit 0 (includes a GAP-acked Spec item)
 python3 scripts/validate.py fixtures/invalid-missing-coverage  # exit 1, expected
 LEANPLAN_FIXTURE=$PWD/fixtures/valid scripts/leanplan-selftest # all pass (exit 0; prints "N passed, 0 failed")
 ```

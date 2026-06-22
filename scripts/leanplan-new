@@ -15,10 +15,10 @@
 #                                            WIDTH-digit number, +1, zero-padded — width via $LEANPLAN_ID_WIDTH,
 #                                            default 4)
 # Forms 1 and 3 normalize the title arg to a kebab slug; form 2 uses the key as-is.
-# Creates <cwd>/docs/features/<id>/{requirement,spec,design,design-rationale,plan}.md.
+# Creates <cwd>/docs/features/<id>/{requirements,spec,design,design-rationale,tasks}.md.
 # Stubs contain section headers + guidance comments — no pseudo-items — so a fresh
-# scaffold passes all validators cleanly. The corresponding /requirement, /specify,
-# /design, /plan skills fill in real content.
+# scaffold passes all validators cleanly. The corresponding /requirements, /specify,
+# /design, /tasks skills fill in real content.
 #
 # Prints the allocated relative dir path (docs/features/<id>) to STDOUT as the only
 # stdout output, so a caller can capture it: dir=$(leanplan-new "$title").
@@ -306,7 +306,7 @@ elif printf '%s' "$RAW" | grep -qE '^[A-Z][A-Z0-9]*-[0-9]+$'; then
     # Form 2: explicit tracker key (e.g. Jira NEWCS-3595) — used verbatim and BARE.
     # No slug: the key is globally unique and human-legible on its own. It already
     # matches [A-Z0-9-] so it is path-safe (no '/' or '..'); do NOT slugify (that would
-    # lowercase it). The same key may also be noted under REQUIREMENT ## Upstream.
+    # lowercase it). The same key may also be noted under Requirements ## Upstream.
     FEATURE_ID="$RAW"
 else
     # Form 3: repo-local sequence id — <NNNN>-<slug> (the default).
@@ -360,7 +360,7 @@ if ! mkdir "$DIR" 2>/dev/null; then
     exit 2
 fi
 
-cat > "$DIR/requirement.md" <<EOF
+cat > "$DIR/requirements.md" <<EOF
 # $FEATURE_ID — <short biz-framed title>
 
 ## Problem
@@ -373,6 +373,12 @@ cat > "$DIR/requirement.md" <<EOF
 
 <!-- Delete sections below if not applicable. -->
 
+## Guarantee
+
+<!-- Conditional — only when continuous domain properties (system-policy intent) exist:
+why a cross-cutting property matters, stated as intent without an observable predicate
+(the observable form is Spec ## Constraint). Delete if none. -->
+
 ## Non-goals
 
 <!-- only when biz-scope edges are genuinely ambiguous -->
@@ -384,19 +390,19 @@ when the feature id itself is a tracker key (Jira-key form), note the URL / rela
 EOF
 
 cat > "$DIR/spec.md" <<EOF
-# $FEATURE_ID — SPEC
+# $FEATURE_ID — Spec
 
-## Outcome
+## Behavior
 
 <!-- Add episode-verifiable items below as:
-###   O-<N>: <kebab-slug>
+###   B-<N>: <kebab-slug>
 followed by "when X, Y happens" prose. One item per behavior. -->
 
-## Invariants
+## Constraint
 
 <!-- Conditional — delete this section if no continuous constraints exist.
 Add items as:
-###   INV-<N>: <kebab-slug>
+###   C-<N>: <kebab-slug>
 for SLA, non-blocking, idempotency, integrity, environmental bindings. -->
 
 <!-- Optional section below; delete if not applicable. -->
@@ -407,7 +413,7 @@ for SLA, non-blocking, idempotency, integrity, environmental bindings. -->
 EOF
 
 cat > "$DIR/design.md" <<EOF
-# $FEATURE_ID — DESIGN
+# $FEATURE_ID — Design
 
 ## Architecture
 
@@ -419,21 +425,21 @@ flowchart LR
 \`\`\`
 
 <!-- Add Decision blocks below, each as:
-##   Decision-<N>: <kebab-slug>
+##   D-<N>: <kebab-slug>
 with a one-line WHAT and a one-line WHY (trivial) or a rationale anchor (non-trivial):
-See rationale at [design-rationale.md#Decision-<N>-<slug>]. -->
+See rationale at [design-rationale.md#D-<N>-<slug>]. -->
 EOF
 
 cat > "$DIR/design-rationale.md" <<EOF
-# $FEATURE_ID — DESIGN RATIONALE
+# $FEATURE_ID — Design Rationale
 
-<!-- One ## Decision-<N>: <slug> per non-trivial decision only. Free-form prose body;
+<!-- One ## D-<N>: <slug> per non-trivial decision only. Free-form prose body;
 typical content: forces at play, alternatives considered, chosen path, invalidation
 hints. No prescribed schema — capture reasoning, don't fill a form. -->
 EOF
 
-cat > "$DIR/plan.md" <<EOF
-# $FEATURE_ID — TASK
+cat > "$DIR/tasks.md" <<EOF
+# $FEATURE_ID — Tasks
 
 <!-- Doc-level Guidelines section is conditional — include only when feature-wide
 work-stance rules genuinely apply (base branch, canary sequence, coordination). -->
@@ -447,18 +453,18 @@ flowchart LR
 
 <!-- caption: what the tracks represent; 1-2 sentences. -->
 
-<!-- Add Task cards below, each as:
-##   Task: <track-prefix><N>
-- **Goal**: <WHAT + HOW; inline SPEC#O-<N>-<slug> / SPEC#INV-<N>-<slug> / DESIGN#Decision-<N>-<slug> anchors>
+<!-- Add task cards below, each as:
+##   T: <track-prefix><N>
+- **Goal**: <WHAT + HOW; inline Spec#B-<N>-<slug> / Spec#C-<N>-<slug> / Design#D-<N>-<slug> anchors>
 - **Repo**: <path or repo name>
-- **Completion**: <observable verification, cites SPEC anchors>
+- **Completion**: <observable verification, cites Spec anchors>
 - **Dependencies**: <prior task IDs as enablers | none>
 - **Guidelines** (conditional): <task-level work-stance rules>
 -->
 EOF
 
-# H1 above is "$FEATURE_ID — TASK" by design (the word TASK; the file is plan.md);
-# fixtures/valid and the validator/selftest depend on this — do not change to PLAN.
+# H1 above is "$FEATURE_ID — Tasks" by design (the artifact node is "Tasks", not "Plan" —
+# framework-design.md §8; the file is tasks.md); fixtures/valid and the validator/selftest depend on this.
 echo "scaffolded $FEATURE_ID at $DIR (5 files)" >&2
 echo "$DIR"
 exit 0

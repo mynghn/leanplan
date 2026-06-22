@@ -1,0 +1,95 @@
+# LeanPlan Plan Stage
+
+This doc carries the procedure for the Tasks stage — sequencing Design into land-able task cards in `tasks.md`. Edge: Design → Tasks (`tasks.md`).
+
+**Stage stance.** A task card describes the *work* — what it achieves, how to verify it, in what stance — never the *finished system* (that is Design; anchor in, don't restate). The two characteristic failures are restating Design content in a Goal and flattening intent into a line-level edit script.
+
+Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
+
+Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
+
+## Inputs
+
+- Requirements, Spec, Design — surface artifacts.
+- Design Rationale — *not* loaded by default; load only when a decision seems questionable mid-planning and you need full rationale.
+- Current repo boundaries and deployment constraints.
+
+## Output
+
+`<cwd>/docs/features/<KEY>/tasks.md`
+
+## Procedure
+
+*Default flow, not a rigid script — re-derive it against the actual Design. Load-bearing (don't skip or reorder): the bidirectional verification (step 6), the one-deployment guardrail (step 7), the self-check (step 8).*
+
+1. **Load** artifact contract + Spec + Design.
+2. **Compose doc-level Guidelines (conditional)** — only when feature-wide work-stance rules genuinely apply (base branch, canary sequence, cross-team coordination). Skip otherwise.
+3. **Identify tracks** — group work by a coordination-relevant axis (common: repo, or protocol-vs-service, or infra-vs-app). Each track becomes a Mermaid subgraph + a prefix letter (e.g. `P` = protocol, `A` = api, `D` = data, `I` = infra). Tracks are navigational aid for humans; the implementation agent doesn't consume them as a formal concept.
+4. **Author `T: <id>` cards**, each with:
+   - **Goal** — *process-framed*: what outcome this task achieves + how (when the work approach is non-obvious), with inline `Spec#B-<N>-<slug>` / `Spec#C-<N>-<slug>` / `Design#D-<N>-<slug>` anchors colocated with the supported sentence. **Anchor — don't restate.** If the Goal starts answering "after this lands, the system looks like X" (field mappings, response shapes, call sequences, signatures, code paths), push X to the relevant Design Decision and link to it from the Goal.
+   - **Repo** — where the work lives.
+   - **Completion** — observable verification + method when non-obvious. Continuous Constraints → ongoing mechanism (SLO / monitor / CI gate); episodic Behavior items → one-shot test. Split dev / prod for infra + DB. Enumerated case scenarios (a/b/c/...) are healthy here — verification is process-specific.
+   - **Dependencies** — prior task IDs as enablers.
+   - **Guidelines** (conditional) — task-scoped stance rules.
+5. **Draw the DAG** at the top under `## Dependency DAG` (or `## DAG`). Subgraphs by track; edges = "prior unblocks this one".
+6. **Bidirectional verification** — do this explicitly and report. Do not paper over gaps:
+   - **Forward**: walk every Spec `B-<N>` and `C-<N>`; each must map to ≥ 1 task Completion criterion **or** be acknowledged via a `**GAP**` annotation. List uncovered items.
+   - **Reverse**: walk every `T: <id>`; each Goal must cite ≥ 1 Spec B / C / Design Decision / doc Guideline as its reason. List orphan tasks.
+7. **One-deployment guardrail (advisory)** — task count > 12 warns; > 16 warns more strongly; under `--strict` (or `LEANPLAN_STRICT=1`) these escalate to errors. If oversized, surface a split question to the user: should this be split into multiple features?
+8. **Self-check**:
+   - No step-by-step edit instructions in any Goal.
+   - Each Goal leads with the outcome it achieves, not preamble — the plan's decisions are recoverable from Goal lead lines (conclusion-first; `artifact-contract.md` → Prose Style).
+   - No tech-realization restatement in Goals (field mappings, response/proto shapes, controller orchestration sequences, signatures, code paths). If a Goal explains *what the system looks like after the work lands*, that content belongs in a Design Decision — the Goal anchors in.
+   - Every Completion is observable (you could write the verification).
+   - Task cards are self-sufficient at cut-off (sentences complete without the anchor target).
+   - DAG renders.
+   - For a plan past ~100 lines, high-stakes / blocking cards sit at the edges (top and tail), not buried mid-file, and critical feature-level Guidelines are re-anchored near the tail (edge-placement; `framework-design.md` §6, `artifact-contract.md` → Prose Style).
+
+## Guardrails
+
+- **Intent + constraints, not scripts.** No step-by-step edit instructions ("edit file X at line Y"). The implementation agent re-derives against current code at task entry.
+- **Process specifics belong here; tech-realization specifics belong in Design.** A task card describes the *work* — what outcome it achieves, how to verify it, in what work-stance. The *finished system's shape* (field mappings, response/proto shapes, controller orchestration sequences, signatures, code paths, schemas) belongs in a Design `D-<N>` block. Anchor the Decision (`Design#D-<N>-<slug>`) from the Goal; do not restate it.
+  - ✅ healthy in Goal: *"BFF facade for ListMyCoupons — thin delegation to D2 (`Design#D-13-cross-domain-wrapping`); itinerary-aware logic stays in socar-server (`Spec#C-2-shared-domain-policy`)."*
+  - ✅ healthy in Completion: *"(a) authed + valid spec → response with `is_available` accurate; (b) anon → UNAUTHENTICATED; (c) parity with app channel for identical input."*
+  - ❌ drift in Goal: *"Request mapping: `web.{a, b, c}` → `domain.{a', b', c'}`; response mapping: `repeated PriceItem price_items=1 ...`; controller orchestration: `resolve(ctx) → checkPaymentCard → checkApprovedDriver → previewV2`."* — push these to Design.
+- **Conclusion-first Goal.** Lead with the outcome this task achieves; the how and the anchors follow. The Goal's bottom line is graspable from its first clause (`artifact-contract.md` → Prose Style).
+  - ✅ *"Publish detected anomalies on detection (`Spec#B-1-detected-anomaly-published`) — direct publisher per `Design#D-2-direct-kafka-publisher`."* — outcome first, anchors trailing.
+  - ❌ *"Since the detector runs in-process and the team wants no new component, this task adds a direct Kafka publisher (`Design#D-2-direct-kafka-publisher`) to publish anomalies on detection (`Spec#B-1-detected-anomaly-published`)."* — the outcome lands last, after the rationale.
+- **Dependencies are *enablers*, not gates.** Phrase as "P2 lands the schema that makes P1 testable", not "P1 cannot start until P2 completes". Impl agent re-evaluates at task entry.
+- **Guidelines describe work-stance, not system shape.** If a line describes what exists *after* the work lands, push it to Design. Externally-observable compat behavior → Spec Constraints. Test specifics → task Completion.
+- **External blockers become first-class tasks.** Infrastructure / database request filings, cross-team coordination — those are tasks in the DAG, not hidden "waiting" states.
+- **Anchors carry ID + slug (identity, not restatement).** `Spec#B-1-detected-anomaly-published` — ID stable; slug names the reference at-a-glance. Don't paraphrase the item's content in the task card; rely on the anchor + JIT load (`artifact-contract.md` → One Prose Home Per Fact).
+- **Forward coverage has one home.** Inline `Completion` citations are the canonical Spec↔Tasks mapping; a forward-coverage table, if kept, is a derived view of them (not a re-authored mapping) — only the deliberately-uncovered subset carries the reserved `**GAP**` marker (`artifact-contract.md` → One Prose Home Per Fact).
+- **`**GAP**` ack is rare.** Use it only for deliberately-deferred coverage with a documented acceptance rationale.
+- **Isolate breadth-heavy verification.** On a large feature (near the task guardrail), the bidirectional sweep holds full Spec + Design + every task card in the window at once — a breadth-heavy aggregation that degrades. Run it in a sub-agent that returns only the gap lists (uncovered Spec items + orphan tasks), keeping the full-corpus read out of the planning window. Guidance, not mandate — when breadth exceeds the window. (context-engineering: context-isolation, explore-then-compact-handoff)
+
+## Template
+
+````markdown
+# <KEY> — Tasks
+
+## Guidelines
+- <only feature-level work-stance rules; omit section otherwise>
+
+## Dependency DAG
+
+```mermaid
+flowchart LR
+    subgraph A [API]
+      A1 --> A2
+    end
+```
+
+## T: A1
+
+- **Goal**: <process-framed — what this task achieves + how (when non-obvious); inline anchors like `Spec#B-1-…` and `Design#D-1-…`. Anchor — don't restate the Decision's content.>
+- **Repo**: <repo/path>
+- **Completion**:
+  - <observable proof, citing Spec#B-* or Spec#C-*; enumerate case scenarios when verification has branches>
+- **Dependencies**: none
+- **Guidelines**: <only task-local stance rules when needed>
+````
+
+## Hand-off
+
+For each independently startable task: `/implement <KEY> <task-id>` (Claude) or `implement <KEY> <task-id>` (Codex).

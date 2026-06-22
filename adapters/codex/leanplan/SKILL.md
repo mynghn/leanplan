@@ -1,6 +1,6 @@
 ---
 name: leanplan
-description: Use LeanPlan, a portable LLM-aware spec-driven-development framework, to author or validate feature artifacts through the requirement, specify, design, plan, and impl stages, plus the off-pipeline sharpen and revise moves.
+description: Use LeanPlan, a portable LLM-aware spec-driven-development framework, to author or validate feature artifacts through the requirements, specify, design, tasks, and implement stages, plus the off-pipeline sharpen and revise moves.
 ---
 
 # LeanPlan
@@ -15,16 +15,16 @@ Parse the user's intent and load only the matching reference from the canonical 
 
 | Intent | Load |
 |---|---|
-| `requirement <slug-or-title>` | `~/.local/share/leanplan/references/requirement.md` |
+| `requirements <slug-or-title>` | `~/.local/share/leanplan/references/requirements.md` |
 | `specify <KEY>` | `~/.local/share/leanplan/references/specify.md` |
 | `design <KEY>` | `~/.local/share/leanplan/references/design.md` |
-| `plan <KEY>` | `~/.local/share/leanplan/references/plan.md` |
-| `impl <KEY> <task-id>` | `~/.local/share/leanplan/references/impl.md` |
+| `tasks <KEY>` | `~/.local/share/leanplan/references/tasks.md` |
+| `implement <KEY> <task-id>` | `~/.local/share/leanplan/references/implement.md` |
 | `sharpen <what-shifted>` | `~/.local/share/leanplan/references/sharpen.md` |
 | `revise <KEY> [Delta-N \| what drifted]` | `~/.local/share/leanplan/references/revise.md` |
 | `validate <feature-path>` | Run `python3 ~/.local/share/leanplan/scripts/validate.py` |
 
-Throughout, `<KEY>` is the feature id. Its three forms (sequence / tracker-key / date), the `leanplan-new` allocation, and the `## Upstream` rule are defined in `artifact-contract.md` / `framework-design.md` §5 and produced by the `requirement` stage — load them there rather than restating here.
+Throughout, `<KEY>` is the feature id. Its three forms (sequence / tracker-key / date), the `leanplan-new` allocation, and the `## Upstream` rule are defined in `artifact-contract.md` / `framework-design.md` §5 and produced by the `requirements` stage — load them there rather than restating here.
 
 For any artifact-writing stage, default-load only the matching stage reference. Load `~/.local/share/leanplan/references/artifact-contract.md` (structural rules) on demand — before writing or editing an artifact's structure or anchors — and `~/.local/share/leanplan/references/philosophy.md` (framework principles) when a principle's intent or grounding is in question, not up front (context-engineering: jit-loading).
 
@@ -40,16 +40,16 @@ python3 ~/.local/share/leanplan/scripts/validate.py docs/features/<KEY>
 
 Flags:
 
-- `--stage requirement|spec|design|plan|full` — partial check while iterating.
+- `--stage requirements|spec|design|tasks|full` — partial check while iterating.
 - `--json` — machine-readable output.
 - `--strict` (or `LEANPLAN_STRICT=1`) — escalates the one-deployment guardrail to error and makes any warning exit non-zero. Suitable for CI / pre-commit.
 - `--allow-large` — suppress the size guardrails (oversized DAGs and over-cap surface artifacts).
 
-A SPEC O / INV item annotated on a line containing `**GAP**` (typically in plan.md's forward-coverage table) is treated as deliberately uncovered — see the artifact contract.
+A Spec B / C item annotated on a line containing `**GAP**` (typically in tasks.md's forward-coverage table) is treated as deliberately uncovered — see the artifact contract.
 
 ## Operating Rules
 
-- Do not turn TASK into a script. Give intent, constraints, anchors, and completion criteria.
+- Do not turn Tasks into a script. Give intent, constraints, anchors, and completion criteria.
 - Do not bulk-load every reference. Load only the stage reference needed now.
 - Do not create living canonical specs. Plan artifacts are in-feature, transient, and migrated into code/tests/types/PR body at implementation close-out.
 - When implementation contradicts a prior artifact, walk up to the highest affected layer and update there instead of patching downstream drift.

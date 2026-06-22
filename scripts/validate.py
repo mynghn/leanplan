@@ -17,10 +17,10 @@ from pathlib import Path
 
 
 SURFACE_FILES = {
-    "requirement": "requirement.md",
+    "requirements": "requirements.md",
     "spec": "spec.md",
     "design": "design.md",
-    "plan": "plan.md",
+    "tasks": "tasks.md",
 }
 
 OPTIONAL_FILES = {
@@ -29,7 +29,7 @@ OPTIONAL_FILES = {
     "understanding": "understanding.md",
 }
 
-STAGE_ORDER = ("requirement", "spec", "design", "plan")
+ARTIFACT_ORDER = ("requirements", "spec", "design", "tasks")
 
 # Surface-budget soft caps, in PROSE lines (fenced code/diagrams and blank lines
 # excluded — see _prose_line_count). The grounding is distractor/review-fidelity
@@ -41,7 +41,7 @@ STAGE_ORDER = ("requirement", "spec", "design", "plan")
 # Direction, not a hard cap; tune per repo. Source of truth:
 # references/artifact-contract.md → "Surface Budget" — this dict mirrors that
 # list; keep the two in sync.
-SURFACE_SOFT_CAP = {"requirement": 90, "spec": 110, "design": 160, "plan": 220}
+SURFACE_SOFT_CAP = {"requirements": 90, "spec": 110, "design": 160, "tasks": 220}
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
 # A trailing ` (retired)` marker is tolerated on any anchor/Task heading: a
@@ -51,15 +51,15 @@ HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
 # into the id/target). Without this the marker would silently de-resolve the
 # anchor — the exact loss retire-by-note exists to prevent. Coverage is the one
 # place the retired state DOES matter: a retired Task grants no forward-coverage
-# credit (see _check_traceability), so a superseded card can't satisfy a live O.
+# credit (see _check_traceability), so a superseded card can't satisfy a live B.
 RETIRED_SUFFIX = r"(\s+\(retired\))?"
-ANCHOR_RE = re.compile(r"^(#{2,4})\s+((O|INV|Decision|Delta)-(\d+):\s+([a-z0-9][a-z0-9-]*))" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
-TASK_RE = re.compile(r"^(#{2,4})\s+Task:\s+([A-Za-z][A-Za-z0-9-]*)" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
+ANCHOR_RE = re.compile(r"^(#{2,4})\s+((B|C|Delta|D)-(\d+):\s+([a-z0-9][a-z0-9-]*))" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
+TASK_RE = re.compile(r"^(#{2,4})\s+T:\s+([A-Za-z][A-Za-z0-9-]*)" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
 CITATION_RE = re.compile(
-    r"\b(?P<file>SPEC|DESIGN|RATIONALE|RESEARCH|TASK|UNDERSTANDING)#(?P<target>"
-    r"(?:O|INV|Decision)-\d+-[a-z0-9][a-z0-9-]*|Delta-\d+-[a-z0-9][a-z0-9-]*|Task:[A-Za-z][A-Za-z0-9-]*)"
+    r"\b(?P<file>Spec|Design|Rationale|Research|Tasks|Understanding)#(?P<target>"
+    r"(?:B|C|D)-\d+-[a-z0-9][a-z0-9-]*|Delta-\d+-[a-z0-9][a-z0-9-]*|T:[A-Za-z][A-Za-z0-9-]*)"
 )
-# A SPEC O/INV item appearing on a line containing **GAP** is treated as
+# A Spec B/C item appearing on a line containing **GAP** is treated as
 # deliberately uncovered — see references/artifact-contract.md "**GAP**
 # acknowledgment". Validator skips it in forward-coverage checks.
 GAP_RE = re.compile(r"\*\*GAP\*\*")
@@ -95,13 +95,13 @@ class Validator:
         self._check_common()
         self._check_surface_size()
 
-        if self._includes("requirement"):
+        if self._includes("requirements"):
             self._check_requirement()
         if self._includes("spec"):
             self._check_spec()
         if self._includes("design"):
             self._check_design()
-        if self._includes("plan"):
+        if self._includes("tasks"):
             self._check_plan()
             self._check_traceability()
         return self.issues
@@ -109,7 +109,7 @@ class Validator:
     def _includes(self, stage: str) -> bool:
         if self.stage == "full":
             return True
-        return STAGE_ORDER.index(stage) <= STAGE_ORDER.index(self.stage)
+        return ARTIFACT_ORDER.index(stage) <= ARTIFACT_ORDER.index(self.stage)
 
     def _load_files(self) -> None:
         for key, filename in {**SURFACE_FILES, **OPTIONAL_FILES}.items():
@@ -121,7 +121,7 @@ class Validator:
         if not self.feature_dir.exists():
             self._error(".", f"feature directory does not exist: {self.feature_dir}")
             return
-        for stage in STAGE_ORDER:
+        for stage in ARTIFACT_ORDER:
             if self._includes(stage) and stage not in self.texts:
                 self._error(SURFACE_FILES[stage], "required surface artifact is missing")
 
@@ -156,7 +156,7 @@ class Validator:
         # --strict escalates a breach to error. Direction, not a hard cap.
         if self.allow_large:
             return
-        for stage in STAGE_ORDER:
+        for stage in ARTIFACT_ORDER:
             if not self._includes(stage) or stage not in self.texts:
                 continue
             cap = SURFACE_SOFT_CAP[stage]
@@ -166,7 +166,7 @@ class Validator:
             msg = (
                 f"{SURFACE_FILES[stage]} has {lines} prose lines (> {cap} soft cap; "
                 "diagrams/code excluded); small-surface guardrail — tighten the prose, "
-                "move depth to RATIONALE/RESEARCH, or split the feature"
+                "move depth to Rationale/Research, or split the feature"
             )
             if self.strict:
                 self._error(SURFACE_FILES[stage], msg)
@@ -174,27 +174,27 @@ class Validator:
                 self._warn(SURFACE_FILES[stage], msg)
 
     def _check_requirement(self) -> None:
-        text = self.texts.get("requirement", "")
+        text = self.texts.get("requirements", "")
         if not text:
             return
-        self._require_sections("requirement.md", text, ("Problem", "Outcome"))
-        self._warn_empty_conditional("requirement.md", text, ("Non-goals", "Upstream"))
+        self._require_sections("requirements.md", text, ("Problem", "Outcome"))
+        self._warn_empty_conditional("requirements.md", text, ("Guarantee", "Non-goals", "Upstream"))
         banned = ("Kafka", "Redis", "Spring", "Kotlin", "Postgres", "MySQL", "gRPC", "Flink")
         for term in banned:
             if re.search(rf"\b{re.escape(term)}\b", text):
-                self._warn("requirement.md", f"possible implementation choice in REQUIREMENT: {term}")
+                self._warn("requirements.md", f"possible implementation choice in Requirements: {term}")
 
     def _check_spec(self) -> None:
         text = self.texts.get("spec", "")
         if not text:
             return
-        self._require_sections("spec.md", text, ("Outcome",))
-        outcomes = self._anchors("spec", kind="O")
-        if not outcomes:
-            self._error("spec.md", "SPEC Outcome must contain at least one O anchor")
-        if self._has_section(text, "Invariants") and not self._anchors("spec", kind="INV"):
-            self._error("spec.md", "Invariants section exists but has no INV anchors")
-        self._warn_empty_conditional("spec.md", text, ("Invariants", "Non-goals"))
+        self._require_sections("spec.md", text, ("Behavior",))
+        behaviors = self._anchors("spec", kind="B")
+        if not behaviors:
+            self._error("spec.md", "Spec Behavior must contain at least one B anchor")
+        if self._has_section(text, "Constraint") and not self._anchors("spec", kind="C"):
+            self._error("spec.md", "Constraint section exists but has no C anchors")
+        self._warn_empty_conditional("spec.md", text, ("Constraint", "Non-goals"))
         if re.search(r"^\s*-\s+\[[ xX]\]", text, re.MULTILINE):
             self._warn("spec.md", "checkbox acceptance criteria are not LeanPlan anchors")
 
@@ -205,90 +205,90 @@ class Validator:
         self._require_sections("design.md", text, ("Architecture",))
         if "```mermaid" not in text:
             self._error("design.md", "Architecture must include a Mermaid diagram")
-        if not self._anchors("design", kind="Decision"):
-            self._error("design.md", "DESIGN must contain at least one Decision anchor")
+        if not self._anchors("design", kind="D"):
+            self._error("design.md", "Design must contain at least one D anchor")
         self._check_design_rationale_consistency()
 
     def _check_plan(self) -> None:
-        text = self.texts.get("plan", "")
+        text = self.texts.get("tasks", "")
         if not text:
             return
-        # plan.md may use either "Dependency DAG" or just "DAG" as the section header.
+        # tasks.md may use either "Dependency DAG" or just "DAG" as the section header.
         if self._has_section(text, "Dependency DAG"):
             dag_section = "Dependency DAG"
         elif self._has_section(text, "DAG"):
             dag_section = "DAG"
         else:
-            self._error("plan.md", "missing required section: Dependency DAG (or DAG)")
+            self._error("tasks.md", "missing required section: Dependency DAG (or DAG)")
             dag_section = None
         if dag_section and "```mermaid" not in self._section_body(text, dag_section):
-            self._error("plan.md", f"{dag_section} must be Mermaid")
-        self._warn_ascii_diagram("plan.md", text)
+            self._error("tasks.md", f"{dag_section} must be Mermaid")
+        self._warn_ascii_diagram("tasks.md", text)
         tasks = self._tasks()
         if not tasks:
-            self._error("plan.md", "TASK artifact must contain at least one task card")
+            self._error("tasks.md", "Tasks artifact must contain at least one task card")
         # One-deployment guardrail: advisory by default; --strict escalates to error;
         # --allow-large overrides entirely.
         if not self.allow_large:
             if len(tasks) > 16:
                 msg = f"task count {len(tasks)} exceeds one-deployment guardrail (>16)"
                 if self.strict:
-                    self._error("plan.md", msg)
+                    self._error("tasks.md", msg)
                 else:
-                    self._warn("plan.md", msg)
+                    self._warn("tasks.md", msg)
             elif len(tasks) > 12:
-                self._warn("plan.md", f"task count {len(tasks)} is near the one-deployment limit (>12)")
+                self._warn("tasks.md", f"task count {len(tasks)} is near the one-deployment limit (>12)")
         if re.search(r"^\s*-\s+\[[ xX]\]", text, re.MULTILINE):
-            self._warn("plan.md", "checkbox task lists are discouraged; use task cards")
+            self._warn("tasks.md", "checkbox task lists are discouraged; use task cards")
         for task_id, body, line in tasks:
             if SCRIPTY_TASK_RE.search(body):
-                self._warn("plan.md", f"Task {task_id} looks like line-level scripting", line)
+                self._warn("tasks.md", f"Task {task_id} looks like line-level scripting", line)
             if not self._task_has_reason(body):
-                self._error("plan.md", f"Task {task_id} has no SPEC/DESIGN/guideline reason citation", line)
+                self._error("tasks.md", f"Task {task_id} has no Spec/Design/guideline reason citation", line)
 
     def _check_traceability(self) -> None:
-        if "spec" not in self.texts or "plan" not in self.texts:
+        if "spec" not in self.texts or "tasks" not in self.texts:
             return
-        plan_text = self.texts.get("plan", "")
-        # Collect SPEC item IDs annotated as **GAP** in plan.md (deliberately uncovered).
+        plan_text = self.texts.get("tasks", "")
+        # Collect Spec item IDs annotated as **GAP** in tasks.md (deliberately uncovered).
         gap_acked = self._gap_acknowledged_targets(plan_text)
         # Coverage credit comes only from LIVE tasks: a retired (superseded) task's
-        # citations must not satisfy a live SPEC item, else retiring the sole task
-        # of a live outcome would silently pass a real coverage hole.
+        # citations must not satisfy a live Spec item, else retiring the sole task
+        # of a live behavior would silently pass a real coverage hole.
         coverage_text = self._plan_text_excluding_retired_tasks(plan_text)
-        for anchor in self._anchors("spec", kind="O") + self._anchors("spec", kind="INV"):
+        for anchor in self._anchors("spec", kind="B") + self._anchors("spec", kind="C"):
             target = anchor["target"]
-            if f"SPEC#{target}" in coverage_text:
+            if f"Spec#{target}" in coverage_text:
                 continue
             if target in gap_acked:
                 continue
-            self._error("plan.md", f"SPEC anchor is not covered by any task: SPEC#{target}")
+            self._error("tasks.md", f"Spec anchor is not covered by any task: Spec#{target}")
 
     def _gap_acknowledged_targets(self, plan_text: str) -> set[str]:
-        """Return SPEC item targets (e.g. 'O-1-foo' or 'INV-3-bar') annotated on a
+        """Return Spec item targets (e.g. 'B-1-foo' or 'C-3-bar') annotated on a
         line containing **GAP**. Lines may reference the item by full target
-        (O-1-foo / INV-3-bar) or by ID alone (O-1 / INV-3); both forms are
+        (B-1-foo / C-3-bar) or by ID alone (B-1 / C-3); both forms are
         accepted as ack."""
         acked: set[str] = set()
-        # Map ID-only to full targets we know about so a bare 'INV-3' on a GAP
-        # line ack's INV-3-<whatever-slug>.
-        spec_targets = {a["target"] for a in self._anchors("spec", kind="O")} | {
-            a["target"] for a in self._anchors("spec", kind="INV")
+        # Map ID-only to full targets we know about so a bare 'C-3' on a GAP
+        # line ack's C-3-<whatever-slug>.
+        spec_targets = {a["target"] for a in self._anchors("spec", kind="B")} | {
+            a["target"] for a in self._anchors("spec", kind="C")
         }
         id_to_targets: dict[str, list[str]] = {}
         for t in spec_targets:
-            # target form: 'O-1-foo-bar' or 'INV-3-baz'; extract 'O-1' / 'INV-3'.
-            m = re.match(r"((?:O|INV)-\d+)-", t)
+            # target form: 'B-1-foo-bar' or 'C-3-baz'; extract 'B-1' / 'C-3'.
+            m = re.match(r"((?:B|C)-\d+)-", t)
             if m:
                 id_to_targets.setdefault(m.group(1), []).append(t)
         for line in plan_text.splitlines():
             if not GAP_RE.search(line):
                 continue
             # Full-target form on the GAP line.
-            for m in re.finditer(r"\b((?:O|INV)-\d+-[a-z0-9][a-z0-9-]*)\b", line):
+            for m in re.finditer(r"\b((?:B|C)-\d+-[a-z0-9][a-z0-9-]*)\b", line):
                 acked.add(m.group(1))
             # ID-only form on the GAP line — ack all matching targets.
-            for m in re.finditer(r"\b((?:O|INV)-\d+)\b", line):
+            for m in re.finditer(r"\b((?:B|C)-\d+)\b", line):
                 for t in id_to_targets.get(m.group(1), []):
                     acked.add(t)
         return acked
@@ -302,26 +302,26 @@ class Validator:
             seen[target] = item["line"]
         seen_tasks: dict[str, int] = {}
         for task in self._parse_tasks(text):
-            target = f"Task:{task['id']}"
+            target = f"T:{task['id']}"
             if target in seen_tasks:
                 self._error(filename, f"duplicate task anchor: {target}", task["line"])
             seen_tasks[target] = task["line"]
 
     def _check_citations(self, filename: str, text: str) -> None:
         anchors_by_file = {
-            "SPEC": {a["target"] for a in self._anchors("spec")},
-            "DESIGN": {a["target"] for a in self._anchors("design")},
-            "RATIONALE": {a["target"] for a in self._anchors("rationale")},
-            "TASK": {f"Task:{t['id']}" for t in self._parse_tasks(self.texts.get("plan", ""))},
-            # Inbound UNDERSTANDING#Delta-N citations resolve against understanding.md's
-            # delta anchors — a revised artifact cites the Delta that justified it. RESEARCH
+            "Spec": {a["target"] for a in self._anchors("spec")},
+            "Design": {a["target"] for a in self._anchors("design")},
+            "Rationale": {a["target"] for a in self._anchors("rationale")},
+            "Tasks": {f"T:{t['id']}" for t in self._parse_tasks(self.texts.get("tasks", ""))},
+            # Inbound Understanding#Delta-N citations resolve against understanding.md's
+            # delta anchors — a revised artifact cites the Delta that justified it. Research
             # stays skipped below: it carries descriptive headings, not a resolvable anchor set.
-            "UNDERSTANDING": {a["target"] for a in self._anchors("understanding")},
+            "Understanding": {a["target"] for a in self._anchors("understanding")},
         }
         for match in CITATION_RE.finditer(text):
             file_key = match.group("file")
             target = match.group("target")
-            if file_key == "RESEARCH":
+            if file_key == "Research":
                 continue
             if target not in anchors_by_file.get(file_key, set()):
                 self._error(filename, f"broken citation: {file_key}#{target}", self._line_for_offset(text, match.start()))
@@ -333,26 +333,26 @@ class Validator:
             self._warn(filename, "MUST/MUST NOT should be reserved for true invariants", self._line_for_offset(text, match.start()))
 
     def _check_design_rationale_consistency(self) -> None:
-        design_anchors = {a["target"] for a in self._anchors("design", kind="Decision")}
-        rationale_anchors = {a["target"] for a in self._anchors("rationale", kind="Decision")}
+        design_anchors = {a["target"] for a in self._anchors("design", kind="D")}
+        rationale_anchors = {a["target"] for a in self._anchors("rationale", kind="D")}
         # Orphan-rationale-block check needs the file to exist; but the
         # design->rationale LINK check below must run even when design-rationale.md
-        # is ENTIRELY absent — a DESIGN that links design-rationale.md#Decision-N
+        # is ENTIRELY absent — a Design that links design-rationale.md#D-N
         # with no such file is a dangling pointer, the strictly-worse case of the
         # missing-block error. Gating the whole method on file presence (an early
         # return) silently passed it; gate only the orphan loop instead.
         if "rationale" in self.texts:
             for target in rationale_anchors - design_anchors:
-                self._error("design-rationale.md", f"rationale decision has no matching DESIGN decision: {target}")
+                self._error("design-rationale.md", f"rationale decision has no matching Design decision: {target}")
         for target in design_anchors:
             if f"design-rationale.md#{target}" in self.texts.get("design", "") and target not in rationale_anchors:
-                self._error("design-rationale.md", f"DESIGN links to missing rationale block: {target}")
+                self._error("design-rationale.md", f"Design links to missing rationale block: {target}")
 
     def _task_has_reason(self, body: str) -> bool:
-        # O / INV / Decision are the live anchor vocabulary (§9 dropped "AC").
-        # Must match CITATION_RE's kinds so an Outcome-only task — permitted by
+        # B / C / D are the live anchor vocabulary (§9 dropped "AC").
+        # Must match CITATION_RE's kinds so a Behavior-only task — permitted by
         # the contract, common for trivial-realization features — is accepted.
-        if re.search(r"\b(SPEC#(?:O|INV)-\d+-[a-z0-9-]+|DESIGN#Decision-\d+-[a-z0-9-]+)", body):
+        if re.search(r"\b(Spec#(?:B|C)-\d+-[a-z0-9-]+|Design#D-\d+-[a-z0-9-]+)", body):
             return True
         return bool(re.search(r"\*\*Guidelines\*\*:\s*\S|^## Guidelines\b", body, re.MULTILINE))
 
@@ -394,7 +394,7 @@ class Validator:
         ]
 
     def _tasks(self) -> list[tuple[str, str, int]]:
-        text = self.texts.get("plan", "")
+        text = self.texts.get("tasks", "")
         parsed = self._parse_tasks(text)
         result = []
         for index, task in enumerate(parsed):
@@ -431,7 +431,7 @@ class Validator:
     def _plan_text_excluding_retired_tasks(self, plan_text: str) -> str:
         """plan_text with every retired Task card's span removed, so a superseded
         task grants no forward-coverage credit. A retired card is kept for history
-        via retire-by-note, but it is dead work — it must not satisfy a live SPEC
+        via retire-by-note, but it is dead work — it must not satisfy a live Spec
         item. Span = the retired heading through just before the next task heading
         (or end of text for the last card)."""
         parsed = self._parse_tasks(plan_text)
@@ -471,7 +471,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("feature_dir", type=Path)
     parser.add_argument(
         "--stage",
-        choices=("requirement", "spec", "design", "plan", "full"),
+        choices=("requirements", "spec", "design", "tasks", "full"),
         default="full",
         help="Validate through the selected stage",
     )
