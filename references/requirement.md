@@ -1,8 +1,8 @@
 # LeanPlan Requirement Stage
 
-This doc carries the procedure for the REQUIREMENT stage — capturing the world outcome before any implementation choice. Edge: standalone input → REQUIREMENT.
+This doc carries the procedure for the REQUIREMENT stage — capturing the desired outcome before any implementation choice. Edge: standalone input → REQUIREMENT.
 
-**Stage stance.** Capture the world outcome in language a PM reads — the future state and the pain behind it, in domain vocabulary. Domain-native *channels* ("admin tool", "partner API") are fine; the attractor to resist is implementation leakage — a chosen stack, architecture, or pattern (that belongs in SPEC / DESIGN).
+**Stage stance.** Capture the desired outcome in language a PM reads — the future state and the pain behind it, in domain vocabulary. Domain-native *channels* ("admin tool", "partner API") are fine; the attractor to resist is implementation leakage — a chosen stack, architecture, or pattern (that belongs in SPEC / DESIGN).
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
@@ -38,13 +38,13 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
    - **Cold start only.** This draws an understanding out of a blank-slate arrival; a disturbance to an *already-formed* understanding is `/sharpen` (Claude) / `sharpen` (Codex), not this step.
 4. **Draft interactively**. Misframed Problem is the single largest source of downstream rework. Confirm framing with the user before writing:
    - **Problem** — what pain or opportunity drives this? Who feels it? What is currently broken, missing, or constrained?
-   - **Outcome** — world future state + observable success signal. Prefer **user-story bullets** for user-visible behaviors using the form `**short title** — one-line summary. follow-up detail when needed.` Group system policies — cross-cutting domain rules (price parity, state-machine rules, regional constraints) — under a separate sub-group rather than forcing them into user-story shape; not every outcome is a user story. State the world *intent* (why the rule matters); its observable, testable form is SPEC's to own, so don't pre-empt SPEC vocabulary here (`artifact-contract.md` → One Prose Home Per Fact). Fold the success signal into the same section (don't split into a separate "Success metric" section).
+   - **Outcome** — desired future state + observable success signal. Prefer **user-story bullets** for user-visible behaviors using the form `**short title** — one-line summary. follow-up detail when needed.` Group system policies — cross-cutting domain rules (price parity, state-machine rules, regional constraints) — under a separate sub-group rather than forcing them into user-story shape; not every outcome is a user story. State the *intent* (why the rule matters); its observable, testable form is SPEC's to own, so don't pre-empt SPEC vocabulary here (`artifact-contract.md` → One Prose Home Per Fact). Fold the success signal into the same section (don't split into a separate "Success metric" section).
    - **Non-goals** — only if scope edges are genuinely ambiguous.
    - **Upstream** — only if refs exist; short list.
 5. **Write** the artifact at the path `leanplan-new` printed in step 1 (e.g. `docs/features/0007-anomaly-publisher/requirement.md`). Do **not** `mkdir` — `leanplan-new` is the single directory allocator; the requirement skill never creates the dir itself.
 6. **Self-check** before exiting:
    - Grep body for tech-stack nouns (Kafka, Redis, Kotlin, Spring, gRPC, Postgres, Flink, Kubernetes, Docker, etc.) — zero hits expected.
-   - Outcome names a world-observable signal.
+   - Outcome names a measurable success signal.
    - Outcome bullets that *are* user-visible behaviors are written in user-story form; system policies are grouped separately, not disguised as user stories.
    - Conditional sections are omitted when empty (don't ship empty Non-goals or Upstream sections).
    - Problem leads with the pain itself (who feels it, what's broken), not background — a PM grasps it from the first line (conclusion-first; `artifact-contract.md` → Prose Style).
@@ -53,7 +53,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 ## Guardrails
 
 - **No implementation choices.** No specific stack (Kafka, Redis, Postgres, gRPC), no internal architecture, no chosen pattern. Domain-vocabulary channels — "admin tool", "partner API", "batch integration" — are fine; they name channels, not choices.
-- **Outcome folds the success signal.** World future state + observable signal in the same section. Don't split into a separate "Success metric" subsection.
+- **Outcome folds the success signal.** Desired future state + observable signal in the same section. Don't split into a separate "Success metric" subsection.
 - **User-story bullets where it fits.** When an outcome describes a user-visible behavior, write it as `**short title** — one-line summary. detail.` so reviewers can scan the feature shape. Don't twist system policies into fake user stories — group them separately.
 - **Conditional sections must earn their place.** Non-goals only when scope is ambiguous; Upstream only when refs exist. Otherwise omit — empty sections dilute the review surface.
 - **Domain-native vocabulary.** Reviewers are PMs / stakeholders. Avoid internal system names unless they *are* the domain context (e.g. a product line).
@@ -62,7 +62,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 ## Template
 
 ```markdown
-# <KEY> — <short world-framed title>
+# <KEY> — <short problem-framed title>
 
 ## Problem
 <the pain or opportunity, who feels it, what is broken or constrained>

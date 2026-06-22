@@ -23,7 +23,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 *Default flow, not a rigid script — re-derive it against the actual REQUIREMENT. Load-bearing (don't skip or reorder): the SPEC test (step 4) and the self-check (step 8).*
 
 1. **Load REQUIREMENT** + the artifact contract (`artifact-contract.md`).
-2. **Derive Outcome items**: for each world outcome in REQUIREMENT, ask what externally-observable behavior signals it. Write as `O-<N>: <slug>` under `## Outcome`. One item per behavior; don't fold two into one.
+2. **Derive Outcome items**: for each desired outcome in REQUIREMENT, ask what externally-observable behavior signals it. Write as `O-<N>: <slug>` under `## Outcome`. One item per behavior; don't fold two into one.
 3. **Lift Invariants**: collect continuous constraints — SLAs, non-blocking guarantees, idempotency, integrity rules, environmental bindings (existing backbone compatibility, compliance boundary, deployment envelope). Write as `INV-<N>: <slug>` under `## Invariants`. If a constraint has no realization alternative, it's an Invariant — not a DESIGN choice.
 4. **Apply the SPEC test** on every line: can the implementation change without changing this externally-observable behavior? If yes, cut the line or push to DESIGN.
 5. **Use generic-category tech only**: "message queue", "event stream", "HTTP API", "distributed cache". Specific names (Kafka, Redis, gRPC, Postgres, Spring) belong in DESIGN.
@@ -49,7 +49,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 - **What a SPEC is NOT** test: implementation can change without observable change → cut or push to DESIGN.
 - **Generic-category tech only.** Specific stack names → DESIGN.
 - **No false optionality.** If a property has no real alternative realization, it's an Invariant, not a DESIGN choice. Don't fake optionality.
-- **SPEC `O` / `INV` is the observable canonical home.** An INV realizing a REQUIREMENT system-policy states the observable form and leaves the world *intent* to REQUIREMENT (`artifact-contract.md` → One Prose Home Per Fact).
+- **SPEC `O` / `INV` is the observable canonical home.** An INV realizing a REQUIREMENT system-policy states the observable form and leaves the *intent* to REQUIREMENT (`artifact-contract.md` → One Prose Home Per Fact).
 - **Stable IDs.** `N` is stable across slug edits. Append new items with higher numbers; supersede by retire-by-note, not deletion — the global rule, in `artifact-contract.md` → Anchors.
 - **Research archive is evidence-only.** Interpretations belong in RATIONALE.
 - **Isolate breadth-heavy research.** When SPEC research (a wide SOTA / prior-art scan) would swamp the working window, run it in a sub-agent that returns only the distilled RESEARCH entries, not the raw search trail. Guidance, not mandate — when breadth exceeds the window. (context-engineering: context-isolation, explore-then-compact-handoff)

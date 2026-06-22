@@ -36,7 +36,7 @@ The full tier model (L0/L1/L2 labels, design reasoning) lives in `framework-desi
 
 | Artifact | Owns |
 |---|---|
-| REQUIREMENT | World intent — what the problem-world wants, incl. system policies as *why a cross-cutting property matters* |
+| REQUIREMENT | Desired outcome — incl. system policies as *why a cross-cutting property matters* |
 | SPEC | Externally-observable contract — canonical prose home for `O` / `INV` facts |
 | DESIGN | Internal realization — the finished-system shape |
 | DESIGN RATIONALE | Decision WHY |
@@ -130,7 +130,7 @@ A fact is authored as prose **once**, in its owning artifact; every other occurr
 
 The rule binds **every seam**, not only DESIGN→SPEC:
 
-- **Altitude split (REQ ↔ SPEC — the World↔Machine cut, `framework-design.md` §2).** A cross-cutting property has two altitudes, two homes: REQUIREMENT owns the world *intent* (the rule + why it matters, no observable, testable predicate); SPEC `O` / `INV` owns the *observable form* (the canonical home — the same rule carrying an observable, testable predicate: a threshold, condition, or test). Neither restates the other's altitude — this resolves the blurred seam where a continuous property could read as either. *Discriminator:* a line with an observable, testable predicate is SPEC's; a line stating only the rule and its rationale is REQUIREMENT's. E.g. REQ — *"prices stay in parity across channels; split pricing erodes trust"* / SPEC#INV — *"web price == app price for identical input."*
+- **Altitude split (REQ ↔ SPEC — the World↔Machine cut, `framework-design.md` §2).** A cross-cutting property has two altitudes, two homes: REQUIREMENT owns the *intent* (the rule + why it matters, no observable, testable predicate); SPEC `O` / `INV` owns the *observable form* (the canonical home — the same rule carrying an observable, testable predicate: a threshold, condition, or test). Neither restates the other's altitude — this resolves the blurred seam where a continuous property could read as either. *Discriminator:* a line with an observable, testable predicate is SPEC's; a line stating only the rule and its rationale is REQUIREMENT's. E.g. REQ — *"prices stay in parity across channels; split pricing erodes trust"* / SPEC#INV — *"web price == app price for identical input."*
 - **Symmetric citation downstream.** Every realization reference cites its target's anchor and stops — DESIGN→SPEC, TASK→SPEC, TASK→DESIGN alike.
 - **Within DESIGN.** The Architecture caption owns boundaries and flow; `Decision` blocks own realization claims — the caption doesn't restate a Decision.
 - **Within TASK.** Inline `Completion` citations are the canonical forward-coverage home; a forward-coverage table, if kept, is a derived view of them, not a re-authored mapping — and only the deliberately-uncovered subset carries the reserved `**GAP**` marker.
