@@ -56,7 +56,7 @@ Archives: Rationale · Research · Understanding (`Delta-`). Axes as named in Ar
 
 - **Naming rule (derivable):** a skill shares its artifact's root — a verb where one exists (`specify`→Spec, `design`→Design), the bare noun where none does (`requirements`, `tasks`). This makes every name follow from the model and retires the `plan`/Tasks/`tasks.md` triple.
 - **Section names derive from the 2×2:** Requirements and Spec are both the **Contract** row, so each has an episodic + a continuous half, named by altitude — Outcome/Guarantee (World) vs. Behavior/Constraint (Machine). "Behavior" is the framework's own definition of Spec; this also kills the old same-name "Outcome on both" confusion.
-- **`plan` is rejected as an artifact name:** it's the *activity* (LeanPlan *plans*; the whole spine is "the plan") — putting it on a node names the part after the whole — and it collides with agent plan-mode. `Tasks` (plural) also fixes the current stage(Tasks)/item(Task) name clash. → `design-rationale.md#D-2`.
+- **`plan` is rejected as an artifact name:** it's the *activity* (LeanPlan *plans*; the whole spine is "the plan") — putting it on a node names the part after the whole — and it collides with agent plan-mode. `Tasks` (plural) also fixes the prior stage(TASK)/item(Task) name clash. → `design-rationale.md#D-2`.
 
 ## D-3: compose-edge-placement-with-one-prose-home
 

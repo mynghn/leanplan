@@ -319,7 +319,7 @@ Genuinely open — not yet built or decided:
 
 - **Request → Requirements edge (`distill`)**: `requirements` currently authors Requirements standalone (interactive with user). Future: when naive problem writings become an explicit Request input artifact, add a `distill` skill for the Request → Requirements sharpening edge.
 - **Divide-and-conquer for oversized work**: how to split inputs that exceed one-deployment scope. Framework assumes proper sizing for now.
-- **Earlier-stage one-deployment heuristics**: scope-sizing checks at Spec time (O count) and Design time (component count) remain deferred. The Tasks-time DAG-size guardrail is active in advisory mode (warn at >12 / >16 tasks; `--strict` escalates to error; `--allow-large` overrides). Hard-block heuristics earlier would catch oversized work sooner but are unproven; revisit if it recurs in practice.
+- **Earlier-stage one-deployment heuristics**: scope-sizing checks at Spec time (B count) and Design time (component count) remain deferred. The Tasks-time DAG-size guardrail is active in advisory mode (warn at >12 / >16 tasks; `--strict` escalates to error; `--allow-large` overrides). Hard-block heuristics earlier would catch oversized work sooner but are unproven; revisit if it recurs in practice.
 - **Real product-domain dogfood**: the framework now self-hosts its own evolution — `docs/features/*` holds several shipped cycles (ce-grounding, artifact-later-update, lean-review-surfaces, understanding-sharpening, reflexive-surface-budget, …). A dogfood on a non-meta *product* feature is still desirable to stress it against domain complexity.
 
 Resolved / shipped — moved out of "open", kept for provenance:

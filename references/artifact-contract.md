@@ -116,14 +116,14 @@ Each task card must include:
 
 ## Traceability
 
-- Every Spec O and INV maps to at least one task completion criterion or task body citation.
-- Every task cites at least one Spec O, Spec INV, Design decision, or explicit guideline reason.
+- Every Spec B and C maps to at least one task completion criterion or task body citation.
+- Every task cites at least one Spec B, Spec C, Design decision, or explicit guideline reason.
 - Tasks dependencies are enablers, not rigid gates. Implementation agents re-evaluate them at task entry.
 - At implement close-out **and on the review path**, run **Close-Out Reconciliation** (`implement-closeout.md`) on a task's load-bearing citations — a reviewer runs it independently, not only the implementing agent, which keeps a self-skipped consultation catchable.
 
 ### `**GAP**` acknowledgment
 
-A Spec O or INV item may be deliberately uncovered (no task verifies it directly) when the team has accepted the gap. Annotate it on a line containing `**GAP**` inside `tasks.md` (typically in a forward-coverage table). The validator treats such items as acknowledged — not coverage errors. Use sparingly and document the acceptance rationale next to the marker.
+A Spec B or C item may be deliberately uncovered (no task verifies it directly) when the team has accepted the gap. Annotate it on a line containing `**GAP**` inside `tasks.md` (typically in a forward-coverage table). The validator treats such items as acknowledged — not coverage errors. Use sparingly and document the acceptance rationale next to the marker.
 
 ## One Prose Home Per Fact
 
@@ -131,7 +131,7 @@ A fact is authored as prose **once**, in its owning artifact; every other occurr
 
 The rule binds **every seam**, not only Design→Spec:
 
-- **Altitude split (REQ ↔ Spec — the World↔Machine cut, `framework-design.md` §2).** A cross-cutting property has two altitudes, two homes: Requirements owns the *intent* (the rule + why it matters, no observable, testable predicate); Spec `B` / `C` owns the *observable form* (the canonical home — the same rule carrying an observable, testable predicate: a threshold, condition, or test). Neither restates the other's altitude — this resolves the blurred seam where a continuous property could read as either. *Discriminator:* a line with an observable, testable predicate is Spec's; a line stating only the rule and its rationale is Requirements's. E.g. REQ — *"prices stay in parity across channels; split pricing erodes trust"* / Spec#INV — *"web price == app price for identical input."*
+- **Altitude split (REQ ↔ Spec — the World↔Machine cut, `framework-design.md` §2).** A cross-cutting property has two altitudes, two homes: Requirements owns the *intent* (the rule + why it matters, no observable, testable predicate); Spec `B` / `C` owns the *observable form* (the canonical home — the same rule carrying an observable, testable predicate: a threshold, condition, or test). Neither restates the other's altitude — this resolves the blurred seam where a continuous property could read as either. *Discriminator:* a line with an observable, testable predicate is Spec's; a line stating only the rule and its rationale is Requirements's. E.g. REQ — *"prices stay in parity across channels; split pricing erodes trust"* / Spec#C — *"web price == app price for identical input."*
 - **Symmetric citation downstream.** Every realization reference cites its target's anchor and stops — Design→Spec, Tasks→Spec, Tasks→Design alike.
 - **Within Design.** The Architecture caption owns boundaries and flow; `Decision` blocks own realization claims — the caption doesn't restate a Decision.
 - **Within Tasks.** Inline `Completion` citations are the canonical forward-coverage home; a forward-coverage table, if kept, is a derived view of them, not a re-authored mapping — and only the deliberately-uncovered subset carries the reserved `**GAP**` marker.

@@ -21,7 +21,7 @@ flowchart LR
 Generalize the existing Design→Spec "no duplicate Invariants" guard into a contract-wide rule: **a fact is authored as prose once, in its owning artifact; every other occurrence is an anchor reference.** Realizes Spec#B-2-one-canonical-home-per-fact. See rationale at [design-rationale.md#D-1-one-prose-home-per-fact].
 
 Ownership + the seams it resolves:
-- **REQ↔Spec (altitude split).** Requirements system-policy = biz *intent* (why a cross-cutting property matters); Spec `B`/`C` = its observable form (canonical home). A Spec INV realizing a policy states the observable form and leaves the biz intent to Requirements — never re-paraphrasing.
+- **REQ↔Spec (altitude split).** Requirements system-policy = biz *intent* (why a cross-cutting property matters); Spec `B`/`C` = its observable form (canonical home). A Spec C realizing a policy states the observable form and leaves the biz intent to Requirements — never re-paraphrasing.
 - **Symmetric guard.** "Cite the anchor, don't restate" binds REQ→Spec and Tasks→Spec, not only Design→Spec.
 - **Within Tasks.** Forward coverage has one home: inline `Completion` citations are canonical; a forward-coverage table, if kept, is a derived view of them, not a re-authored mapping — only the deliberately-uncovered subset carries the reserved `**GAP**` marker.
 - **Within Design.** The Architecture caption owns boundaries/flow only; `Decision` blocks own realization claims — the caption does not restate a Decision.

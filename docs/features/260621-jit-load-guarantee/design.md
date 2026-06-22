@@ -33,7 +33,7 @@ A skip is surfaced by reconciling the task's load-bearing citations against the 
 - **No new artifact.** The plan card already enumerates the load-bearing citations; a separate ledger would duplicate them. The floor is the enumerable obligation (derivable from the card) plus a judgment discharge (is the substance present?). See `Rationale#D-2-in-round-reconciliation`.
 
 ### D-3: scope-by-citation-prefix
-The reconciliation fires only on the load-bearing prefix — `Spec#O`, `Spec#INV`, `Design#D` — and never on `Rationale#` / `Research#`, realizing `Spec#C-1-archive-citation-never-force-loaded` by construction with no new tag.
+The reconciliation fires only on the load-bearing prefix — `Spec#B`, `Spec#C`, `Design#D` — and never on `Rationale#` / `Research#`, realizing `Spec#C-1-archive-citation-never-force-loaded` by construction with no new tag.
 
 - **Realization.** The obligation set is exactly the citations matching `Spec#(B|C)-…` or `Design#D-…` — the discriminator already first-class in the citation grammar and in `validate.py`'s `_task_has_reason`. `Design#D-N` is load-bearing while `Rationale#D-N` is archive: same target, different prefix, so the check keys on the `Spec`/`Design` file prefix, never the bare target kind. See `Rationale#D-3-scope-by-citation-prefix`.
 

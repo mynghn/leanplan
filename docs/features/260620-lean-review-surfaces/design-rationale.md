@@ -6,7 +6,7 @@ Forces. Duplication inflates every surface (the arch-enemy) and, worse, the rest
 
 Alternatives considered.
 - **Spec sole home** (delete the Requirements System-policies group; continuous properties live only in Spec). Leanest and most orthogonal — the seam can't blur because one side is gone. Rejected: it removes a first-class home for biz-level cross-cutting mandates (regulatory rules, product values) that aren't a single observable contract, and it forces re-deriving the requirement template. We chose to preserve that expressiveness.
-- **Route by testability** (a concern is a Spec INV iff it has a single observable test, else a Requirements policy; mutually exclusive). Clean partition, but the "is it testable?" criterion is fuzzy at authoring time and would itself become a recurring judgment call. Rejected as harder to apply consistently than an altitude rule.
+- **Route by testability** (a concern is a Spec C iff it has a single observable test, else a Requirements policy; mutually exclusive). Clean partition, but the "is it testable?" criterion is fuzzy at authoring time and would itself become a recurring judgment call. Rejected as harder to apply consistently than an altitude rule.
 
 Chosen path. Altitude split + a general anchor rule: Requirements system-policy states the biz *why*; Spec `B`/`C` states the observable *what* (the canonical home); every other artifact cites the anchor. Keeps both homes, sharpens their roles, and generalizes that single-seam (prose-only) guard to all seams (including the two within-artifact cases). Least disruptive to the existing structure.
 

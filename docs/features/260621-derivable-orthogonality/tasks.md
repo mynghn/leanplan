@@ -21,7 +21,7 @@ flowchart LR
     M5 --> M6
 ```
 
-One track (framework-doc rework). M1 lands the model; M2 writes the naming authority; M3 makes the always-loaded guards cite the model; M4 is the independent rider; M5 verifies the Invariants; M6 hands the costly rename off as its own effort.
+One track (framework-doc rework). M1 lands the model; M2 writes the naming authority; M3 makes the always-loaded guards cite the model; M4 is the independent rider; M5 verifies the Constraints; M6 hands the costly rename off as its own effort.
 
 ## T: M1
 

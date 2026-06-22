@@ -4,7 +4,7 @@ Evidence from a cold audit of the LeanPlan references + the worked `260619-conte
 
 ## Duplication found across the artifact chain
 
-- **Requirements System-policies ≡ Spec Invariants.** In the 260619 example, the three System-policies (portability / freshness / leanness) map 1:1 to `spec.md` C-1 / C-2 / C-3 — the same facts reworded at both homes.
+- **Requirements System-policies ≡ Spec Constraints.** In the 260619 example, the three System-policies (portability / freshness / leanness) map 1:1 to `spec.md` C-1 / C-2 / C-3 — the same facts reworded at both homes.
 - **De-dup guard is asymmetric.** `design.md` carries "No duplicate Invariants" (Design→Spec) only; `artifact-contract.md` Drift Guards have no equivalent for REQ→Spec or Tasks→Spec.
 - **Root in the contract.** `requirements.md` defines the System-policies sub-group using Spec vocabulary ("cross-cutting invariants (price parity, state-machine rules, regional constraints)") — collapsing the role boundary at definition time.
 - **Tasks Completion citations ≡ Forward-coverage table.** In 260619 `tasks.md`, per-task `Completion` already cites its Spec anchor; a tail forward-coverage table re-states the inverse Spec-item→task map — the same traceability fact twice.
