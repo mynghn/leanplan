@@ -3,7 +3,7 @@
 ## Guidelines
 
 - **Framework-source topology** — the work edits LeanPlan's own source in this repo (`references/`, `scripts/`); the *live* copies are at `~/.local/share/leanplan/`, a chezmoi-managed external clone of the repo's `main` that the hooks invoke by absolute path (see `scripts/README.md`). The whole repo is mirrored, so a new script reaches the canonical path simply by living in `scripts/`, going live after merge + `chezmoi update` — `install.sh` is the non-chezmoi *adapter* installer and delivers no scripts. Git hooks are enabled per-repo (symlink into `.git/hooks/`); the Action ships as a per-repo opt-in workflow template.
-- **Branch** — land on a `feat/round-scoped-key-leakage` branch off the base; the planning docs currently sit on `feat/sparse-arrival-drawout`, so move them onto the feature branch before impl, to keep the two features unmixed.
+- **Branch** — land on a `feat/round-scoped-key-leakage` branch off the base; the planning docs currently sit on `feat/sparse-arrival-drawout`, so move them onto the feature branch before implementation, to keep the two features unmixed.
 
 ## Dependency DAG
 
@@ -27,10 +27,10 @@ The guidance arm (G1) is independent — it ships as prose and covers every surf
 
 ## T: G1
 
-- **Goal**: Land the rule's substance in the guidance layer so the impl agent carries the *substance* of a WHY — not its round-local key — onto every durable surface, per `Design#D-1-guidance-carries-substance`. Realizes `Spec#B-1-durable-why-carries-substance-not-key` and the guidance arm of `Spec#C-1-durable-artifacts-free-of-round-scoped-keys`. The exact placement (P7 clause, distillation-hierarchy guard, close-out self-check) is in the Decision; anchor in, don't restate.
-- **Repo**: leanplan (`references/philosophy.md`, `references/impl.md`).
+- **Goal**: Land the rule's substance in the guidance layer so the implementation agent carries the *substance* of a WHY — not its round-local key — onto every durable surface, per `Design#D-1-guidance-carries-substance`. Realizes `Spec#B-1-durable-why-carries-substance-not-key` and the guidance arm of `Spec#C-1-durable-artifacts-free-of-round-scoped-keys`. The exact placement (P7 clause, distillation-hierarchy guard, close-out self-check) is in the Decision; anchor in, don't restate.
+- **Repo**: leanplan (`references/philosophy.md`, `references/implement.md`).
 - **Completion**:
-  - The guard and close-out self-check are present in `impl.md`, and the substance-not-key clause in `philosophy.md` P7 (review/presence check, readable in the docs).
+  - The guard and close-out self-check are present in `implement.md`, and the substance-not-key clause in `philosophy.md` P7 (review/presence check, readable in the docs).
   - One-shot observation per `Spec#B-1-durable-why-carries-substance-not-key`: a durable artifact produced under the new guidance (a commit body, inline comment, or PR note) states the constraint in words, with no `B-/C-/D-` token or feature id standing in for it.
 - **Dependencies**: none.
 

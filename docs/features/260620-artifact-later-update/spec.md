@@ -2,7 +2,7 @@
 
 ## Behavior
 ### B-1: update-invocable-from-any-in-flight-stage
-A planner invokes one sanctioned update at any in-flight stage — requirement, spec, design, plan, or impl — naming the drift to inject, and the process engages on that feature's committed artifacts and produces a revision. It is reachable at stage boundaries, between tasks, and mid-task during impl — not only from an impl stop-the-line. Verifiable: invoking at each stage, including mid-task, engages rather than reporting no entry point.
+A planner invokes one sanctioned update at any in-flight stage — requirement, spec, design, plan, or implementation — naming the drift to inject, and the process engages on that feature's committed artifacts and produces a revision. It is reachable at stage boundaries, between tasks, and mid-task during implementation — not only from an implementation stop-the-line. Verifiable: invoking at each stage, including mid-task, engages rather than reporting no entry point.
 
 ### B-2: change-propagated-downstream
 When an update changes an artifact, every downstream artifact whose content depends on the change is revised, and every touched artifact is re-validated. No downstream artifact is left citing or restating the superseded content. Verifiable: inject a change, then confirm each dependent downstream item reflects it and a content search finds no surviving reference to the prior version.

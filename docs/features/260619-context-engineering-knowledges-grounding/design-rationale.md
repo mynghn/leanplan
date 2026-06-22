@@ -27,7 +27,7 @@ Invalidation: if a rule's grounding is challenged so often that the hop is frict
 
 ## D-3: adapters-lazy-load-references
 
-This fixes a measured self-contradiction: every stage SKILL eager-loads `philosophy.md` (23) + `artifact-contract.md` (126) + `<stage>.md` before acting — 247 lines at `impl` — while the framework (and `impl.md` itself) preaches JIT loading. Grounding the framework in `jit-loading` while it violates `jit-loading` would be the loudest "do as I say, not as I do."
+This fixes a measured self-contradiction: every stage SKILL eager-loads `philosophy.md` (23) + `artifact-contract.md` (126) + `<stage>.md` before acting — 247 lines at `implement` — while the framework (and `implement.md` itself) preaches JIT loading. Grounding the framework in `jit-loading` while it violates `jit-loading` would be the loudest "do as I say, not as I do."
 
 Chosen split: the `<stage>.md` procedure is the always-load (it is the actual instruction set + template for the edge). `artifact-contract.md` (the 126-line bulk, the worst offender) becomes load-on-demand. `philosophy.md` also becomes on-demand.
 
@@ -39,9 +39,9 @@ Invalidation: a stage is observed authoring malformed structure because the cont
 
 ## D-4: isolation-as-method-primitive
 
-`specify` (REQ→Spec research), `design` (code investigation), and `impl` (broad code investigation) are the breadth-heavy edges — the ones whose raw investigation trail would swamp the planning window. Isolating that work into a sub-agent that returns only the distilled artifact grounds `context-isolation` + `explore-then-compact-handoff`. This feature's own cold audit is the worked example: two breadth scans ran isolated; only their conclusions reached `research.md`.
+`specify` (REQ→Spec research), `design` (code investigation), and `implement` (broad code investigation) are the breadth-heavy edges — the ones whose raw investigation trail would swamp the planning window. Isolating that work into a sub-agent that returns only the distilled artifact grounds `context-isolation` + `explore-then-compact-handoff`. This feature's own cold audit is the worked example: two breadth scans ran isolated; only their conclusions reached `research.md`.
 
-Tooling gap closed: the `specify` adapter lacked `Agent` in `allowed-tools` (`design`/`impl` already had it), so the primitive was unauthorizable on the very edge that most needs it.
+Tooling gap closed: the `specify` adapter lacked `Agent` in `allowed-tools` (`design`/`implement` already had it), so the primitive was unauthorizable on the very edge that most needs it.
 
 Guidance, not mandate — "when breadth exceeds the window." Mandating sub-agents for trivial lookups would burn latency and tokens; the call is the agent's at investigation time.
 
@@ -49,13 +49,13 @@ Invalidation: harness sub-agent semantics change materially, or isolation is obs
 
 ## D-7: session-boundary-principle
 
-Neither prior report carried this; the brief promotes it to first-class. The principle: the planning spine (requirement→spec→design→plan) is tightly coupled and belongs in one warm session; impl is the natural hard cut to a fresh frame. Grounds `explore-execute-boundary` (the temporal plan→impl boundary itself) + `compaction-vs-eviction` (summarize-and-reinitialize at a task boundary) + `explore-then-compact-handoff` + `context-isolation`; the "warm session" half also leans on `prefix-cache-economics` (cache warmth across the continuous spine).
+Neither prior report carried this; the brief promotes it to first-class. The principle: the planning spine (requirement→spec→design→plan) is tightly coupled and belongs in one warm session; implementation is the natural hard cut to a fresh frame. Grounds `explore-execute-boundary` (the temporal plan→implementation boundary itself) + `compaction-vs-eviction` (summarize-and-reinitialize at a task boundary) + `explore-then-compact-handoff` + `context-isolation`; the "warm session" half also leans on `prefix-cache-economics` (cache warmth across the continuous spine).
 
-Cross-session resolution (the fork the reports split on): **no new per-feature state artifact.** Report 1 proposed a transient `progress.md`; rejected here on principle 7 — impl survival across sessions is carried by harness task-state + git commits (which already carry distilled WHYs per principle 8), not a living doc. This holds P7 intact rather than reframing it.
+Cross-session resolution (the fork the reports split on): **no new per-feature state artifact.** Report 1 proposed a transient `progress.md`; rejected here on principle 7 — implementation survival across sessions is carried by harness task-state + git commits (which already carry distilled WHYs per principle 8), not a living doc. This holds P7 intact rather than reframing it.
 
 Placement: design→plan is the loosest intra-planning seam (plan can be re-derived from design cheaply), so if any in-spine cut is ever needed it goes there; req→spec→design stay continuous.
 
-Harness realization: on Claude Code the boundary and pivots are realized by grounded session-management commands — `/handoff <goal>` (a goal-scoped fresh-session brief at the plan→impl cut) and `/compact-focus` (in-session lean at a pivot). Both are themselves grounded in the same CE concepts (`explore-execute-boundary`, `explore-then-compact-handoff`, `compaction-vs-eviction`, `lost-in-the-middle`, `prefix-cache-economics`), so LeanPlan's principle and the harness commands agree by *shared grounding*, not coincidence — and this dogfood run uses `/handoff` at its own plan→impl cut. Portability gate: these are optional accelerators, named only in §13 / the Claude adapter, never in the portable principle; a bare install (no such commands, no KB) performs the boundary by hand. This is the §13 "what frontier harnesses provide vs. what we build" line applied to session management — the framework names the behavior, the harness supplies the mechanism when present.
+Harness realization: on Claude Code the boundary and pivots are realized by grounded session-management commands — `/handoff <goal>` (a goal-scoped fresh-session brief at the plan→implementation cut) and `/compact-focus` (in-session lean at a pivot). Both are themselves grounded in the same CE concepts (`explore-execute-boundary`, `explore-then-compact-handoff`, `compaction-vs-eviction`, `lost-in-the-middle`, `prefix-cache-economics`), so LeanPlan's principle and the harness commands agree by *shared grounding*, not coincidence — and this dogfood run uses `/handoff` at its own plan→implementation cut. Portability gate: these are optional accelerators, named only in §13 / the Claude adapter, never in the portable principle; a bare install (no such commands, no KB) performs the boundary by hand. This is the §13 "what frontier harnesses provide vs. what we build" line applied to session management — the framework names the behavior, the harness supplies the mechanism when present.
 
 Invalidation: the harness gains durable per-feature session state that makes an explicit boundary marker redundant, or loses task-state such that git alone is insufficient (then reconsider a transient externalization — still not a canonical doc).
 

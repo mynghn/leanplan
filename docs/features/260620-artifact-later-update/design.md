@@ -2,14 +2,14 @@
 
 ## Architecture
 
-`/revise <KEY>` is the single sanctioned, any-stage entry for editing committed artifacts (`Spec#B-1-update-invocable-from-any-in-flight-stage`) — a skill (reference-doc procedure + adapters), LLM-executed like `/sharpen`, not a new engine. Its justified input is a `Delta-<N>` block in `understanding.md`: emitted by `/sharpen`, recorded at intake from a planner's inline drift, or handed up from an impl stop-the-line. `/revise` identifies the corrected artifact, propagates downstream-only (`Spec#C-3-change-stays-downstream-only`) re-evaluating in place by default, preserves anchor IDs via the generalized retire-by-note contract (`Spec#B-3-prior-work-preserved`), and re-validates (`Spec#C-2-committed-set-stays-consistent`). Structural splits and renames route through the extended allocator (`Spec#B-4-structural-ops-leave-nothing-stranded`). Supporting edits land in `artifact-contract.md`, `leanplan-new`, and `validate.py`; current-state of each is in `research.md`.
+`/revise <KEY>` is the single sanctioned, any-stage entry for editing committed artifacts (`Spec#B-1-update-invocable-from-any-in-flight-stage`) — a skill (reference-doc procedure + adapters), LLM-executed like `/sharpen`, not a new engine. Its justified input is a `Delta-<N>` block in `understanding.md`: emitted by `/sharpen`, recorded at intake from a planner's inline drift, or handed up from an implementation stop-the-line. `/revise` identifies the corrected artifact, propagates downstream-only (`Spec#C-3-change-stays-downstream-only`) re-evaluating in place by default, preserves anchor IDs via the generalized retire-by-note contract (`Spec#B-3-prior-work-preserved`), and re-validates (`Spec#C-2-committed-set-stays-consistent`). Structural splits and renames route through the extended allocator (`Spec#B-4-structural-ops-leave-nothing-stranded`). Supporting edits land in `artifact-contract.md`, `leanplan-new`, and `validate.py`; current-state of each is in `research.md`.
 
 ```mermaid
 flowchart TD
     SH[sharpen emits Delta] --> U[(understanding.md Delta-N)]
     INL[planner inline drift] -. intake records Delta .-> U
     U --> R{{revise KEY}}
-    ISL[impl stop-the-line] --> R
+    ISL[implementation stop-the-line] --> R
     R --> ID[identify corrected artifact]
     ID --> PROP[propagate downstream only<br/>re-evaluate in place, re-derive on structural change]
     PROP --> RV[re-validate]
@@ -20,13 +20,13 @@ flowchart TD
 ```
 
 ## D-1: revise-unified-editing-entry
-`/revise <KEY>` is a new sanctioned skill and the single entry for editing committed artifacts at any in-flight occasion — realizes `Spec#B-1-update-invocable-from-any-in-flight-stage`. The impl Artifact Update Loop's editing core (identify-layer → edit → re-evaluate-downstream → scope-gate) is re-homed here; impl's six stop-the-line *triggers* stay in impl but now call `/revise` rather than running their own inline walk-up, so a mid-task drift during impl flows through the same entry as every other occasion. → `design-rationale.md#D-1-revise-unified-editing-entry`.
+`/revise <KEY>` is a new sanctioned skill and the single entry for editing committed artifacts at any in-flight occasion — realizes `Spec#B-1-update-invocable-from-any-in-flight-stage`. The implementation Artifact Update Loop's editing core (identify-layer → edit → re-evaluate-downstream → scope-gate) is re-homed here; implementation's six stop-the-line *triggers* stay in implementation but now call `/revise` rather than running their own inline walk-up, so a mid-task drift during implementation flows through the same entry as every other occasion. → `design-rationale.md#D-1-revise-unified-editing-entry`.
 
 - Files (skill-definition pattern in `research.md`): create `adapters/claude/revise/SKILL.md` and `references/revise.md`; add a dispatch row to `adapters/codex/leanplan/SKILL.md`; add a row to `framework-design.md` §12.
 - Skill name `/revise` is provisional — the one user-facing label worth confirming.
 
 ## D-2: in-place-default-re-derive-on-threshold
-For each artifact in the drift's downstream scope-of-impact, `/revise` re-evaluates **in place** by default — a local edit preserving stable anchor IDs — and escalates to full re-derivation (re-running the stage skill from the corrected upstream) only when the change is **structural**: the anchor set itself must change, not just prose inside stable anchors. This generalizes the impl loop's existing default (`impl.md:61`) to every stage. Realizes `Spec#B-2-change-propagated-downstream`, preserves `Spec#B-3-prior-work-preserved`, and honors `Spec#C-3-change-stays-downstream-only` by walking only downstream of the corrected artifact. → `design-rationale.md#D-2-in-place-default-re-derive-on-threshold`.
+For each artifact in the drift's downstream scope-of-impact, `/revise` re-evaluates **in place** by default — a local edit preserving stable anchor IDs — and escalates to full re-derivation (re-running the stage skill from the corrected upstream) only when the change is **structural**: the anchor set itself must change, not just prose inside stable anchors. This generalizes the implementation loop's existing default (`implement.md:61`) to every stage. Realizes `Spec#B-2-change-propagated-downstream`, preserves `Spec#B-3-prior-work-preserved`, and honors `Spec#C-3-change-stays-downstream-only` by walking only downstream of the corrected artifact. → `design-rationale.md#D-2-in-place-default-re-derive-on-threshold`.
 
 ## D-3: generalize-retire-by-note
 Lift the `(retired)` retire-by-note form from Spec-only into the global `## Anchors` section of `artifact-contract.md`, so a superseded `Decision`, Tasks card, or Requirements/Spec item is retired by inline `(retired)` note rather than deleted. The stable-ID non-renumber rule there is already global (`artifact-contract.md:46`); only the retire *form* is Spec-special-cased, so this removes an inconsistency with no live alternative. Realizes the cross-artifact half of `Spec#B-3-prior-work-preserved`.

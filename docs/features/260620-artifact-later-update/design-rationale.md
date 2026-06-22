@@ -2,17 +2,17 @@
 
 ## D-1: revise-unified-editing-entry
 
-The editing capability C needs already exists — it is just trapped inside impl. The impl Artifact Update Loop walks up and edits artifacts; `/sharpen` deliberately stops at emitting a delta. So rather than build a second editing mechanism, C lifts the existing one out of impl into a stage-agnostic skill.
+The editing capability C needs already exists — it is just trapped inside implementation. The implementation Artifact Update Loop walks up and edits artifacts; `/sharpen` deliberately stops at emitting a delta. So rather than build a second editing mechanism, C lifts the existing one out of implementation into a stage-agnostic skill.
 
 Alternatives weighed:
-- **Leave the impl loop in place; add a separate editing path for the other stages.** Rejected: two editing engines drift apart — the exact silent inconsistency C exists to prevent, now in the framework's own machinery. "How an artifact gets revised" must have one home (One-Prose-Home at the mechanism level).
+- **Leave the implementation loop in place; add a separate editing path for the other stages.** Rejected: two editing engines drift apart — the exact silent inconsistency C exists to prevent, now in the framework's own machinery. "How an artifact gets revised" must have one home (One-Prose-Home at the mechanism level).
 - **Make revise a deterministic script.** Rejected: deciding which downstream items are implicated, and in-place vs re-derive, is judgment — LLM work, like every LeanPlan stage. A script would be too crude or would re-implement an LLM.
 
-Chosen: one editing engine, expressed as a skill; impl's six stop-the-line *triggers* remain impl's (they are impl-time detections) but call `/revise`. This is what makes "during impl" not a special case — it is the same entry as every other occasion.
+Chosen: one editing engine, expressed as a skill; implementation's six stop-the-line *triggers* remain implementation's (they are implementation-time detections) but call `/revise`. This is what makes "during implementation" not a special case — it is the same entry as every other occasion.
 
-Invalidation trigger: if impl's triggers come to need editing behavior that genuinely diverges from the other stages', the single-engine bet is wrong and the loop should re-fork.
+Invalidation trigger: if implementation's triggers come to need editing behavior that genuinely diverges from the other stages', the single-engine bet is wrong and the loop should re-fork.
 
-Scope note (not work-ordering): the target shape is impl delegating to revise; *when* `impl.md` is re-pointed (this feature or a follow-up) is the plan's call and does not change the shape.
+Scope note (not work-ordering): the target shape is implementation delegating to revise; *when* `implement.md` is re-pointed (this feature or a follow-up) is the plan's call and does not change the shape.
 
 ## D-2: in-place-default-re-derive-on-threshold
 
@@ -24,7 +24,7 @@ Forces:
 - Full re-derivation (re-run the stage skill from the corrected upstream) maximizes internal consistency but renumbers/loses anchors and erases history — a direct B-3 violation.
 - Pure in-place editing preserves IDs but cannot absorb a change that reshapes an artifact's anchor set.
 
-Chosen: in-place re-evaluation is the default — the same default the impl loop already runs (`impl.md:61`, "re-evaluate in place, not fully re-derive") — escalating to re-derivation only when the anchor set itself must change, and even then preserving surviving IDs and retiring removed ones by note (D-3). This is also the operational form of the Requirements's "effort proportional to volatility": a content-only change stays a cheap local edit; a structural change at a foundational upstream artifact may re-derive — but ID preservation binds both ends of the gradient.
+Chosen: in-place re-evaluation is the default — the same default the implementation loop already runs (`implement.md:61`, "re-evaluate in place, not fully re-derive") — escalating to re-derivation only when the anchor set itself must change, and even then preserving surviving IDs and retiring removed ones by note (D-3). This is also the operational form of the Requirements's "effort proportional to volatility": a content-only change stays a cheap local edit; a structural change at a foundational upstream artifact may re-derive — but ID preservation binds both ends of the gradient.
 
 Alternative weighed: always re-derive for guaranteed consistency. Rejected on B-3 (cannot preserve IDs/history) and because it contradicts the framework's existing in-place bet.
 

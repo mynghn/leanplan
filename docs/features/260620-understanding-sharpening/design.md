@@ -6,7 +6,7 @@
 
 ```mermaid
 flowchart TB
-    P[planner working any stage: requirement to impl] -->|disturbance to the understanding| SH["/sharpen — skill, off-pipeline"]
+    P[planner working any stage: requirement to implementation] -->|disturbance to the understanding| SH["/sharpen — skill, off-pipeline"]
     SH -->|loads| PR[references/sharpen.md protocol]
     PR --> RB[1 reflect back: name killed assumption + now-wrong question]
     RB --> CK{external claim?}
@@ -24,7 +24,7 @@ flowchart TB
 
 ## D-1: sharpen-as-non-stage-skill
 
-`/sharpen` is declared as a skill — a thin `adapters/claude/sharpen/SKILL.md` adapter over `references/sharpen.md` — invocable at any point in a round and sitting *off* the requirement→impl pipeline (a callable move, not a 6th stage). Being a skill is what enables mid-process pick-up. Realizes `Spec#B-1-sharpen-invocable-mid-any-stage` and `Spec#C-3-opt-in-never-gates` (a skill is invoked, never a gate). See rationale at [design-rationale.md#D-1-sharpen-as-non-stage-skill].
+`/sharpen` is declared as a skill — a thin `adapters/claude/sharpen/SKILL.md` adapter over `references/sharpen.md` — invocable at any point in a round and sitting *off* the requirement→implementation pipeline (a callable move, not a 6th stage). Being a skill is what enables mid-process pick-up. Realizes `Spec#B-1-sharpen-invocable-mid-any-stage` and `Spec#C-3-opt-in-never-gates` (a skill is invoked, never a gate). See rationale at [design-rationale.md#D-1-sharpen-as-non-stage-skill].
 
 - **Adapter:** `name: sharpen`; `argument-hint: "[what shifted | a claim to check]"`; `allowed-tools: Read, AskUserQuestion, WebSearch, WebFetch, Write, Bash(validate.py)` — but Write is used **only** for `understanding.md`; the skill never edits a committed surface artifact (`Spec#C-1`).
 - **Registration:** add `sharpen` to `install.sh` `CLAUDE_SKILLS`; add a `sharpen` row to the Codex `## Dispatch` table; add the move to `framework-design.md` §12 as a non-pipeline skill (distinct from the five stage edges).
@@ -43,6 +43,6 @@ The delta lands in a new feature-local **archive** `docs/features/<KEY>/understa
 
 ## D-4: stage-docs-point-to-sharpen
 
-Each stage reference doc (`requirement`/`specify`/`design`/`plan`/`impl.md`) gains a one-line pointer: a disturbance to the understanding is a sanctioned reason to invoke `/sharpen` (which won't touch your artifacts), rather than ignoring it or hand-rolling a fix. Trivial — it realizes the "from inside any stage, instead of ignoring" half of `Spec#B-1-sharpen-invocable-mid-any-stage` by making the move discoverable where each stage runs.
+Each stage reference doc (`requirements`/`specify`/`design`/`tasks`/`implement.md`) gains a one-line pointer: a disturbance to the understanding is a sanctioned reason to invoke `/sharpen` (which won't touch your artifacts), rather than ignoring it or hand-rolling a fix. Trivial — it realizes the "from inside any stage, instead of ignoring" half of `Spec#B-1-sharpen-invocable-mid-any-stage` by making the move discoverable where each stage runs.
 
-- **Boundary:** this does **not** rewire `impl.md`'s existing Stop-The-Line / Artifact Update Loop. Those impl-only triggers are one disturbance *source* that may invoke `/sharpen` for the cognitive re-derivation; generalizing and reconciling impl's artifact-editing loop is C's (#9) territory, not B's.
+- **Boundary:** this does **not** rewire `implement.md`'s existing Stop-The-Line / Artifact Update Loop. Those implementation-only triggers are one disturbance *source* that may invoke `/sharpen` for the cognitive re-derivation; generalizing and reconciling implementation's artifact-editing loop is C's (#9) territory, not B's.

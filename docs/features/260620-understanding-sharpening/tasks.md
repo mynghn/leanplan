@@ -48,7 +48,7 @@ Near-linear: the artifact model gives the protocol a delta home (A1→S1); the a
 ## T: D1
 
 - **Goal**: Integrate the move across the framework docs so it is discoverable from inside any stage and the framework's own map stays truthful (`Design#D-4-stage-docs-point-to-sharpen`) — a one-line `/sharpen` pointer in each stage doc realizes the "from inside any stage, instead of ignoring" half of `Spec#B-1-sharpen-invocable-mid-any-stage`.
-- **Repo**: leanplan (`references/{requirement,specify,design,plan,impl}.md`, `framework-design.md`, `references/philosophy.md`)
+- **Repo**: leanplan (`references/{requirement,specify,design,plan,implementation}.md`, `framework-design.md`, `references/philosophy.md`)
 - **Completion**:
   - Each of the five stage reference docs names `/sharpen` as the sanctioned response to a disturbance (which won't touch its artifacts), phrased as opt-in, never required (`Spec#B-1-sharpen-invocable-mid-any-stage`, `Spec#C-3-opt-in-never-gates`).
   - `framework-design.md` §12 lists `sharpen` as a non-pipeline skill, distinct from the five stage edges; `philosophy.md` companions note the new reference doc.

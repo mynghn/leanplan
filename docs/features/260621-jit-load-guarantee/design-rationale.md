@@ -1,13 +1,13 @@
 # 260621-jit-load-guarantee — Design Rationale
 
-Decision record: among three enforcement weights — pure review (lightest), a greppable floor (middle), a validator-gated receipt (heaviest) — the **middle** was chosen (2026-06-22). It buys a structured, enumerable obligation against the rubber-stamp failure mode without standing up new framework machinery. A late constraint — *no round-local identifier may leak into the product* (`impl-closeout.md` "substance, not the key") — relocated the floor from a commit/PR marker to an in-round reconciliation, which turned out lighter than the marker it replaced.
+Decision record: among three enforcement weights — pure review (lightest), a greppable floor (middle), a validator-gated receipt (heaviest) — the **middle** was chosen (2026-06-22). It buys a structured, enumerable obligation against the rubber-stamp failure mode without standing up new framework machinery. A late constraint — *no round-local identifier may leak into the product* (`implement-closeout.md` "substance, not the key") — relocated the floor from a commit/PR marker to an in-round reconciliation, which turned out lighter than the marker it replaced.
 
 ## D-1: mandatory-substance-distillation
 
 **Forces.** `Spec#B-1-load-bearing-consultation-observable` needs the act of consulting a load-bearing anchor to leave an observable trace. Two constraints squeeze the trace's form: it must not stamp a round-local handle into the durable product (the "substance, not the key" rule), and it must not add standing prose to the review surface (`Spec#C-2-surface-no-less-lean`).
 
 **Alternatives considered.**
-- *A new consultation marker that names the anchor in the product* (e.g. a code annotation or commit line `satisfies D-2`). Rejected: it carries the handle, not the reason — the precise failure `impl-closeout.md` warns of. It also *feels* like proof while being forgeable by copying the slug, the very gap M exists to close.
+- *A new consultation marker that names the anchor in the product* (e.g. a code annotation or commit line `satisfies D-2`). Rejected: it carries the handle, not the reason — the precise failure `implement-closeout.md` warns of. It also *feels* like proof while being forgeable by copying the slug, the very gap M exists to close.
 - *Eager-load the cited content onto the card.* Rejected: abandons the leanness bet (a requirement non-goal); defeats the deferral the surface depends on.
 
 **Chosen path.** Reuse the distillation already mandated at close-out and make it load-bearing for the load-bearing class: the consulted constraint must land in the product **as substance**. This needs no new signal — the substance *is* the signal. It is leak-free by construction: the reason in words ("at-least-once; duplicates tolerated") cannot be written without consulting the anchor, whereas the handle can be copied blind. The rule that forbids the handle is the same rule that makes the proof load-bearing — a reflexive fit with the framework rather than a bolt-on.

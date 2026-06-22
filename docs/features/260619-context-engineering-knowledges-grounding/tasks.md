@@ -71,16 +71,16 @@ Tracks: **A** archive (vendored grounding), **S** surface (name-hooks on the hot
 
 ## T: C1
 
-- **Goal**: Make stage adapters lazy-load references per `Design#D-3-adapters-lazy-load-references`: default-load only `<stage>.md`; gate `artifact-contract.md` (load before editing artifact structure/anchors) and `philosophy.md` (load on principle challenge) on demand. Self-hook the changed load instruction `(CE: jit-loading)`. Apply across the 5 Claude adapter SKILLs + the Codex dispatcher; mirror the gating note in `impl.md`.
-- **Repo**: `mynghn/leanplan` — `adapters/claude/*/SKILL.md`, `adapters/codex/leanplan/SKILL.md`, `references/impl.md`.
+- **Goal**: Make stage adapters lazy-load references per `Design#D-3-adapters-lazy-load-references`: default-load only `<stage>.md`; gate `artifact-contract.md` (load before editing artifact structure/anchors) and `philosophy.md` (load on principle challenge) on demand. Self-hook the changed load instruction `(CE: jit-loading)`. Apply across the 5 Claude adapter SKILLs + the Codex dispatcher; mirror the gating note in `implement.md`.
+- **Repo**: `mynghn/leanplan` — `adapters/claude/*/SKILL.md`, `adapters/codex/leanplan/SKILL.md`, `references/implement.md`.
 - **Completion**:
   - No stage SKILL eager-loads all three references; `artifact-contract.md` carries an explicit "load before structural edit" trigger — verifies `Spec#B-3-framework-conforms-to-its-own-advice` (the `jit-loading` self-fix; baseline in `research.md` → Self-conformance gaps).
 - **Dependencies**: A2 (enabler — the `(CE: jit-loading)` hook resolves once the mapping lands).
 
 ## T: C2
 
-- **Goal**: Prescribe isolation as a method primitive in `specify.md`, `design.md`, `impl.md` per `Design#D-4-isolation-as-method-primitive` — breadth-heavy investigation runs in a sub-agent returning only the distilled artifact; guidance, not mandate. Add `Agent` to the `specify` adapter `allowed-tools`. Self-hook `(CE: context-isolation)` / `(CE: explore-then-compact-handoff)`.
-- **Repo**: `mynghn/leanplan` — `references/{specify,design,impl}.md`, `adapters/claude/specify/SKILL.md`.
+- **Goal**: Prescribe isolation as a method primitive in `specify.md`, `design.md`, `implement.md` per `Design#D-4-isolation-as-method-primitive` — breadth-heavy investigation runs in a sub-agent returning only the distilled artifact; guidance, not mandate. Add `Agent` to the `specify` adapter `allowed-tools`. Self-hook `(CE: context-isolation)` / `(CE: explore-then-compact-handoff)`.
+- **Repo**: `mynghn/leanplan` — `references/{specify,design,implementation}.md`, `adapters/claude/specify/SKILL.md`.
 - **Completion**:
   - The three stage references prescribe isolated breadth-heavy investigation; the `specify` adapter `allowed-tools` includes `Agent` — verifies `Spec#B-3-framework-conforms-to-its-own-advice`.
 - **Dependencies**: A2 (enabler — hooks resolve once the mapping lands).
@@ -95,7 +95,7 @@ Tracks: **A** archive (vendored grounding), **S** surface (name-hooks on the hot
 
 ## T: C4
 
-- **Goal**: Add the session-boundary principle per `Design#D-7-session-boundary-principle` to `philosophy.md` and `framework-design.md` §1, with a §13 note that on Claude Code `/handoff` (plan→impl) and `/compact-focus` (pivots) realize it — harness commands named there only, never in the portable principle. Self-hook `(CE: compaction-vs-eviction)` / `(CE: explore-then-compact-handoff)`. No new per-feature state artifact.
+- **Goal**: Add the session-boundary principle per `Design#D-7-session-boundary-principle` to `philosophy.md` and `framework-design.md` §1, with a §13 note that on Claude Code `/handoff` (plan→implementation) and `/compact-focus` (pivots) realize it — harness commands named there only, never in the portable principle. Self-hook `(CE: compaction-vs-eviction)` / `(CE: explore-then-compact-handoff)`. No new per-feature state artifact.
 - **Repo**: `mynghn/leanplan` — `references/philosophy.md`, `framework-design.md` §1 + §13.
 - **Completion**:
   - The principle is present in `philosophy.md` + `framework-design.md` §1; §13 names the Claude harness realizations; the portable principle text names no harness command — verifies `Spec#B-3-framework-conforms-to-its-own-advice` and supports `Spec#C-1-portable-self-contained`.

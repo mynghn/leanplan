@@ -2,7 +2,7 @@
 
 ## Behavior
 ### B-1: sharpen-invocable-mid-any-stage
-When a disturbance hits an understanding that has begun to form — at any point from mid-requirement through impl — the planner invokes the sharpening move in place and it engages within that stage's context.
+When a disturbance hits an understanding that has begun to form — at any point from mid-requirement through implementation — the planner invokes the sharpening move in place and it engages within that stage's context.
 
 ### B-2: reflect-back-not-re-ask
 On invocation, the move names the specific prior assumption the disturbance invalidates and restates the now-wrong question that assumption was answering — rather than re-eliciting the problem from a blank slate.

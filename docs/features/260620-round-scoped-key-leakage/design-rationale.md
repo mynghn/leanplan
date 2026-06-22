@@ -2,11 +2,11 @@
 
 ## D-1: guidance-carries-substance
 
-Guidance is the only universal arm, so the rule's substance must live there regardless of what we mechanize. The impl agent authors on surfaces no git hook or CI can see — runtime logs, runbooks, external wikis, the body of a Slack post — and guidance travels with the agent to all of them. So even in a world with a perfect mechanical gate, the guidance edit is load-bearing.
+Guidance is the only universal arm, so the rule's substance must live there regardless of what we mechanize. The implementation agent authors on surfaces no git hook or CI can see — runtime logs, runbooks, external wikis, the body of a Slack post — and guidance travels with the agent to all of them. So even in a world with a perfect mechanical gate, the guidance edit is load-bearing.
 
 Why extend P7 rather than add a 9th principle: the leak is a *failure mode* of P7 ("persist by migration to code"), not a new axis of behavior. P7 already says "distill non-obvious WHYs into durable forms"; it simply never said "carry the substance, not the round-local key." Adding a standalone "round-scoped vs durable identifiers" principle was the alternative — rejected to keep philosophy.md lean (8 tight principles; a new one for a single failure mode dilutes the set). The distinction it would name is real but is better attached to P7, whose hierarchy is exactly where the migration happens, and cross-linked to P6 (transience) which is *why* the key dangles.
 
-Why this closes the observed gap: the existing impl close-out already had "distill WHYs" and "confirm plan artifacts non-load-bearing," yet leaks happened — because an agent can satisfy "I migrated the WHY" by writing "satisfies C-1", which *feels* migrated but smuggles the round-local key. The explicit guard ("substance, not the key") plus a concrete close-out self-check names the failure the prior wording allowed.
+Why this closes the observed gap: the existing implementation close-out already had "distill WHYs" and "confirm plan artifacts non-load-bearing," yet leaks happened — because an agent can satisfy "I migrated the WHY" by writing "satisfies C-1", which *feels* migrated but smuggles the round-local key. The explicit guard ("substance, not the key") plus a concrete close-out self-check names the failure the prior wording allowed.
 
 Invalidation triggers: if leaks persist on non-code surfaces despite the guidance, the distinction is under-weighted as a P7 clause and should be elevated to a standalone principle. If the self-check proves to be dead weight an agent rubber-stamps, lean harder on the mechanical arm instead of adding more prose.
 

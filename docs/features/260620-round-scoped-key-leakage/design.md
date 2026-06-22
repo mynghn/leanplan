@@ -2,14 +2,14 @@
 
 ## Architecture
 
-Two arms realize `Spec#C-1-durable-artifacts-free-of-round-scoped-keys`, with the guidance arm also realizing `Spec#B-1-durable-why-carries-substance-not-key`. The **guidance arm** (philosophy P7 + impl.md) is universal — it shapes the impl agent wherever it authors, so it reaches every durable surface, including logs, runbooks, and wikis the mechanical arm can't observe. The **backstop arm** is narrow — anchor tokens and cross-artifact citations only — and wires one shared detector (`scan-leaks`) into three surface-specific points: `pre-commit` and `commit-msg` locally (no CI needed), and a GitHub Action for PR descriptions and review comments, which local git hooks cannot see. Other durable surfaces are guidance-only by design. Warn by default; `LEANPLAN_STRICT` / CI blocks. `scan-leaks` never inspects `docs/features/**`, where round-scoped anchors legitimately resolve.
+Two arms realize `Spec#C-1-durable-artifacts-free-of-round-scoped-keys`, with the guidance arm also realizing `Spec#B-1-durable-why-carries-substance-not-key`. The **guidance arm** (philosophy P7 + implement.md) is universal — it shapes the implementation agent wherever it authors, so it reaches every durable surface, including logs, runbooks, and wikis the mechanical arm can't observe. The **backstop arm** is narrow — anchor tokens and cross-artifact citations only — and wires one shared detector (`scan-leaks`) into three surface-specific points: `pre-commit` and `commit-msg` locally (no CI needed), and a GitHub Action for PR descriptions and review comments, which local git hooks cannot see. Other durable surfaces are guidance-only by design. Warn by default; `LEANPLAN_STRICT` / CI blocks. `scan-leaks` never inspects `docs/features/**`, where round-scoped anchors legitimately resolve.
 
 ```mermaid
 flowchart TB
-    AGENT["impl agent"]
+    AGENT["implementation agent"]
     subgraph G["Guidance arm — universal coverage"]
         P7["philosophy.md P7<br/>+ substance-not-key clause"]
-        IMPL["impl.md<br/>distillation guard + close-out self-check"]
+        IMPL["implement.md<br/>distillation guard + close-out self-check"]
     end
     SCAN["scan-leaks<br/>narrow pattern: anchors + citations"]
     subgraph B["Backstop arm — narrow, warn-default"]
@@ -36,8 +36,8 @@ flowchart TB
 Land the rule's substance in the guidance layer, the only arm that reaches every durable surface. Rationale at [design-rationale.md#D-1-guidance-carries-substance](design-rationale.md#D-1-guidance-carries-substance).
 
 - **philosophy.md P7** — append a clause: migrate the *substance* of a WHY, not its round-local key. The key is round-scoped (cf. P6 transience) and dangles once the plan is discarded. Extends P7 rather than adding a 9th principle — the leak is a failure mode of "persist by migration," not a new axis.
-- **impl.md distillation hierarchy** — add the guard: when promoting a WHY into any durable tier (commit / PR / inline comment / lint), carry the constraint in words, never the anchor or feature id.
-- **impl.md close-out** — add a self-check step before commit: scan your own staged durable outputs for round-scoped tokens; replace any with substance.
+- **implement.md distillation hierarchy** — add the guard: when promoting a WHY into any durable tier (commit / PR / inline comment / lint), carry the constraint in words, never the anchor or feature id.
+- **implement.md close-out** — add a self-check step before commit: scan your own staged durable outputs for round-scoped tokens; replace any with substance.
 - Realizes `Spec#B-1-durable-why-carries-substance-not-key` and the guidance arm of `Spec#C-1-durable-artifacts-free-of-round-scoped-keys`.
 
 ## D-2: narrow-leak-detector

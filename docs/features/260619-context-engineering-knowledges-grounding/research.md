@@ -24,12 +24,12 @@ Verified against `references/*.md`, `framework-design.md`, the adapter SKILLs, a
 - Isolation (not yet present) → `context-isolation`, `explore-then-compact-handoff`.
 - Stable→volatile load order (not yet present) → `prefix-cache-economics` (entry states "order stable-to-volatile").
 - Edge-placement in long artifacts (not yet present) → `lost-in-the-middle`. The "~100-line" trigger is a LeanPlan-local heuristic (reuses the §6 ToC>100 threshold); the concept itself states no line cutoff.
-- Session-boundary discipline (not yet present) → `explore-execute-boundary` (the temporal explore→execute / plan→impl boundary — primary), `compaction-vs-eviction`, `explore-then-compact-handoff`, `context-isolation`; "warm session" also traces to `prefix-cache-economics`.
+- Session-boundary discipline (not yet present) → `explore-execute-boundary` (the temporal explore→execute / plan→implementation boundary — primary), `compaction-vs-eviction`, `explore-then-compact-handoff`, `context-isolation`; "warm session" also traces to `prefix-cache-economics`.
 
 ## Self-conformance gaps (measured)
 
-- JIT self-violation: every stage adapter SKILL eager-loads `philosophy.md` (23 lines) + `artifact-contract.md` (126) + `<stage>.md` before acting. `impl` = 23 + 126 + 98 = **247 lines** loaded up front, while `impl.md` itself prescribes JIT-loading of artifact anchors. Sharpest case: `artifact-contract.md` (126 lines) loads at every stage even when structure is not being edited.
-- Isolation: `Agent` is in the `design` and `impl` adapter `allowed-tools`, absent from `specify` (the REQ→Spec research edge); `requirement`/`plan` lack it too. No stage reference prescribes isolating breadth-heavy investigation into a sub-agent that returns only the distilled artifact.
+- JIT self-violation: every stage adapter SKILL eager-loads `philosophy.md` (23 lines) + `artifact-contract.md` (126) + `<stage>.md` before acting. `implement` = 23 + 126 + 98 = **247 lines** loaded up front, while `implement.md` itself prescribes JIT-loading of artifact anchors. Sharpest case: `artifact-contract.md` (126 lines) loads at every stage even when structure is not being edited.
+- Isolation: `Agent` is in the `design` and `implement` adapter `allowed-tools`, absent from `specify` (the REQ→Spec research edge); `requirements`/`tasks` lack it too. No stage reference prescribes isolating breadth-heavy investigation into a sub-agent that returns only the distilled artifact.
 - Prefix-cache ordering: no stable→volatile load-order rule in `framework-design.md` §6 or in adapter authoring guidance.
 - Edge-placement: §6 has a ToC>100-line rule only; no rule re-anchors critical invariants near a long artifact's tail or orders high-stakes DAG cards at the edges.
 - Session-boundary: absent as a principle. §14 notes cross-session continuity is handled by harness + git, with no artifact planned.
@@ -38,7 +38,7 @@ Verified against `references/*.md`, `framework-design.md`, the adapter SKILLs, a
 
 - LeanPlan references the CE knowledge base **zero** times today; skills load only `~/.local/share/leanplan/references/*`. The shipped framework already runs standalone.
 - `install.sh` only symlinks `adapters/{claude/*, codex/leanplan}` into the runtime skill registries; it does not enumerate `references/`. Files added under `references/` ship via the git tree (chezmoi external clone / `git clone`), so no `install.sh` change is needed to ship new references.
-- `validate.py` validates one feature dir under `docs/features/<KEY>` (`SURFACE_FILES` = requirement/spec/design/plan; optional rationale/research). It never reads `references/`. Its "frontmatter discouraged" check is scoped to those feature files. Records under `references/` are invisible to it and may carry provenance frontmatter without tripping it.
+- `validate.py` validates one feature dir under `docs/features/<KEY>` (`SURFACE_FILES` = requirement/spec/design/tasks; optional rationale/research). It never reads `references/`. Its "frontmatter discouraged" check is scoped to those feature files. Records under `references/` are invisible to it and may carry provenance frontmatter without tripping it.
 - Skills resolve via symlink to the installed copy `~/.local/share/leanplan/`; repo edits to the framework take effect for running skills only after reinstall / `chezmoi update`.
 
 ## Principle 7 scope

@@ -3,7 +3,7 @@
 ## Behavior
 ### B-1: durable-why-carries-substance-not-key
 
-A durable artifact that carries a round's reason states it as substance, never as the round-scoped key. When an `impl` round promotes a reason into a durable artifact (code comment, commit / PR body, log, runbook), the artifact names the constraint in plain words — e.g. "tokens must never be stored in clear" — not the handle that points at it — e.g. "satisfies `C-1`". The reason crosses; only its round-local key is dropped.
+A durable artifact that carries a round's reason states it as substance, never as the round-scoped key. When an `implement` round promotes a reason into a durable artifact (code comment, commit / PR body, log, runbook), the artifact names the constraint in plain words — e.g. "tokens must never be stored in clear" — not the handle that points at it — e.g. "satisfies `C-1`". The reason crosses; only its round-local key is dropped.
 
 One-shot test: run a round whose planning artifacts anchor a reason as `C-1`, then read the durable artifact it produces — the constraint appears in words, the token `C-1` does not.
 
@@ -20,4 +20,4 @@ Durable artifacts hold no round-scoped navigation handle used as a reference. Co
 ## Non-goals
 
 - **Anchor scheme unchanged** — no new id format, no renaming of the `B-` / `C-` / `D-` / `T:` / `Delta-` anchors or of feature ids.
-- **Enforcement mechanism is Design's** — whether the guarantee lands as framework guidance, an `impl` close-out self-check, a pre-commit / CI gate, or a combination is not an observable of this contract; it is chosen at Design.
+- **Enforcement mechanism is Design's** — whether the guarantee lands as framework guidance, an `implement` close-out self-check, a pre-commit / CI gate, or a combination is not an observable of this contract; it is chosen at Design.

@@ -2,7 +2,7 @@
 
 ## Problem
 
-LeanPlan's round-scoped identifiers keep leaking into artifacts that outlive the round, where they can no longer be decoded. Anchors (`B-`, `C-`, `D-`) and feature ids (`0004`, `260620-…`) are navigation handles: they resolve only against one feature's planning artifacts. Yet `impl` work repeatedly emits them as if they were durable, global terms — a code comment "satisfies `C-1`", a commit or PR body citing "feature `0004`" as a standing concept, a variable or log name built around a round key.
+LeanPlan's round-scoped identifiers keep leaking into artifacts that outlive the round, where they can no longer be decoded. Anchors (`B-`, `C-`, `D-`) and feature ids (`0004`, `260620-…`) are navigation handles: they resolve only against one feature's planning artifacts. Yet `implement` work repeatedly emits them as if they were durable, global terms — a code comment "satisfies `C-1`", a commit or PR body citing "feature `0004`" as a standing concept, a variable or log name built around a round key.
 
 Those durable artifacts get read later *without* the planning docs in context — and the planning docs may be gone, since the framework treats them as discardable and the code as the truth. The reader then meets "`C-1`" or "feature `0004`" with no way to tell which feature or which invariant was meant: a dangling, unresolvable reference. The ephemeral has leaked into the permanent.
 

@@ -2,13 +2,13 @@
 
 ## Problem
 
-A LeanPlan round treats the problem understanding as settled once it's captured — yet understanding keeps shifting whenever a disturbance lands on it: the user realizes something mid-stage, research returns a finding, a premise proves false, or implementation exposes a wrong assumption. These land once an understanding has begun to form — anywhere from mid-requirement through impl, not at a tidy front. LeanPlan sanctions understanding-work at exactly one moment — blank-slate, before the requirement stage. Once a round is underway there is no sanctioned move for *"stop — the framing just changed under me; re-derive it."*
+A LeanPlan round treats the problem understanding as settled once it's captured — yet understanding keeps shifting whenever a disturbance lands on it: the user realizes something mid-stage, research returns a finding, a premise proves false, or implementation exposes a wrong assumption. These land once an understanding has begun to form — anywhere from mid-requirement through implementation, not at a tidy front. LeanPlan sanctions understanding-work at exactly one moment — blank-slate, before the requirement stage. Once a round is underway there is no sanctioned move for *"stop — the framing just changed under me; re-derive it."*
 
 So whoever runs the round — agent and user together — improvises, and improvisation fails two ways: **thrash**, chasing the disturbance unbounded until the stage in flight derails; or **silent mutation**, quietly rewriting committed artifacts and corrupting the traceability and review history they exist to provide. Either way a falsified premise can slip downstream, and the round keeps building on understanding it should have stopped to re-derive.
 
 ## Outcome
 
-LeanPlan offers a **sanctioned, bounded sharpening move invocable from inside any stage** — requirement through impl — triggered by a disturbance to the current understanding, not by ordinary stage iteration. It reflects and re-derives *without* touching committed artifacts, and its product is a durable record of how the understanding changed. It engages only where an understanding already exists to be disturbed; drawing a *sparse* arrival out from a blank slate — when nothing has formed yet — is a separate concern (Non-goals).
+LeanPlan offers a **sanctioned, bounded sharpening move invocable from inside any stage** — requirement through implementation — triggered by a disturbance to the current understanding, not by ordinary stage iteration. It reflects and re-derives *without* touching committed artifacts, and its product is a durable record of how the understanding changed. It engages only where an understanding already exists to be disturbed; drawing a *sparse* arrival out from a blank slate — when nothing has formed yet — is a separate concern (Non-goals).
 
 User stories:
 
