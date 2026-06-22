@@ -16,7 +16,7 @@ Load `~/.local/share/leanplan/references/revise.md` — it is authoritative for 
 
 Runtime glue:
 
-- **Target** — `$ARGUMENTS` names the feature `<KEY>` and, optionally, the `Delta-<N>` to consume or the drift to inject. The move engages on `<cwd>/docs/features/<KEY>/`'s committed artifacts at whatever stage is in flight, including mid-task during impl.
+- **Target** — `$ARGUMENTS` names the feature `<KEY>` and, optionally, the `Delta-<N>` to consume or the drift to inject. The move engages on `<cwd>/docs/features/<KEY>/`'s committed artifacts at whatever stage is in flight, including mid-task during implementation.
 - **Justification** — the only mutation-authorizing input is a `Delta-<N>` block in `docs/features/<KEY>/understanding.md`. Consume the named one, or record one from the planner's asserted drift before any edit. With none and nothing recordable, make no edit.
 - **Edit targets** — the artifact the drift corrects and every downstream artifact it implicates; artifacts upstream of the corrected one stay byte-unchanged.
 - **Validate** — after propagating, run `python3 ~/.local/share/leanplan/scripts/validate.py docs/features/<KEY>` (scope `--stage` to the in-flight stage if downstream artifacts are not yet authored) to confirm the committed set is consistent and references no superseded content.

@@ -1,6 +1,6 @@
 # LeanPlan Implementation — Close-Out Distillation
 
-On-demand companion to `impl.md`, loaded at procedure step 7 (close-out). Carries the distillation tier hierarchy and the commit-message / PR-body promotion rules — the lookup detail consumed only once close-out is reached, kept out of the always-loaded implementation reference (context-engineering: jit-loading).
+On-demand companion to `implement.md`, loaded at procedure step 7 (close-out). Carries the distillation tier hierarchy and the commit-message / PR-body promotion rules — the lookup detail consumed only once close-out is reached, kept out of the always-loaded implementation reference (context-engineering: jit-loading).
 
 ## Distillation Hierarchy
 
@@ -15,7 +15,7 @@ At close-out, migrate non-obvious WHYs from plan anchors into the strongest dura
 | 5 | **PR body** | Change rationale that must survive squash-merge. |
 | 6 | **Inline comment** | Last resort — subtle invariant, workaround, non-obvious constraint that requires adjacency to the code. |
 
-**Substance, not the key.** Whichever tier you promote a WHY into, carry the constraint *in words* — never the round-local handle that points at it. An in-round anchor (`O-N` / `INV-N` / `Decision-N`), a `SPEC#…`-style cross-artifact citation, or the feature id is plan-scoped (philosophy.md P6) and dangles once the plan is discarded; a durable form reading only "satisfies the round's anchor" *feels* migrated but has carried the handle, not the reason. Write the reason itself (e.g. "tokens must never be stored in clear").
+**Substance, not the key.** Whichever tier you promote a WHY into, carry the constraint *in words* — never the round-local handle that points at it. An in-round anchor (`B-N` / `C-N` / `D-N`), a `Spec#…`-style cross-artifact citation, or the feature id is plan-scoped (philosophy.md P6) and dangles once the plan is discarded; a durable form reading only "satisfies the round's anchor" *feels* migrated but has carried the handle, not the reason. Write the reason itself (e.g. "tokens must never be stored in clear").
 
 ### Commit message vs. inline comment
 
@@ -40,12 +40,12 @@ PR body is particularly durable — visible in GitHub history post-squash, linka
 
 ## Close-Out Reconciliation
 
-The distillation above leaves the consultation proof; this step checks it. Run it at close-out as an impl self-check, and re-run it on the review path. It is **review-tier, not a `validate.py` gate** — the validator reads artifacts, not the code / commits / PR where substance lands, so it cannot judge whether a migrated reason is genuine.
+The distillation above leaves the consultation proof; this step checks it. Run it at close-out as an implementation self-check, and re-run it on the review path. It is **review-tier, not a `validate.py` gate** — the validator reads artifacts, not the code / commits / PR where substance lands, so it cannot judge whether a migrated reason is genuine.
 
 Reconcile the task card's **load-bearing citations** against the delivered work:
 
-- **Obligation set.** Exactly the citations the card makes from the load-bearing prefixes — the SPEC `O` / `INV` a task realizes and the DESIGN `Decision` it builds on. The card already enumerates them; no separate ledger is kept.
+- **Obligation set.** Exactly the citations the card makes from the load-bearing prefixes — the Spec `B` / `C` a task realizes and the Design `Decision` it builds on. The card already enumerates them; no separate ledger is kept.
 - **Check.** Each one's constraint must appear as substance in the delivered work — a type, test, annotation, commit body, PR body, or comment from the hierarchy above, carried *in words*. Substance means the anchor's **actual content** — the condition or reason it states — not a paraphrase of the slug name, which only re-says what naming the anchor already said; reproducing the content is what reading yields, and a self-describing slug does not. A reviewer who has opened the anchor judges the match. A load-bearing citation with no such substance, or only slug-deep substance, is a **surfaced skip**: its anchor was named but never consulted. Flag it; do not accept it as conforming.
-- **Key on the artifact prefix, never the bare anchor.** A `Decision` cited from DESIGN is load-bearing and in scope; the same `Decision` slug cited from RATIONALE is archive — load-on-challenge, never forced, and never a finding when absent. Archive-prefix citations (`RATIONALE#…`, `RESEARCH#…`) never enter the reconciliation.
+- **Key on the artifact prefix, never the bare anchor.** A `Decision` cited from Design is load-bearing and in scope; the same `Decision` slug cited from Rationale is archive — load-on-challenge, never forced, and never a finding when absent. Archive-prefix citations (`Rationale#…`, `Research#…`) never enter the reconciliation.
 
 The handles are read in-round, from the still-live plan card; the product carries only the distilled substance. So the check needs nothing round-scoped stamped into permanent history — it reads the card against the work, not a marker planted in the code.

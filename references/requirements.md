@@ -1,8 +1,8 @@
 # LeanPlan Requirement Stage
 
-This doc carries the procedure for the REQUIREMENT stage — capturing the desired outcome before any implementation choice. Edge: standalone input → REQUIREMENT.
+This doc carries the procedure for the Requirements stage — capturing the desired outcome before any implementation choice. Edge: standalone input → Requirements.
 
-**Stage stance.** Capture the desired outcome in language a PM reads — the future state and the pain behind it, in domain vocabulary. Domain-native *channels* ("admin tool", "partner API") are fine; the attractor to resist is implementation leakage — a chosen stack, architecture, or pattern (that belongs in SPEC / DESIGN).
+**Stage stance.** Capture the desired outcome in language a PM reads — the future state and the pain behind it, in domain vocabulary. Domain-native *channels* ("admin tool", "partner API") are fine; the attractor to resist is implementation leakage — a chosen stack, architecture, or pattern (that belongs in Spec / Design).
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
@@ -15,7 +15,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 ## Output
 
-`<cwd>/docs/features/<KEY>/requirement.md`
+`<cwd>/docs/features/<KEY>/requirements.md`
 
 ## Procedure
 
@@ -34,18 +34,19 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
      - **Frame** — offer two or more candidate problem framings for the planner to choose among; don't silently adopt the first.
      - **Surface** — raise the gaps and ambiguities bearing on the problem and resolve them with the planner.
    - **Opt-in, never a gate.** The step offers; it never blocks. The planner can decline it or cut it short and move to distillation at any point.
-   - **Forms understanding, writes nothing.** The draw-out forms the planner's understanding in the conversation — no file. Distillation (steps 4–5) is the sole writer of `requirement.md` and works from that understanding.
+   - **Forms understanding, writes nothing.** The draw-out forms the planner's understanding in the conversation — no file. Distillation (steps 4–5) is the sole writer of `requirements.md` and works from that understanding.
    - **Cold start only.** This draws an understanding out of a blank-slate arrival; a disturbance to an *already-formed* understanding is `/sharpen` (Claude) / `sharpen` (Codex), not this step.
 4. **Draft interactively**. Misframed Problem is the single largest source of downstream rework. Confirm framing with the user before writing:
    - **Problem** — what pain or opportunity drives this? Who feels it? What is currently broken, missing, or constrained?
-   - **Outcome** — desired future state + observable success signal. Prefer **user-story bullets** for user-visible behaviors using the form `**short title** — one-line summary. follow-up detail when needed.` Group system policies — cross-cutting domain rules (price parity, state-machine rules, regional constraints) — under a separate sub-group rather than forcing them into user-story shape; not every outcome is a user story. State the *intent* (why the rule matters); its observable, testable form is SPEC's to own, so don't pre-empt SPEC vocabulary here (`artifact-contract.md` → One Prose Home Per Fact). Fold the success signal into the same section (don't split into a separate "Success metric" section).
+   - **Outcome** — desired future state + observable success signal. Prefer **user-story bullets** for user-visible behaviors using the form `**short title** — one-line summary. follow-up detail when needed.` not every outcome is a user story. Fold the success signal into the same section (don't split into a separate "Success metric" section).
+   - **Guarantee** (conditional) — cross-cutting domain rules that hold continuously (price parity, state-machine rules, regional constraints), kept out of user-story shape. State the *intent* (why the rule matters); its observable, testable form is Spec's to own, so don't pre-empt Spec vocabulary here (`artifact-contract.md` → One Prose Home Per Fact). Omit the section when no such policies exist.
    - **Non-goals** — only if scope edges are genuinely ambiguous.
    - **Upstream** — only if refs exist; short list.
-5. **Write** the artifact at the path `leanplan-new` printed in step 1 (e.g. `docs/features/0007-anomaly-publisher/requirement.md`). Do **not** `mkdir` — `leanplan-new` is the single directory allocator; the requirement skill never creates the dir itself.
+5. **Write** the artifact at the path `leanplan-new` printed in step 1 (e.g. `docs/features/0007-anomaly-publisher/requirements.md`). Do **not** `mkdir` — `leanplan-new` is the single directory allocator; the requirement skill never creates the dir itself.
 6. **Self-check** before exiting:
    - Grep body for tech-stack nouns (Kafka, Redis, Kotlin, Spring, gRPC, Postgres, Flink, Kubernetes, Docker, etc.) — zero hits expected.
    - Outcome names a measurable success signal.
-   - Outcome bullets that *are* user-visible behaviors are written in user-story form; system policies are grouped separately, not disguised as user stories.
+   - Outcome bullets that *are* user-visible behaviors are written in user-story form; system policies live under `## Guarantee`, not disguised as Outcome user stories.
    - Conditional sections are omitted when empty (don't ship empty Non-goals or Upstream sections).
    - Problem leads with the pain itself (who feels it, what's broken), not background — a PM grasps it from the first line (conclusion-first; `artifact-contract.md` → Prose Style).
    - Problem reflects a formed understanding, not a sparse guess — a sparse arrival was drawn out (problem elicited, framings weighed, gaps resolved) before distillation, and the draw-out wrote no file of its own.
@@ -54,10 +55,10 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 - **No implementation choices.** No specific stack (Kafka, Redis, Postgres, gRPC), no internal architecture, no chosen pattern. Domain-vocabulary channels — "admin tool", "partner API", "batch integration" — are fine; they name channels, not choices.
 - **Outcome folds the success signal.** Desired future state + observable signal in the same section. Don't split into a separate "Success metric" subsection.
-- **User-story bullets where it fits.** When an outcome describes a user-visible behavior, write it as `**short title** — one-line summary. detail.` so reviewers can scan the feature shape. Don't twist system policies into fake user stories — group them separately.
+- **User-story bullets where it fits.** When an outcome describes a user-visible behavior, write it as `**short title** — one-line summary. detail.` so reviewers can scan the feature shape. Don't twist system policies into fake user stories — they belong under `## Guarantee`.
 - **Conditional sections must earn their place.** Non-goals only when scope is ambiguous; Upstream only when refs exist. Otherwise omit — empty sections dilute the review surface.
 - **Domain-native vocabulary.** Reviewers are PMs / stakeholders. Avoid internal system names unless they *are* the domain context (e.g. a product line).
-- **Draw out a sparse arrival; never force it.** When the arrival carries no formed problem, elicit it — problem, candidate framings, gaps — before distilling. The draw-out is opt-in: a formed arrival skips it, and the planner can decline or cut it short at any point. It forms the planner's understanding only — distillation stays the sole writer of `requirement.md`.
+- **Draw out a sparse arrival; never force it.** When the arrival carries no formed problem, elicit it — problem, candidate framings, gaps — before distilling. The draw-out is opt-in: a formed arrival skips it, and the planner can decline or cut it short at any point. It forms the planner's understanding only — distillation stays the sole writer of `requirements.md`.
 
 ## Template
 
@@ -75,12 +76,13 @@ User stories:
 - **<short title>** — <one-line user-observable behavior>. <follow-up detail if it sharpens the story; otherwise drop>.
 - ...
 
-System policies: <only when cross-cutting domain rules exist; otherwise drop this group>
-
-- **<short title>** — <the domain rule + why it matters; SPEC owns its observable form>. <detail>.
-- ...
-
 <observable success signal folded into a final sentence or two>
+
+## Guarantee
+<only when cross-cutting domain rules (system-policy intent) exist; otherwise drop this section>
+
+- **<short title>** — <the domain rule + why it matters; Spec owns its observable form>. <detail>.
+- ...
 
 ## Non-goals
 - <only when scope edges are ambiguous>
@@ -89,8 +91,8 @@ System policies: <only when cross-cutting domain rules exist; otherwise drop thi
 - <Jira / PRD / Slack refs when they exist — metadata; record here when they are not the feature id itself>
 ```
 
-The user-stories / system-policies split is a default shape, not a contract. Drop a group when it's empty; collapse to flat bullets when the feature is small enough that grouping adds noise.
+The Outcome user-stories / Guarantee system-policies split is a default shape, not a contract. Drop the Guarantee section when empty; collapse Outcome to flat bullets when the feature is small enough that grouping adds noise.
 
 ## Hand-off
 
-Tell the user: next edge is `/specify <KEY>` (Claude) or `specify <KEY>` (Codex), where `<KEY>` is the id `leanplan-new` allocated (e.g. `0007-anomaly-publisher`, `NEWCS-3595`, or `260616-anomaly-publisher`). Iterating on REQUIREMENT first is fine — `specify` re-derives from REQUIREMENT each invocation.
+Tell the user: next edge is `/specify <KEY>` (Claude) or `specify <KEY>` (Codex), where `<KEY>` is the id `leanplan-new` allocated (e.g. `0007-anomaly-publisher`, `NEWCS-3595`, or `260616-anomaly-publisher`). Iterating on Requirements first is fine — `specify` re-derives from Requirements each invocation.
