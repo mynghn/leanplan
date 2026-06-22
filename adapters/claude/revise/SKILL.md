@@ -1,7 +1,7 @@
 ---
 name: revise
-description: LeanPlan — inject a justified drift into committed artifacts at any in-flight stage and propagate it downstream-only via intake-Delta → identify corrected artifact → edit in place (re-derive on structural change) preserving anchor IDs → re-validate. The repair half that consumes what /sharpen emits; edits artifacts, but only against a recorded justification.
-argument-hint: "<KEY> [Delta-N | what drifted]"
+description: LeanPlan — inject a justified change into already-committed artifacts at any in-flight stage and propagate it only to downstream stages, editing in place against a recorded justification. The repair counterpart to /sharpen (which only diagnoses); never edits without a recorded reason.
+argument-hint: "<KEY> [what drifted | a recorded delta]"
 allowed-tools: Read, Edit, Write, AskUserQuestion, Bash(python3 ~/.local/share/leanplan/scripts/validate.py *), Bash(~/.local/share/leanplan/scripts/leanplan-new *)
 ---
 

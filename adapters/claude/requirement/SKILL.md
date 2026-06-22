@@ -1,7 +1,7 @@
 ---
 name: requirement
-description: LeanPlan — author a REQUIREMENT artifact for a feature. Interactive extraction of biz-only Problem + Outcome; standalone edge.
-argument-hint: "[brief biz intent | PROJ-123 | --date intent | id to revise]"
+description: LeanPlan — author a REQUIREMENT artifact for a feature. Interactive extraction of a feature's Problem + Outcome (no implementation choices); the entry stage — no upstream artifact required.
+argument-hint: "[brief intent | PROJ-123 | --date intent | id to revise]"
 allowed-tools: Read, Write, Edit, AskUserQuestion, Bash(~/.local/share/leanplan/scripts/leanplan-new *), Bash(python3 ~/.local/share/leanplan/scripts/validate.py *), Bash(ls *), mcp__atlassian__getJiraIssue, mcp__atlassian__searchJiraIssuesUsingJql, mcp__claude_ai_Slack__slack_read_thread, mcp__claude_ai_Slack__slack_read_channel
 ---
 

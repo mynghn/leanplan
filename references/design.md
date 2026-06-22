@@ -2,7 +2,7 @@
 
 This doc carries the procedure for the DESIGN stage — choosing the realization (components, stack, decisions) that satisfies a SPEC. Edge: SPEC → DESIGN.
 
-**Stage stance.** Capture the finished-system shape in full — every realization detail a downstream task will need (field mappings, schemas, signatures, call sequences) lives here, so tasks anchor instead of paraphrase. Stop the moment it turns into *work* (ordering, rollout, INFRAREQ → TASK). The two attractors to resist are under-capture and over-reach.
+**Stage stance.** Capture the finished-system shape in full — every realization detail a downstream task will need (field mappings, schemas, signatures, call sequences) lives here, so tasks anchor instead of paraphrase. Stop the moment it turns into *work* (ordering, rollout, cross-team request filing → TASK). The two attractors to resist are under-capture and over-reach.
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
@@ -39,7 +39,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
    Surface any uncovered items that *no* path realizes. Do not force-create a Decision for a trivial realization that the TASK layer handles directly.
 8. **Stop** if a design choice changes the SPEC contract — SPEC is wrong, not just this DESIGN. Record the drift as a `Delta` in `understanding.md`, then run `/revise <KEY>` (Claude) / `revise <KEY>` (Codex) — it injects the fix at SPEC and propagates downstream-only (`revise.md`). Don't hand-edit SPEC inline.
 9. **Self-check** before exit:
-   - No work ordering / INFRAREQ / rollout text (those belong in TASK).
+   - No work ordering, cross-team request filing, or rollout text (those belong in TASK).
    - No top-level `## Schemas` or `## Interfaces` section — schemas live inside their Decisions.
    - Tech-realization specifics a downstream plan task will need (field mappings, response shapes, signatures, call sequences) are *captured here* — so the plan card can anchor in without restating. Skim each Decision: does it answer "what does the system look like in this slice?" completely?
    - Non-trivial decisions have resolvable rationale anchors in `design-rationale.md`.
@@ -48,7 +48,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 ## Guardrails
 
-- **Chosen realization only.** DESIGN is the finished-system shape, not the work that builds it (Product, not Process). No work ordering, PR stacking, INFRAREQ procedure, or migration sequence — those belong in TASK.
+- **Chosen realization only.** DESIGN is the finished-system shape, not the work that builds it. No work ordering, PR stacking, cross-team request procedure, or migration sequence — those belong in TASK.
 - **Tech-realization specifics live here, in full.** Field-by-field mappings, response/proto shapes, method signatures, controller/service call sequences, schemas — capture them inside the relevant `Decision-<N>` block at design time. Downstream plan tasks should be able to anchor in via `DESIGN#Decision-<N>-<slug>` *without restating* the content. If a plan task ends up paraphrasing a Decision because it lacked detail here, the missing detail is a gap in **this** doc — fill it. Symmetric guard with the corresponding rule in `plan.md`.
 - **Architecture is mandatory.** Even a trivial one-component feature gets a diagram — it forces clarity about boundaries.
 - **Trivial vs. non-trivial.** Trivial decisions get a one-line inline why; non-trivial decisions (a real alternative was weighed, a tradeoff accepted, an invalidation trigger worth recording) anchor to RATIONALE.

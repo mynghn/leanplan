@@ -4,7 +4,7 @@ A lean, LLM-aware spec-driven-development framework for one-deployment-sized fea
 
 ## What it is
 
-LeanPlan defines five stages — **REQUIREMENT → SPEC → DESIGN → TASK → code** — with surface/archive layering, JIT-loaded rationale, and a validator that enforces the contract. The framework is shaped around how LLM agents actually consume planning artifacts: limited useful context, weak long-range attention, stronger performance with JIT-loaded intent plus current code.
+LeanPlan defines five stages — **REQUIREMENT → SPEC → DESIGN → TASK → code** — that keep each artifact lean by pushing verbose rationale into separately-loaded archives, with a validator that enforces the contract. The framework is shaped around how LLM agents actually consume planning artifacts: limited useful context, weak long-range attention, and stronger performance when intent is loaded just-in-time alongside current code.
 
 The full framework design is in [`framework-design.md`](./framework-design.md).
 
