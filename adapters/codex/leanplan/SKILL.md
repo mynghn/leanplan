@@ -1,55 +1,42 @@
 ---
 name: leanplan
-description: Use LeanPlan, a portable LLM-aware spec-driven-development framework, to author or validate feature artifacts through the requirements, specify, design, tasks, and implement stages, plus the off-pipeline sharpen and revise moves.
+description: LeanPlan front door for Codex. Use for `$leanplan <move>`; routes requirements, specify, design, tasks, implement, sharpen, revise, and validate to the matching leanplan-* skill.
 ---
 
-# LeanPlan
+# LeanPlan Front Door
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill is the Codex-side dispatcher across all five stages plus the off-pipeline `sharpen` and `revise` moves; the Claude Code runtime exposes the same content via slash commands.
-
-Use this skill when the user asks to create, refine, validate, or implement a LeanPlan feature plan. Canonical assets (shared between Claude Code and Codex runtimes) live at `~/.local/share/leanplan/`.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This Codex skill is a compatibility front door for `$leanplan <move>` invocations.
 
 ## Dispatch
 
-Parse the user's intent and load only the matching reference from the canonical tree:
+Parse the first argument, then read and follow the matching move wrapper. The target wrapper owns the input contract, canonical reference, validation command, and handoff language.
 
-| Intent | Load |
+| Move | Load wrapper |
 |---|---|
-| `requirements <slug-or-title>` | `~/.local/share/leanplan/references/requirements.md` |
-| `specify <KEY>` | `~/.local/share/leanplan/references/specify.md` |
-| `design <KEY>` | `~/.local/share/leanplan/references/design.md` |
-| `tasks <KEY>` | `~/.local/share/leanplan/references/tasks.md` |
-| `implement <KEY> <task-id>` | `~/.local/share/leanplan/references/implement.md` |
-| `sharpen <what-shifted>` | `~/.local/share/leanplan/references/sharpen.md` |
-| `revise <KEY> [Delta-N \| what drifted]` | `~/.local/share/leanplan/references/revise.md` |
-| `validate <feature-path>` | Run `python3 ~/.local/share/leanplan/scripts/validate.py` |
+| `requirements <slug-or-title>` | `~/.local/share/leanplan/adapters/codex/leanplan-requirements/SKILL.md` |
+| `specify <KEY>` | `~/.local/share/leanplan/adapters/codex/leanplan-specify/SKILL.md` |
+| `design <KEY>` | `~/.local/share/leanplan/adapters/codex/leanplan-design/SKILL.md` |
+| `tasks <KEY>` | `~/.local/share/leanplan/adapters/codex/leanplan-tasks/SKILL.md` |
+| `implement <KEY> <task-id>` | `~/.local/share/leanplan/adapters/codex/leanplan-implement/SKILL.md` |
+| `sharpen <what-shifted>` | `~/.local/share/leanplan/adapters/codex/leanplan-sharpen/SKILL.md` |
+| `revise <KEY> [Delta-N | what drifted]` | `~/.local/share/leanplan/adapters/codex/leanplan-revise/SKILL.md` |
+| `validate <feature-path>` | `~/.local/share/leanplan/adapters/codex/leanplan-validate/SKILL.md` |
 
-Throughout, `<KEY>` is the feature id. Its three forms (sequence / tracker-key / date), the `leanplan-new` allocation, and the `## Upstream` rule are defined in `artifact-contract.md` / `framework-design.md` §5 and produced by the `requirements` stage — load them there rather than restating here.
+If the requested move is missing or ambiguous, ask for one of the move names above. Do not infer a stage and proceed silently.
 
-For any artifact-writing stage, default-load only the matching stage reference. Load `~/.local/share/leanplan/references/artifact-contract.md` (structural rules) on demand — before writing or editing an artifact's structure or anchors — and `~/.local/share/leanplan/references/philosophy.md` (framework principles) when a principle's intent or grounding is in question, not up front (context-engineering: jit-loading).
+## Validation Flags
 
-The framework doc at `~/.local/share/leanplan/framework-design.md` carries the full coordinate model, validator design, and stop-the-line catalog. Load it only when challenged on framework shape — `philosophy.md` covers the principles needed at runtime.
-
-If the current repo has its own `docs/framework-design.md` (a project-local snapshot), read it as repo-local context only. The canonical references remain authoritative.
-
-## Validation
+The validation utility and stage wrappers use:
 
 ```bash
 python3 ~/.local/share/leanplan/scripts/validate.py docs/features/<KEY>
 ```
 
-Flags:
-
 - `--stage requirements|spec|design|tasks|full` — partial check while iterating.
 - `--json` — machine-readable output.
-- `--strict` (or `LEANPLAN_STRICT=1`) — escalates the one-deployment guardrail to error and makes any warning exit non-zero. Suitable for CI / pre-commit.
-- `--allow-large` — suppress the size guardrails (oversized DAGs and over-cap surface artifacts).
+- `--strict` or `LEANPLAN_STRICT=1` — warnings exit non-zero and one-deployment guardrails become errors.
+- `--allow-large` — suppress size guardrails.
 
-A Spec B / C item annotated on a line containing `**GAP**` (typically in tasks.md's forward-coverage table) is treated as deliberately uncovered — see the artifact contract.
+## Boundary
 
-## Operating Rules
-
-- Do not turn Tasks into a script. Give intent, constraints, anchors, and completion criteria.
-- Do not bulk-load every reference. Load only the stage reference needed now.
-- Do not create living canonical specs. Plan artifacts are in-feature, transient, and migrated into code/tests/types/PR body at implementation close-out.
-- When implementation contradicts a prior artifact, walk up to the highest affected layer and update there instead of patching downstream drift.
+This front door is routing glue only. It does not restate stage procedure, artifact shape, or implementation close-out rules. Those live in the move wrappers and the shared references they load.
