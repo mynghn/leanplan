@@ -45,3 +45,8 @@ LeanPlan is probably being used outside its intended shape when:
 - The same rationale is copied into multiple artifacts.
 - Validation is treated as a substitute for product or code review.
 - The feature cannot be explained as one deployable slice.
+
+## Next
+
+- Read [`reference.md`](./reference.md) for quick command and artifact lookup.
+- Back to [`USER_GUIDE.md`](../../USER_GUIDE.md) for the entry path and Quickstart.

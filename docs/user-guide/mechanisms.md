@@ -193,3 +193,9 @@ How to work with it:
 - Prefer durable forms after the work lands: tests, types, annotations, commit messages, PR text, and only rarely comments.
 
 When to challenge it: if brevity removes a constraint that implementation must honor, restore it to the owning artifact. If depth is useful only for audit or challenge, keep it archived and cited.
+
+## Next
+
+- Read [`adoption.md`](./adoption.md) for team adoption guidance.
+- Read [`reference.md`](./reference.md) for quick command and artifact lookup.
+- Back to [`USER_GUIDE.md`](../../USER_GUIDE.md) for the entry path and Quickstart.

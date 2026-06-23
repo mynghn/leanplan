@@ -2,7 +2,7 @@
 
 This page is for returning users who want to understand the full LeanPlan flow and the places where human judgment matters.
 
-LeanPlan has five planned stages followed by task implementation:
+LeanPlan has five stages: four planning stages, then implementation:
 
 1. **Requirements** captures the problem, scope, and success shape.
 2. **Spec** derives observable behavior and constraints.
@@ -95,3 +95,4 @@ Use these moves when the plan and reality disagree. Do not silently patch around
 
 - Read [`mechanisms.md`](./mechanisms.md) for the framework behavior behind the workflow.
 - Read [`reference.md`](./reference.md) for quick command and artifact lookup.
+- Back to [`USER_GUIDE.md`](../../USER_GUIDE.md) for the entry path and Quickstart.

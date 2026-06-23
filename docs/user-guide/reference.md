@@ -90,3 +90,9 @@ python3 ~/.local/share/leanplan/scripts/validate.py --strict docs/features/<KEY>
 | Completion criteria are subjective | Rewrite them around observable evidence |
 | A task only says "implement the design" | Add task-specific goal, constraints, and completion criteria |
 | The guide and references seem to disagree | Treat `references/*.md` and adapters as canonical agent procedure, then fix the human-facing explanation |
+
+## See also
+
+- [`using-leanplan.md`](./using-leanplan.md) — the full stage workflow.
+- [`mechanisms.md`](./mechanisms.md) — why LeanPlan behaves the way it does.
+- Back to [`USER_GUIDE.md`](../../USER_GUIDE.md) for the entry path and Quickstart.
