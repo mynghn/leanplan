@@ -1,11 +1,11 @@
 ---
-name: implement
+name: leanplan-implement
 description: LeanPlan — implement one task card from tasks.md against current code. Re-reason at task entry, enforce stop-the-line triggers, distill non-obvious WHYs into durable code forms at close-out.
 argument-hint: "<feature-key> <task-id>"
 allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(git *), Bash(./gradlew *), Bash(mise *), Bash(ls *), Bash(mkdir *), Bash(gh *), Bash(*/scripts/leanplan-validate *), Bash(*/scripts/scan-leaks *), mcp__atlassian__getJiraIssue, mcp__atlassian__addCommentToJiraIssue
 ---
 
-# implement
+# leanplan implement
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the implementation stage (one task card → landed code).
 
 Resolve `<LEANPLAN_ROOT>` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/claude/<skill>/`. Substitute that absolute path wherever commands below use `<LEANPLAN_ROOT>`.

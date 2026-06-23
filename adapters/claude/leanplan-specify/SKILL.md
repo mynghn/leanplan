@@ -1,11 +1,11 @@
 ---
-name: specify
+name: leanplan-specify
 description: LeanPlan — derive a Spec (externally-observable contract) from an existing Requirements. Generic-category tech only; split episodic Behavior items from continuous Constraints.
 argument-hint: "<feature-key>"
 allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(ls *), Bash(mkdir *), Bash(*/scripts/leanplan-validate *), WebFetch, WebSearch
 ---
 
-# specify
+# leanplan specify
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the Spec stage (Requirements → Spec edge).
 
@@ -18,6 +18,6 @@ Load `<LEANPLAN_ROOT>/references/specify.md` — it is authoritative for the pro
 
 Runtime glue:
 
-- **Missing input** — if `<cwd>/docs/features/<KEY>/requirements.md` is absent, stop and point the user to `/requirements` (see `specify.md` Inputs).
+- **Missing input** — if `<cwd>/docs/features/<KEY>/requirements.md` is absent, stop and point the user to `/leanplan-requirements` (see `specify.md` Inputs).
 - **Validate** — `<LEANPLAN_ROOT>/scripts/leanplan-validate <cwd>/docs/features/<KEY> --stage spec`.
-- **Hand off** — next edge is `/design <KEY>`.
+- **Hand off** — next edge is `/leanplan-design <KEY>`.

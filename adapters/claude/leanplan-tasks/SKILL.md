@@ -1,11 +1,11 @@
 ---
-name: tasks
+name: leanplan-tasks
 description: LeanPlan — produce a Tasks tasks.md from a Design. Track subgraphs, prefixed task IDs, bidirectional verification against Spec + Design.
 argument-hint: "<feature-key>"
 allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Bash(ls *), Bash(mkdir *), Bash(git *), Bash(*/scripts/leanplan-validate *)
 ---
 
-# tasks
+# leanplan tasks
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the Tasks stage (Design → `tasks.md` edge).
 
 Resolve `<LEANPLAN_ROOT>` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/claude/<skill>/`. Substitute that absolute path wherever commands below use `<LEANPLAN_ROOT>`.
@@ -19,4 +19,4 @@ Runtime glue:
 
 - **Output** — `<cwd>/docs/features/<KEY>/tasks.md` (the filename is `tasks.md`, not `task.md`).
 - **Validate** — `<LEANPLAN_ROOT>/scripts/leanplan-validate <cwd>/docs/features/<KEY> --stage tasks`.
-- **Hand off** — for each independently startable task, `/implement <KEY> <task-id>`.
+- **Hand off** — for each independently startable task, `/leanplan-implement <KEY> <task-id>`.
