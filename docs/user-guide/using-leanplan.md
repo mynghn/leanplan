@@ -84,12 +84,7 @@ Hand-off: continue to the next unblocked task, revise the plan if implementation
 
 ## Off-pipeline moves
 
-LeanPlan includes two moves for moments when the planned path is no longer enough:
-
-- **sharpen** is a reflect-and-re-derive move when understanding shifts but the committed artifacts do not need direct edits yet. Use it to clarify what changed before continuing.
-- **revise** is the artifact update path when implementation or review discovers that a Requirements, Spec, Design, or Tasks artifact is wrong or stale. Use it to update the highest affected layer and then re-evaluate downstream artifacts.
-
-Use these moves when the plan and reality disagree. Do not silently patch around upstream wrongness in the current task.
+When the plan and reality disagree, LeanPlan has two off-pipeline moves — **sharpen** (record a shift in understanding without editing artifacts yet) and **revise** (update the highest affected artifact, then re-evaluate downstream). Reach for them instead of silently patching around upstream wrongness in the current task. See [`mechanisms.md` → Sharpen and revise](./mechanisms.md#sharpen-and-revise) for how each works and when to challenge their use.
 
 ## Next
 

@@ -157,5 +157,6 @@ After the first-use path, continue based on what you need:
 - For LeanPlan-specific mechanisms, read [`docs/user-guide/mechanisms.md`](./docs/user-guide/mechanisms.md).
 - For team adoption guidance, read [`docs/user-guide/adoption.md`](./docs/user-guide/adoption.md).
 - For command and artifact lookup, read [`docs/user-guide/reference.md`](./docs/user-guide/reference.md).
+- For a real worked example, read the plan under [`docs/features/260620-artifact-later-update/`](./docs/features/260620-artifact-later-update) — a complete Requirements → Spec → Design → Tasks spine (with design-rationale and research archives) for an actual LeanPlan feature. Browse [`docs/features/`](./docs/features) for more.
 - For framework internals, read [`framework-design.md`](./framework-design.md).
 - For agent procedure, read the canonical files under [`references/`](./references/).

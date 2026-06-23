@@ -95,104 +95,50 @@ When to challenge it: if the agent reaches for `revise` without a clear drift re
 
 ## Goal 2: Review surface brevity
 
-LeanPlan keeps the visible plan small because small review surfaces get read. Brevity is not a taste preference here; it is a review and reasoning mechanism. The goal is to preserve enough intent for correct implementation while avoiding a document that looks complete but gets skimmed.
+LeanPlan keeps the visible plan small because small review surfaces actually get read. Brevity here is a review and reasoning mechanism, not a taste preference: preserve enough intent for correct implementation while avoiding a document that looks complete but gets skimmed.
 
 ### Surface and archive layering
 
-Canonical references: [`artifact-contract.md` → Surface / Archive layering](../../references/artifact-contract.md#surface--archive-layering), [`framework-design.md` → Surface/archive layering](../../framework-design.md#4-surfacearchive-layering), [`philosophy.md` → Archive verbose reasoning](../../references/philosophy.md#behavior-shaping-principles).
+Canonical references: [`artifact-contract.md` → Surface / Archive layering](../../references/artifact-contract.md#surface--archive-layering), [`artifact-contract.md` → Surface Budget](../../references/artifact-contract.md#surface-budget), [`framework-design.md` → Surface/archive layering](../../framework-design.md#4-surfacearchive-layering), [`philosophy.md` → Archive verbose reasoning](../../references/philosophy.md#behavior-shaping-principles).
 
-What you see: Requirements, Spec, Design, and Tasks stay compact, while deeper rationale can live in supporting archive material such as design rationale or research notes.
+What you see: Requirements, Spec, Design, and Tasks stay compact; deeper rationale lives in supporting archive material (design rationale, research, understanding). The agent or validator pushes back when a surface artifact grows past its soft prose budget, or when the task DAG looks too large for one deployment-sized change.
 
-Why it exists: reviewers and agents need the current decision path quickly. They also need a way to recover deeper reasoning when a decision is challenged. Surface/archive layering keeps both: the surface stays reviewable, and the archive remains available on demand.
-
-How to work with it:
-
-- Keep the main artifact decision-ready.
-- Move exploration, rejected alternatives, and evidence into archives when they matter but do not need to be loaded every time.
-- Link from the surface to the archive only where a reviewer may reasonably challenge the decision.
-
-When to challenge it: if the surface is so short that reviewers cannot tell what was decided, promote the missing decision into the surface. If the surface is carrying history, debate, or backup evidence, archive it and leave a pointed citation.
-
-### Surface budget pushback
-
-Canonical references: [`artifact-contract.md` → Surface Budget](../../references/artifact-contract.md#surface-budget), [`validate.py` → surface-budget guardrail](../../scripts/validate.py).
-
-What you see: the agent or validator may push back when a surface artifact grows past its soft prose budget, or when the task DAG starts looking too large for one deployment-sized change.
-
-Why it exists: the budget is a tripwire, not a target. LeanPlan uses it to catch artifacts that are becoming hard to review or that may be hiding more than one feature. The right response is not automatic deletion; it is a deliberate choice about where the extra material belongs.
+Why it exists: reviewers and agents need the current decision path fast, but must still recover deeper reasoning on challenge — layering keeps both. The budget is a tripwire for "this is getting hard to review, or hiding more than one feature," not a target. And brevity is not information loss: the archive path, citations, and implementation close-out exist so cut prose is recoverable, not forgotten.
 
 How to work with it:
 
-- Ask what prose belongs in an archive, what belongs on the surface, and what should be removed as duplication.
-- Split the feature when the size is evidence that the work is no longer one deployable slice.
-- Use strict validation when the team wants budget warnings to block CI or pre-commit.
-- Use `--allow-large` only when the larger surface is intentional and still reviewable.
+- Keep the main artifact decision-ready; move exploration, rejected alternatives, and evidence into archives when they matter but need not load every time.
+- When a budget warning fires, decide where the material belongs — archive it, cite it, or split the feature — rather than blindly deleting. Use `--allow-large` only when the larger surface is intentional and still reviewable; use strict validation when the team wants warnings to block CI.
+- Before closing a task, ask where each important WHY will live afterward (tests, types, annotations, commit/PR text).
 
-When to challenge it: if a warning is caused by legitimate reference material such as a Mermaid diagram or fenced schema, make sure it is being counted correctly before shrinking the artifact. If the artifact is over budget because every line carries load-bearing intent, the better fix may be feature splitting, not prose compression.
+When to challenge it: if the surface is so short that reviewers cannot tell what was decided, promote the missing decision back onto it. If a warning is caused by legitimate reference material — a Mermaid diagram, a fenced schema — check it is counted correctly before shrinking.
 
-### One prose home plus traceability
+### Traceability over restatement
 
 Canonical references: [`artifact-contract.md` → One Prose Home Per Fact](../../references/artifact-contract.md#one-prose-home-per-fact), [`artifact-contract.md` → Traceability](../../references/artifact-contract.md#traceability), [`framework-design.md` → References carry ID + slug](../../framework-design.md#9-key-design-resolutions).
 
-What you see: later artifacts cite earlier anchors instead of copying their content.
+What you see: later artifacts cite earlier anchors (`B-`, `C-`, `D-`, `T:`) instead of copying their content.
 
-Why it exists: brevity fails if every artifact repeats the same fact. Restatement creates drift and makes review harder because the reader must compare versions. Traceability preserves the relationship without multiplying prose.
+Why it exists: brevity fails if every artifact repeats the same fact — restatement creates drift and forces the reader to compare versions to find the authoritative one. Citation preserves the relationship without multiplying prose. This is the same one-prose-home principle behind stage ownership, seen from the downstream side.
 
 How to work with it:
 
-- Use anchor references to show why a task or decision exists.
-- Keep the cited artifact as the source of the fact.
-- During implementation, carry the substance of important constraints into durable surfaces like code shape, tests, annotations, commit messages, or PR text.
+- Use anchor references to show why a task or decision exists; keep the cited artifact as the source of the fact.
+- During implementation, carry the substance of important constraints into durable surfaces — code shape, tests, annotations, commit messages, PR text — not just the anchor.
 
 When to challenge it: if a citation is decorative and the task would mean the same thing without it, improve the task. If a citation points to an anchor whose substance no longer matches the work, revise the plan rather than treating the anchor as a label.
-
-### Conclusion-first prose
-
-Canonical references: [`artifact-contract.md` → Prose Style](../../references/artifact-contract.md#prose-style), [`framework-design.md` → Cross-cutting structural rules](../../framework-design.md#6-cross-cutting-structural-rules).
-
-What you see: good LeanPlan artifacts lead with the claim, decision, or task outcome, then give support.
-
-Why it exists: a short paragraph can still bury the useful part. Reviewers skim dense prose, and agents lose the thread when the conclusion arrives after caveats. LeanPlan's brevity goal depends on order as much as length.
-
-How to work with it:
-
-- Make headings and first lines carry the point.
-- Prefer bullets or small tables when the reader needs to compare items.
-- Put caveats after the decision they qualify.
-
-When to challenge it: if you have to reread a section to discover what it decided, rewrite the lead. If a section starts with background and only later reveals the conclusion, invert it.
 
 ### Validation as a guardrail
 
 Canonical references: [`validate.py`](../../scripts/validate.py), [`artifact-contract.md` → Required Shapes](../../references/artifact-contract.md#required-shapes), [`artifact-contract.md` → Anchors](../../references/artifact-contract.md#anchors).
 
-What you see: `validate.py` checks feature artifacts and reports missing sections, broken references, coverage gaps, and size guardrail warnings.
+What you see: `validate.py` checks feature artifacts and reports missing sections, broken references, coverage gaps, and size guardrail warnings (see `reference.md` for the flags).
 
 Why it exists: LeanPlan's review surface depends on structure. Lightweight validation catches shape drift before an agent or reviewer relies on a plan that no longer has the required anchors, coverage, or dependency shape.
 
-How to work with it:
+How to work with it: run validation before implementation and after plan edits; treat failures as plan defects, not formatting annoyances.
 
-- Run validation before implementation and after plan edits.
-- Treat validation failures as plan defects, not formatting annoyances.
-- Use strict validation when CI or pre-commit should fail on warnings.
-
-When to challenge it: validation cannot decide whether the product judgment is good or whether the implementation is elegant. It protects the contract; humans still own intent, tradeoffs, and review quality.
-
-### Brevity is not information loss
-
-Canonical references: [`artifact-contract.md` → Surface Budget](../../references/artifact-contract.md#surface-budget), [`philosophy.md` → Persist by migration to code](../../references/philosophy.md#behavior-shaping-principles), [`implement.md` → Distill WHYs](../../references/implement.md#procedure).
-
-What you see: LeanPlan cuts surface prose aggressively, but it does not ask the team to forget why decisions were made.
-
-Why it exists: review surface brevity only works if users trust that important reasoning can be recovered. The archive path, citations, validation, and implementation close-out all exist to make brevity safe rather than shallow.
-
-How to work with it:
-
-- Ask "does this fact need to be read every time?" before placing it on the surface.
-- Ask "where will this rationale live after implementation?" before closing a task.
-- Prefer durable forms after the work lands: tests, types, annotations, commit messages, PR text, and only rarely comments.
-
-When to challenge it: if brevity removes a constraint that implementation must honor, restore it to the owning artifact. If depth is useful only for audit or challenge, keep it archived and cited.
+When to challenge it: validation cannot decide whether the product judgment is good or the implementation elegant. It protects the contract; humans still own intent, tradeoffs, and review quality.
 
 ## Next
 

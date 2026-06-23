@@ -38,6 +38,8 @@ python3 ~/.local/share/leanplan/scripts/validate.py --stage tasks docs/features/
 python3 ~/.local/share/leanplan/scripts/validate.py --strict docs/features/<KEY>
 ```
 
+`leanplan-new` accepts three feature-id forms: a title → `NNNN-slug` sequence id (default); a bare tracker key like `NEWCS-3595` → used verbatim (e.g. a Jira issue); or `--date "title"` → `YYMMDD-slug`.
+
 ## Artifact responsibilities
 
 | Artifact | Owns | Does not own |
