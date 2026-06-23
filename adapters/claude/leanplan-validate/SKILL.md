@@ -9,12 +9,12 @@ allowed-tools: Read, Bash(*/scripts/leanplan-validate *), Bash(ls *)
 
 LeanPlan validation is the utility move that runs the shared structural validator. It authors no artifact — it reads a feature path and reports. Validation is also embedded as stage-local glue in every stage skill; this move is the standalone, on-demand entry point for checking artifacts between or after stages.
 
-Resolve `<LEANPLAN_ROOT>` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/claude/<skill>/`. Substitute that absolute path wherever commands below use `<LEANPLAN_ROOT>`.
+Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/claude/<skill>/`. Later `scripts/...` paths are relative to `LP_ROOT`; when running a command, use the shell form `"$LP_ROOT/..."`.
 
 Run:
 
 ```bash
-<LEANPLAN_ROOT>/scripts/leanplan-validate <feature-path>
+"$LP_ROOT/scripts/leanplan-validate" <feature-path>
 ```
 
 Flags:

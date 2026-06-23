@@ -7,12 +7,12 @@ description: LeanPlan — validate a LeanPlan feature path in Codex. Use for `le
 
 LeanPlan validation is the utility move that runs the shared structural validator. It does not author an artifact.
 
-Resolve `<LEANPLAN_ROOT>` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/codex/<skill>/`. Substitute that absolute path wherever commands below use `<LEANPLAN_ROOT>`.
+Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/codex/<skill>/`. Later `scripts/...` paths are relative to `LP_ROOT`; when running a command, use the shell form `"$LP_ROOT/..."`.
 
 Run:
 
 ```bash
-<LEANPLAN_ROOT>/scripts/leanplan-validate <feature-path>
+"$LP_ROOT/scripts/leanplan-validate" <feature-path>
 ```
 
 Flags:
