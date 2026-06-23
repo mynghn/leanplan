@@ -10,7 +10,7 @@ The current Prose Style guidance names adjacent habits ("lists over dense paragr
 
 ## Outcome
 
-The shared, all-artifact prose guidance distinguishes *concise* from *compressed* — naming information-compression-as-false-brevity as a failure mode the author can self-catch and the reviewer can reject by name. Brevity is defined explicitly: short *explanatory* sentences and lists, never a denser form — an unfamiliar coined word, or several concepts packed into one separator-joined token — that the reader must unpack.
+The shared, all-artifact prose guidance distinguishes *concise* from *compressed* — naming information-compression-as-false-brevity as a failure mode the author can self-catch and the reviewer can reject by name. Brevity is defined explicitly: shorten by cutting **redundancy** — what's repeated, derivable, or already implied — never by dropping a **distinct piece of information** the reader needs (*which* check, in what order, on what). The coined word and the noun pile are two ways that loss happens; even plain words can drop an axis ("the save" for the one that skips the duplicate check).
 
 User stories:
 
