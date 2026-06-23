@@ -7,7 +7,7 @@
 #
 # Run from inside a checked-out LeanPlan repo. Creates symlinks from the runtime
 # skill registries (~/.claude/skills/<name>, ~/.agents/skills/<name>) into
-# this repo's adapters/ subtree.
+# this repo's adapters/ and utils/ subtrees.
 
 set -euo pipefail
 
@@ -17,6 +17,7 @@ CODEX_SKILLS_DIR="$HOME/.agents/skills"
 
 CLAUDE_SKILLS=(leanplan-requirements leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-sharpen leanplan-revise leanplan-validate)
 CODEX_SKILLS=(leanplan-requirements leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-sharpen leanplan-revise leanplan-validate)
+UTILITY_SKILLS=(leanplan-installation-freshness)
 
 action="${1:-install}"
 
@@ -43,6 +44,12 @@ install_symlinks() {
         ln -sfn "$REPO_DIR/adapters/codex/$s" "$CODEX_SKILLS_DIR/$s"
         echo "linked $CODEX_SKILLS_DIR/$s -> $REPO_DIR/adapters/codex/$s"
     done
+    for s in "${UTILITY_SKILLS[@]}"; do
+        ln -sfn "$REPO_DIR/utils/$s" "$CLAUDE_SKILLS_DIR/$s"
+        echo "linked $CLAUDE_SKILLS_DIR/$s -> $REPO_DIR/utils/$s"
+        ln -sfn "$REPO_DIR/utils/$s" "$CODEX_SKILLS_DIR/$s"
+        echo "linked $CODEX_SKILLS_DIR/$s -> $REPO_DIR/utils/$s"
+    done
 }
 
 uninstall_symlinks() {
@@ -60,6 +67,14 @@ uninstall_symlinks() {
             rm "$link"
             echo "removed $link"
         fi
+    done
+    for s in "${UTILITY_SKILLS[@]}"; do
+        for link in "$CLAUDE_SKILLS_DIR/$s" "$CODEX_SKILLS_DIR/$s"; do
+            if [ -L "$link" ]; then
+                rm "$link"
+                echo "removed $link"
+            fi
+        done
     done
 }
 

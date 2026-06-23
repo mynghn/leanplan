@@ -16,3 +16,7 @@ LeanPlan adapters are runtime shells over shared framework behavior. This map is
 Both vendors name the eight shared moves `leanplan-<move>` — Claude installs loose symlinked skills (`~/.claude/skills/leanplan-<move>`) and Codex loose move skills (`~/.agents/skills/leanplan-<move>`), so neither has a plugin namespace and both carry the `leanplan-` vendor prefix to avoid collision. There is no gateway/front-door skill; invoke the move skill directly (Claude prefixes the runtime `/` sigil, Codex omits it). The skill set is symmetric across vendors: validation is embedded as stage-local glue in every stage adapter on both sides, and each also exposes a standalone `leanplan-validate` move as the on-demand entry point.
 
 Vendor-specific invocation glue must not restate stage procedure. Edit `references/*.md` or `scripts/leanplan-validate` when LeanPlan behavior changes.
+
+Installation utilities are not LeanPlan moves and do not live in this adapter map. They are authored
+under `utils/`; for example, `utils/leanplan-installation-freshness/` checks the checkout and runtime
+symlinks that `install.sh` manages.

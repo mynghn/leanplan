@@ -17,10 +17,11 @@ leanplan/
 ├── framework-design.md                 framework design (the canonical doc)
 ├── references/                 per-stage operational guidance
 ├── scripts/                    leanplan-validate + scaffold + selftest + pre-commit hook
+├── utils/                      installation/maintenance utility skills
 ├── fixtures/                   valid (incl. a GAP-ack) / invalid examples
 └── adapters/                   per-runtime skill implementations
-    ├── claude/                 Claude Code (8-skill set)
-    ├── codex/                  Codex stage skills
+    ├── claude/                 Claude Code skills
+    ├── codex/                  Codex skills
     └── README.md               cross-vendor adapter map
 ```
 
@@ -34,7 +35,7 @@ git clone https://github.com/mynghn/leanplan.git "$LEANPLAN_ROOT"
 "$LEANPLAN_ROOT/install.sh"
 ```
 
-`install.sh` creates the per-runtime symlinks from that checkout: Claude Code at `~/.claude/skills/<name>`, and Codex at `~/.agents/skills/leanplan-*`.
+`install.sh` creates the per-runtime symlinks from that checkout: Claude Code at `~/.claude/skills/<name>`, Codex at `~/.agents/skills/leanplan-*`, and shared utility skills from `utils/`.
 
 To update an installed copy:
 
@@ -45,6 +46,8 @@ git -C "$LEANPLAN_ROOT" pull --ff-only
 ```
 
 Re-running `install.sh` is safe and refreshes adapter symlinks after the adapter list changes.
+Use `leanplan-installation-freshness` from your agent to check the installed checkout and adapter
+symlinks before updating.
 
 ### Optional dotfile-manager use
 
