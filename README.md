@@ -18,7 +18,7 @@ leanplan/
 ├── fixtures/                   valid (incl. a GAP-ack) / invalid examples
 └── adapters/                   per-runtime skill implementations
     ├── claude/                 Claude Code (7-skill set)
-    ├── codex/                  Codex (move skills + leanplan front door)
+    ├── codex/                  Codex stage skills
     └── README.md               cross-vendor adapter map
 ```
 
@@ -31,7 +31,7 @@ git clone https://github.com/mynghn/leanplan.git ~/.local/share/leanplan
 ~/.local/share/leanplan/install.sh
 ```
 
-`install.sh` creates the per-runtime symlinks: Claude Code at `~/.claude/skills/<name>`, and Codex at `~/.agents/skills/{leanplan,leanplan-*}`.
+`install.sh` creates the per-runtime symlinks: Claude Code at `~/.claude/skills/<name>`, and Codex at `~/.agents/skills/leanplan-*`.
 
 To update an installed copy:
 

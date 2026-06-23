@@ -142,6 +142,11 @@ rn_setup_unreadable_ref() {
 
 inject_baseline() { :; }
 
+inject_ascii_architecture() {
+    perl -0pi.bak -e 's/```mermaid\n.*?```/```ascii\n[script] -> [runtime]\n    |          ^\n    +----------+\n```/s' "$1/design.md"
+    rm -f "$1/design.md.bak"
+}
+
 inject_broken_anchor() {
     local f
     f=$(task_file "$1")
@@ -420,6 +425,7 @@ inject_design_links_absent_rationale() {
 #   0 = clean (no errors; warnings allowed in default mode)
 #   1 = at least one error (or any warning under --strict)
 assert_case "baseline (clean fixture)"        0 "validation passed"                     inject_baseline
+assert_case "ascii architecture visual"       0 "validation passed"                     inject_ascii_architecture
 assert_case "broken anchor"                   1 "broken citation"                       inject_broken_anchor
 assert_case "duplicate delta anchor"          1 "duplicate anchor: Delta-1"             inject_duplicate_delta
 assert_case "coverage hole"                   1 "is not covered by any task"            inject_coverage_hole

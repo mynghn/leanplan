@@ -22,7 +22,7 @@ flowchart LR
 `README.md` makes `git clone https://github.com/mynghn/leanplan.git ~/.local/share/leanplan` plus `~/.local/share/leanplan/install.sh` the primary install path, and makes `git -C ~/.local/share/leanplan pull --ff-only` the primary refresh path for the running tree. See rationale at [design-rationale.md#D-1-readme-primary-path-is-direct-checkout].
 
 - Satisfies `Spec#B-1-primary-install-path-is-self-contained`, `Spec#B-2-refresh-path-is-self-contained`, and `Spec#C-1-no-current-guidance-requires-personal-dotfiles`.
-- The README keeps the existing adapter registry targets: Claude Code at `~/.claude/skills/<name>` and Codex at `~/.agents/skills/{leanplan,leanplan-*}`.
+- The README keeps the current adapter registry targets: Claude Code at `~/.claude/skills/<name>` and Codex stage skills at `~/.agents/skills/leanplan-*` (`Understanding#Delta-1-codex-front-door-removed`).
 - The README describes re-running `install.sh` after adapter-list changes as a harmless refresh of registry symlinks.
 
 ## D-2: installer-is-the-product-adapter-installer

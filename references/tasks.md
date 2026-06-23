@@ -6,7 +6,7 @@ This doc carries the procedure for the Tasks stage — sequencing Design into la
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
-Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
+Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `leanplan-sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
 
 ## Inputs
 
@@ -93,4 +93,4 @@ flowchart LR
 
 ## Hand-off
 
-For each independently startable task: `/implement <KEY> <task-id>` (Claude) or `implement <KEY> <task-id>` (Codex).
+For each independently startable task: `/implement <KEY> <task-id>` (Claude) or `leanplan-implement <KEY> <task-id>` (Codex).

@@ -16,7 +16,7 @@ CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
 CODEX_SKILLS_DIR="$HOME/.agents/skills"
 
 CLAUDE_SKILLS=(requirements specify design tasks implement sharpen revise)
-CODEX_SKILLS=(leanplan leanplan-requirements leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-sharpen leanplan-revise leanplan-validate)
+CODEX_SKILLS=(leanplan-requirements leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-sharpen leanplan-revise leanplan-validate)
 
 action="${1:-install}"
 
@@ -24,8 +24,17 @@ ensure_parent_dirs() {
     mkdir -p "$CLAUDE_SKILLS_DIR" "$CODEX_SKILLS_DIR"
 }
 
+remove_legacy_codex_front_door() {
+    link="$CODEX_SKILLS_DIR/leanplan"
+    if [ -L "$link" ] && [ "$(readlink "$link")" = "$REPO_DIR/adapters/codex/leanplan" ]; then
+        rm "$link"
+        echo "removed legacy $link"
+    fi
+}
+
 install_symlinks() {
     ensure_parent_dirs
+    remove_legacy_codex_front_door
     for s in "${CLAUDE_SKILLS[@]}"; do
         ln -sfn "$REPO_DIR/adapters/claude/$s" "$CLAUDE_SKILLS_DIR/$s"
         echo "linked $CLAUDE_SKILLS_DIR/$s -> $REPO_DIR/adapters/claude/$s"
@@ -37,6 +46,7 @@ install_symlinks() {
 }
 
 uninstall_symlinks() {
+    remove_legacy_codex_front_door
     for s in "${CLAUDE_SKILLS[@]}"; do
         link="$CLAUDE_SKILLS_DIR/$s"
         if [ -L "$link" ]; then

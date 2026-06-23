@@ -1,9 +1,9 @@
 ---
 name: leanplan-revise
-description: LeanPlan — inject a justified drift into committed artifacts in Codex and propagate downstream only. Use for `leanplan revise <KEY> [Delta-N | what drifted]`.
+description: LeanPlan — inject a justified drift into committed artifacts in Codex and propagate downstream only. Use for `leanplan-revise <KEY> [Delta-N | what drifted]`.
 ---
 
-# leanplan revise
+# leanplan-revise
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the off-pipeline revise move.
 

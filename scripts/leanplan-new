@@ -361,15 +361,15 @@ if ! mkdir "$DIR" 2>/dev/null; then
 fi
 
 cat > "$DIR/requirements.md" <<EOF
-# $FEATURE_ID — <short biz-framed title>
+# $FEATURE_ID — <short problem-framed title>
 
 ## Problem
 
-<!-- what biz pain or opportunity drives this? who feels it? what is currently broken, missing, or constrained? -->
+<!-- what pain or opportunity drives this? who feels it? what is currently broken, missing, or constrained? -->
 
 ## Outcome
 
-<!-- biz future state + the signal that confirms it, folded into one paragraph. Don't split into a separate "Success metric" section. -->
+<!-- future state + the signal that confirms it, folded into one paragraph. Don't split into a separate "Success metric" section. -->
 
 <!-- Delete sections below if not applicable. -->
 
@@ -381,7 +381,7 @@ why a cross-cutting property matters, stated as intent without an observable pre
 
 ## Non-goals
 
-<!-- only when biz-scope edges are genuinely ambiguous -->
+<!-- only when scope edges are genuinely ambiguous -->
 
 ## Upstream
 
@@ -409,7 +409,7 @@ for SLA, non-blocking, idempotency, integrity, environmental bindings. -->
 
 ## Non-goals
 
-<!-- only when tech-scope edges are ambiguous -->
+<!-- only when scope edges are ambiguous -->
 EOF
 
 cat > "$DIR/design.md" <<EOF
@@ -417,7 +417,7 @@ cat > "$DIR/design.md" <<EOF
 
 ## Architecture
 
-<!-- brief caption: what this diagram shows -->
+<!-- brief caption: what this visual shows; Mermaid or fenced ASCII art are valid -->
 
 \`\`\`mermaid
 flowchart LR
