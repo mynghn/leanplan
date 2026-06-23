@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# leanplan-selftest: verify validate.py catches injected defects against a known-good fixture.
+# leanplan-selftest: verify leanplan-validate catches injected defects against a known-good fixture.
 #
 # Fixture defaults to the bundled valid/ fixture; override via
 # LEANPLAN_FIXTURE=<path-to-known-good-feature-dir>. Scenarios run in ephemeral
@@ -12,7 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEFAULT_FIXTURE="$(cd "$SCRIPT_DIR/.." && pwd)/fixtures/valid"
 
 FIXTURE="${LEANPLAN_FIXTURE:-$DEFAULT_FIXTURE}"
-VALIDATE="${LEANPLAN_VALIDATE:-$SCRIPT_DIR/validate.py}"
+VALIDATE="${LEANPLAN_VALIDATE:-$SCRIPT_DIR/leanplan-validate}"
 SCAN="${LEANPLAN_SCAN:-$SCRIPT_DIR/scan-leaks}"
 LEANPLAN_NEW="${LEANPLAN_NEW:-$SCRIPT_DIR/leanplan-new}"
 
@@ -20,11 +20,11 @@ if [ ! -d "$FIXTURE" ]; then
     echo "error: fixture not found at $FIXTURE (set LEANPLAN_FIXTURE to override)" >&2
     exit 2
 fi
-if [ ! -x "$VALIDATE" ] && ! [ -f "$VALIDATE" ]; then
-    echo "error: validate.py not found at $VALIDATE" >&2
+if [ ! -x "$VALIDATE" ]; then
+    echo "error: leanplan-validate not found at $VALIDATE" >&2
     exit 2
 fi
-if [ ! -x "$SCAN" ] && ! [ -f "$SCAN" ]; then
+if [ ! -x "$SCAN" ]; then
     echo "error: scan-leaks not found at $SCAN" >&2
     exit 2
 fi
@@ -57,7 +57,7 @@ assert_case() {
 
     local out ec
     # shellcheck disable=SC2086
-    out=$(python3 "$VALIDATE" "$case_dir" $extra_flags 2>&1)
+    out=$("$VALIDATE" "$case_dir" $extra_flags 2>&1)
     ec=$?
 
     if [ "$ec" -eq "$expected_ec" ] && printf '%s' "$out" | grep -qF -- "$expected_stderr_substr"; then
@@ -73,7 +73,7 @@ assert_case() {
 
 # scan_case: write CONTENT to a temp non-artifact file, run scan-leaks over it,
 # and check exit code + an expected output substring. The leak detector's
-# regression backstop — assert_case's role, for scan-leaks instead of validate.py.
+# regression backstop — assert_case's role, for scan-leaks instead of leanplan-validate.
 scan_case() {
     local label="$1" content="$2" expected_ec="$3" expected_substr="$4"
     local extra_flags="${5:-}"
@@ -83,7 +83,7 @@ scan_case() {
 
     local out ec
     # shellcheck disable=SC2086
-    out=$(python3 "$SCAN" "$f" $extra_flags 2>&1)
+    out=$("$SCAN" "$f" $extra_flags 2>&1)
     ec=$?
 
     if [ "$ec" -eq "$expected_ec" ] && printf '%s' "$out" | grep -qF -- "$expected_substr"; then
@@ -101,7 +101,7 @@ scan_case() {
 # docs/features/<old> from the fixture (H1 set to match the key so the H1 refresh
 # has work), runs an optional SETUP_FN against the repo root (siblings, refs), runs
 # the rename, then checks exit code + a PREDICATE eval'd at the repo root. This is
-# do_rename's only automated coverage — assert_case/scan_case drive validate.py /
+# do_rename's only automated coverage — assert_case/scan_case drive leanplan-validate /
 # scan-leaks, so the move/rewrite/H1/residual-gate/rollback/guards path would
 # otherwise regress with the suite still green.
 rename_case() {
@@ -142,6 +142,11 @@ rn_setup_unreadable_ref() {
 
 inject_baseline() { :; }
 
+inject_ascii_architecture() {
+    perl -0pi.bak -e 's/```mermaid\n.*?```/```ascii\n[script] -> [runtime]\n    |          ^\n    +----------+\n```/s' "$1/design.md"
+    rm -f "$1/design.md.bak"
+}
+
 inject_broken_anchor() {
     local f
     f=$(task_file "$1")
@@ -151,8 +156,8 @@ inject_broken_anchor() {
 
 inject_duplicate_delta() {
     # Append-only integrity: re-emitting an existing Delta id (the easy mistake
-    # when /sharpen is re-invoked across stateless sessions) must be caught.
-    cat > "$1/understanding.md" <<'U'
+    # when /leanplan-sharpen is re-invoked across stateless sessions) must be caught.
+    cat > "$1/understanding-shifts.md" <<'U'
 # LP-EXAMPLE — Understanding
 
 ## Delta-1: premise-falsified
@@ -216,7 +221,7 @@ inject_understanding_citation_ok() {
     # so the inbound Understanding#Delta-N citation must RESOLVE (parity with
     # Spec#/Design#). Guards the auditable-justification link: a revised artifact
     # can cite the delta that justified it and have that link checked.
-    cat > "$1/understanding.md" <<'U'
+    cat > "$1/understanding-shifts.md" <<'U'
 # LP-EXAMPLE — Understanding
 
 ## Delta-1: premise-falsified
@@ -229,6 +234,116 @@ inject_understanding_citation_broken() {
     # An inbound Understanding# citation with no matching delta must now ERROR.
     # Before C this was unconditionally skipped (always passed); the skip is gone.
     printf '\nRevised per `Understanding#Delta-9-nonexistent`.\n' >> "$1/design.md"
+}
+
+inject_defer_anchor_and_citation_resolve() {
+    # F2: a deferrals.md Defer-N block + an inbound Deferrals#Defer-N citation must
+    # resolve — the anchor parses (Defer is ordered before D in ANCHOR_RE) and the
+    # Deferrals# citation form is recognized. Marked resolved so it stays clean once
+    # the L1 no-loss check lands (a drained deferral is the steady state); the
+    # resolve-in-place marker's Design# target resolves against the fixture's D-2.
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy (resolved -> Design#D-2-in-repo-path-hard-coded)
+
+**Owning stage**: Design
+
+The open question: which cache strategy; surfaced while specifying behavior.
+
+Forces: latency vs consistency.
+
+Option seen (not chosen): write-through cache.
+D
+    printf '\nResolved the parked `Deferrals#Defer-1-cache-strategy`.\n' >> "$1/design.md"
+}
+
+inject_duplicate_defer() {
+    # Append-only integrity for the new lane: re-emitting an existing Defer id must
+    # be caught (parity with the duplicate-Delta guard).
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+**Owning stage**: Tasks
+
+The open question; surfaced mid-design.
+
+## Defer-1: cache-strategy
+
+A second block reusing the same id — must be flagged.
+D
+}
+
+inject_broken_defer_citation() {
+    # An inbound Deferrals# citation with no matching Defer anchor must ERROR
+    # (parity with the broken Spec#/Understanding# citation guards).
+    printf '\nSee `Deferrals#Defer-9-nonexistent`.\n' >> "$1/design.md"
+}
+
+inject_defer_undrained() {
+    # L1 no-loss: an unresolved Defer-N addressed to a stage whose artifact already
+    # exists (Design here) is an undrained deferral — the advisory warns by default
+    # and errors under --strict. No resolve-in-place marker on the heading.
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+**Owning stage**: Design
+
+The open question: which cache strategy; surfaced while specifying behavior.
+
+Forces: latency vs consistency.
+D
+}
+
+inject_defer_future_stage() {
+    # L1 no-loss: an unresolved Defer-N addressed to a stage NOT yet authored is
+    # legitimate — no warning. Addressed to Tasks, with tasks.md removed and
+    # validation run through --stage design, so tasks.md is genuinely absent.
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+**Owning stage**: Tasks
+
+The open question: which cache strategy; surfaced while specifying behavior.
+D
+    rm -f "$1/tasks.md"
+}
+
+inject_defer_nl_owner() {
+    # L1 robustness: a natural-language owner phrasing ("the Design stage") must still
+    # resolve to the stage and warn — not silently skip on off-canonical wording.
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+**Owning stage**: the Design stage
+
+The open question: which cache strategy; surfaced while specifying behavior.
+D
+}
+
+inject_defer_inbody_heading() {
+    # L1 robustness: a stray markdown heading in the block body, before the owner
+    # line, must not truncate the owner search — the warning must still fire (blocks
+    # are bounded by the next anchor, not the next markdown heading).
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+# rough sketch of the option space
+
+**Owning stage**: Design
+
+The open question: which cache strategy; surfaced while specifying behavior.
+D
 }
 
 inject_retired_anchor() {
@@ -310,6 +425,7 @@ inject_design_links_absent_rationale() {
 #   0 = clean (no errors; warnings allowed in default mode)
 #   1 = at least one error (or any warning under --strict)
 assert_case "baseline (clean fixture)"        0 "validation passed"                     inject_baseline
+assert_case "ascii architecture visual"       0 "validation passed"                     inject_ascii_architecture
 assert_case "broken anchor"                   1 "broken citation"                       inject_broken_anchor
 assert_case "duplicate delta anchor"          1 "duplicate anchor: Delta-1"             inject_duplicate_delta
 assert_case "coverage hole"                   1 "is not covered by any task"            inject_coverage_hole
@@ -319,6 +435,14 @@ assert_case "surface bloat (--strict)"        1 "soft cap"                      
 assert_case "behavior-only task reason"       0 "validation passed"                     inject_outcome_only_task  "--strict"
 assert_case "understanding citation resolves"  0 "validation passed"                     inject_understanding_citation_ok
 assert_case "broken understanding citation"    1 "broken citation: Understanding#Delta-9-nonexistent" inject_understanding_citation_broken
+assert_case "defer anchor + citation resolve"  0 "validation passed"                     inject_defer_anchor_and_citation_resolve
+assert_case "duplicate defer anchor"           1 "duplicate anchor: Defer-1"              inject_duplicate_defer
+assert_case "broken defer citation"            1 "broken citation: Deferrals#Defer-9-nonexistent" inject_broken_defer_citation
+assert_case "undrained defer warns"            0 "undrained deferral"                     inject_defer_undrained
+assert_case "undrained defer errors (--strict)" 1 "undrained deferral"                    inject_defer_undrained    "--strict"
+assert_case "defer for unauthored stage ok"    0 "validation passed"                     inject_defer_future_stage "--stage design"
+assert_case "defer natural-language owner warns" 0 "undrained deferral"                   inject_defer_nl_owner
+assert_case "defer in-body heading still warns"  0 "undrained deferral"                    inject_defer_inbody_heading
 assert_case "retired anchor still resolves"    0 "validation passed"                     inject_retired_anchor
 assert_case "retired task still resolves"      0 "validation passed"                     inject_retired_task
 assert_case "retired task grants no coverage"  1 "is not covered by any task: Spec#B-9-retired-sole-coverage" inject_retired_sole_coverage
@@ -327,7 +451,7 @@ assert_case "design links absent rationale"    1 "Design links to missing ration
 
 # scan-leaks defect injection: round-scoped keys leaked into a non-artifact file
 # must be caught — defect-injection coverage for the per-surface leak backstop.
-# Exit semantics mirror validate.py —
+# Exit semantics mirror leanplan-validate —
 # a leak warns (exit 0) by default and escalates to error (exit 1) under --strict;
 # the grey zone (feature ids, readable scope labels, bare numbers) stays clean,
 # and the inline directive suppresses even under --strict.
@@ -344,11 +468,13 @@ scan_case "scan: inline directive suppresses"       'satisfies C-1  # leanplan-a
 scan_case "scan: bare anchor B-1 leak (strict)"        'see the B-1 baseline here'               1 "B-1"               "--strict"
 scan_case "scan: bare anchor D-2 leak (strict)"        'following D-2 we chose X'                1 "D-2"               "--strict"
 scan_case "scan: bare anchor Delta-3 leak (strict)"    'per Delta-3 the assumption changed'       1 "Delta-3"           "--strict"
+scan_case "scan: bare anchor Defer-2 leak (strict)"    'parked as Defer-2 earlier'               1 "Defer-2"           "--strict"
 scan_case "scan: citation Design# leak (strict)"       'see Design#D-2-narrow here'              1 "Design#D-2"        "--strict"
+scan_case "scan: citation Deferrals# leak (strict)"    'see Deferrals#Defer-1-cache here'        1 "Deferrals#Defer-1" "--strict"
 
 # --text is the commit-msg hook's only input path; exercise it, the exit-2 input
 # error contract, and the anchor-inside-citation dedup directly.
-out=$(python3 "$SCAN" --strict --text 'satisfies C-1 here' 2>&1); ec=$?
+out=$("$SCAN" --strict --text 'satisfies C-1 here' 2>&1); ec=$?
 if [ "$ec" -eq 1 ] && printf '%s' "$out" | grep -qF -- "C-1"; then
     printf 'PASS %s\n' "scan: --text mode leak (strict)"; pass=$((pass + 1))
 else
@@ -356,7 +482,7 @@ else
         "scan: --text mode leak (strict)" "$ec" "$out"; fail=$((fail + 1))
 fi
 
-out=$(python3 "$SCAN" "$TMP/nonexistent-$$.txt" 2>&1); ec=$?
+out=$("$SCAN" "$TMP/nonexistent-$$.txt" 2>&1); ec=$?
 if [ "$ec" -eq 2 ]; then
     printf 'PASS %s\n' "scan: missing file -> exit 2"; pass=$((pass + 1))
 else
@@ -364,7 +490,7 @@ else
         "scan: missing file -> exit 2" "$ec" "$out"; fail=$((fail + 1))
 fi
 
-out=$(python3 "$SCAN" --json --text 'see Spec#C-1-durable here' 2>&1)
+out=$("$SCAN" --json --text 'see Spec#C-1-durable here' 2>&1)
 ntok=$(printf '%s' "$out" | grep -c '"token"')
 if [ "$ntok" -eq 1 ]; then
     printf 'PASS %s\n' "scan: citation dedup (single token)"; pass=$((pass + 1))

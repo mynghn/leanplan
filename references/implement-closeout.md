@@ -40,7 +40,7 @@ PR body is particularly durable — visible in GitHub history post-squash, linka
 
 ## Close-Out Reconciliation
 
-The distillation above leaves the consultation proof; this step checks it. Run it at close-out as an implementation self-check, and re-run it on the review path. It is **review-tier, not a `validate.py` gate** — the validator reads artifacts, not the code / commits / PR where substance lands, so it cannot judge whether a migrated reason is genuine.
+The distillation above leaves the consultation proof; this step checks it. Run it at close-out as an implementation self-check, and re-run it on the review path. It is **review-tier, not a `leanplan-validate` gate** — the validator reads artifacts, not the code / commits / PR where substance lands, so it cannot judge whether a migrated reason is genuine.
 
 Reconcile the task card's **load-bearing citations** against the delivered work:
 

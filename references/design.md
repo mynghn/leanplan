@@ -6,7 +6,7 @@ This doc carries the procedure for the Design stage — choosing the realization
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
-Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
+Mid-stage, if a disturbance shifts the understanding, `leanplan-sharpen` is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
 
 ## Inputs
 
@@ -24,9 +24,9 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 *Default flow, not a rigid script — re-derive it against the actual Spec and current code. Load-bearing (don't skip or reorder): inspect current code before choosing (step 2), the coverage check (step 7), the self-check (step 9).*
 
-1. **Load Spec** + artifact contract + any existing `research.md`.
+1. **Load Spec** + artifact contract + any existing `research.md`. Then **drain deferrals** (load-bearing): if `deferrals.md` exists, surface each unresolved `Defer-<N>` addressed to this stage, `Design`, and re-examine it against the current option space — non-binding, re-derive not replay; resolve in place (refer to `references/deferral.md` for detailed procedure guide).
 2. **Inspect current code** before choosing architecture. Reality is authoritative — don't pick components without seeing what already exists.
-3. **Draft Architecture**: Mermaid diagram + brief caption showing chosen components, boundaries, and data / control flow. External systems appear as labeled nodes / edges.
+3. **Draft Architecture**: one or more visual blocks (Mermaid or fenced ASCII art) + brief caption showing chosen components, boundaries, and data / control flow. External systems appear as labeled nodes / edges. Prefer adding a visual companion anywhere a relationship, sequence, state, or mapping would otherwise be described in words; diagrams act as structured prompt material, so clear labels and boundaries matter more than the notation.
 4. **Enumerate Decisions**: for each realization choice that emerged, open a `D-<N>: <slug>` block.
    - One-line WHAT — the choice made.
    - WHY: one line if trivial; anchor to Rationale if non-trivial. Schemas, interfaces, signatures fold inline within the relevant Decision.
@@ -37,7 +37,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
    - an Architecture element,
    - **or** (for trivial realization not worth a Decision block) a directly-cited Tasks Completion criterion that the downstream `plan` skill will add.
    Surface any uncovered items that *no* path realizes. Do not force-create a Decision for a trivial realization that the Tasks layer handles directly.
-8. **Stop** if a design choice changes the Spec contract — Spec is wrong, not just this Design. Record the drift as a `Delta` in `understanding.md`, then run `/revise <KEY>` (Claude) / `revise <KEY>` (Codex) — it injects the fix at Spec and propagates downstream-only (`revise.md`). Don't hand-edit Spec inline.
+8. **Stop** if a design choice changes the Spec contract — Spec is wrong, not just this Design. Record the drift as a `Delta` in `understanding-shifts.md`, then run `leanplan-revise <KEY>` — it injects the fix at Spec and propagates downstream-only (`revise.md`). Don't hand-edit Spec inline.
 9. **Self-check** before exit:
    - No work ordering, cross-team request filing, or rollout text (those belong in Tasks).
    - No top-level `## Schemas` or `## Interfaces` section — schemas live inside their Decisions.
@@ -49,8 +49,9 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 ## Guardrails
 
 - **Chosen realization only.** Design is the finished-system shape, not the work that builds it. No work ordering, PR stacking, cross-team request procedure, or migration sequence — those belong in Tasks.
+- **Park a genuine deferral; don't discard it.** A real cross-stage decision that surfaces here goes into `deferrals.md` as a `Defer-<N>` addressed to its owning stage, rather than being discarded — opt-in planner judgment; procedure in `references/deferral.md`.
 - **Tech-realization specifics live here, in full.** Field-by-field mappings, response/proto shapes, method signatures, controller/service call sequences, schemas — capture them inside the relevant `D-<N>` block at design time. Downstream plan tasks should be able to anchor in via `Design#D-<N>-<slug>` *without restating* the content. If a plan task ends up paraphrasing a Decision because it lacked detail here, the missing detail is a gap in **this** doc — fill it. Symmetric guard with the corresponding rule in `tasks.md`.
-- **Architecture is mandatory.** Even a trivial one-component feature gets a diagram — it forces clarity about boundaries.
+- **Architecture visual material is mandatory.** Even a trivial one-component feature gets at least one diagram or ASCII visual — it forces clarity about boundaries. Use Mermaid when graph semantics carry the shape cleanly; use fenced ASCII art when layout, alignment, or mixed annotations express the idea better. More than one visual is fine when each earns its place.
 - **Trivial vs. non-trivial.** Trivial decisions get a one-line inline why; non-trivial decisions (a real alternative was weighed, a tradeoff accepted, an invalidation trigger worth recording) anchor to Rationale.
   - ✅ trivial — "store the new flag on the existing `accounts` row — the repo's standard for per-account state" (no live alternative → one line, no Rationale).
   - ✅ non-trivial — "read-through cache over direct-DB read for the hot lookup → `D-3` + Rationale" (alternative weighed: staleness window vs. DB load; invalidation trigger worth recording).
@@ -67,4 +68,4 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 ## Hand-off
 
-Next edge: `/tasks <KEY>` (Claude) or `tasks <KEY>` (Codex).
+Next edge: `leanplan-tasks <KEY>`.

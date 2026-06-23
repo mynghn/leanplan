@@ -6,7 +6,7 @@ This doc carries the procedure for the implementation stage — taking one task 
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
-Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them, distinct from the Stop-The-Line / Artifact Update Loop below, which deliberately walks up and edits the affected layer (via `/revise`).
+Mid-stage, if a disturbance shifts the understanding, `leanplan-sharpen` is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them, distinct from the Stop-The-Line / Artifact Update Loop below, which deliberately walks up and edits the affected layer (via `leanplan-revise`).
 
 ## Inputs
 
@@ -31,9 +31,9 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 4. **Re-reason** against current code: does the plan still apply? Any of the six stop-the-line triggers hit? If yes, run the Artifact Update Loop and surface to the user before coding.
 5. **Implement** the smallest meaningful change that realizes Goal + passes Completion criteria. No speculative scope; no drive-by refactors beyond what the task requires.
 6. **Verify each Completion criterion explicitly** — not "tests pass", but each specific criterion the card named.
-7. **Distill WHYs** at close-out — migrate each non-obvious WHY into the strongest durable form. **The constraint of each of the card's load-bearing citations migrates too** (the Spec `B` / `C` it realizes, the Design `Decision` it builds on) — mandatory for that class, not gated on "non-obvious", since that substance is the step-2 consultation proof. Load `~/.local/share/leanplan/references/implement-closeout.md` for the tier hierarchy, the commit-message / PR-body promotion rules, and the close-out reconciliation that verifies this; JIT — fetch only now, at close-out, not before. (context-engineering: jit-loading)
+7. **Distill WHYs** at close-out — migrate each non-obvious WHY into the strongest durable form. **The constraint of each of the card's load-bearing citations migrates too** (the Spec `B` / `C` it realizes, the Design `Decision` it builds on) — mandatory for that class, not gated on "non-obvious", since that substance is the step-2 consultation proof. Load `references/implement-closeout.md` from the same LeanPlan root as this reference for the tier hierarchy, the commit-message / PR-body promotion rules, and the close-out reconciliation that verifies this; JIT — fetch only now, at close-out, not before. (context-engineering: jit-loading)
 8. **Confirm plan artifacts are non-load-bearing**: the WHYs they carried have migrated; discarding the plan would not lose context for future readers.
-9. **Key-leak self-check** before commit — run the detector, don't eyeball it: `python3 ~/.local/share/leanplan/scripts/scan-leaks --strict <staged files>` for code, and `--text "<message/PR body>"` (or piped stdin) for the prose you're about to commit. It flags round-scoped tokens — in-round anchors, `Spec#…`-style citations, the feature id used as a standing concept — and skips `docs/features/**`, where anchors resolve. Replace any hit with the constraint in words, or add `leanplan-allow-key` on the line for a legitimate match.
+9. **Key-leak self-check** before commit — run the detector, don't eyeball it: `<LEANPLAN_ROOT>/scripts/scan-leaks --strict <staged files>` for code, and `--text "<message/PR body>"` (or piped stdin) for the prose you're about to commit. It flags round-scoped tokens — in-round anchors, `Spec#…`-style citations, the feature id used as a standing concept — and skips `docs/features/**`, where anchors resolve. Replace any hit with the constraint in words, or add `leanplan-allow-key` on the line for a legitimate match.
 10. **Commit** with subject matching the change. Body carries distilled change rationale (alternatives, tradeoffs). For squash-merge teams, populate the PR body with the same content.
 11. **Hand off** to the next unblocked task in the DAG, or raise any stop-the-line item that surfaced mid-task.
 
@@ -47,18 +47,19 @@ If any of the following surfaces at task entry or mid-implementation, stop and r
 4. **Implementation would require changing externally-observable behavior.** Walk up to Spec; possibly Requirements.
 5. **A Constraint is unprovable by the current test/monitor strategy.** Add a probe mechanism (test harness, monitor, SLO) at Tasks level, or push to a continuous-verification mechanism via Design.
 6. **Task scope expands beyond the feature boundary.** One-deployment guardrail — pause and surface the split question.
+7. **A deferral was stranded by planning.** A `Defer-N` in `deferrals.md` addressed to a planning stage is still unresolved (no `(resolved -> …)` marker) though planning is complete — a parked decision was never drained. Check once, at first task entry (`leanplan-validate` flags it). Drain it at its owning stage — re-examine against the now-current options and resolve in place, routing through `leanplan-revise` when the resolution edits a committed artifact — before building on the plan.
 
 ## Artifact Update Loop
 
-A stop-the-line trigger is an implementation-time *detection*; the edit it implies is not implementation's to perform inline. Hand the edit-and-propagate to the off-pipeline `/revise` move (`revise.md`) — the single home for editing committed artifacts — so a mid-implementation correction follows the same path as a drift caught between stages.
+A stop-the-line trigger is an implementation-time *detection*; the edit it implies is not implementation's to perform inline. Hand the edit-and-propagate to the off-pipeline `leanplan-revise` move (`revise.md`) — the single home for editing committed artifacts — so a mid-implementation correction follows the same path as a drift caught between stages.
 
 On any trigger:
 
-1. **Record the drift as a justification.** Capture what implementation found — the contradiction, the missing verification path, the scope spill — as a `Delta` in `understanding.md`, or hand up an existing one. This is `/revise`'s required input, and it is what makes the correction an auditable update rather than a silent patch.
-2. **Invoke `/revise <KEY>`** (Claude) / **`revise <KEY>`** (Codex) — JIT-load `revise.md` and run the move in-session. It identifies the highest artifact the drift corrects (Requirements / Spec / Design / Tasks), edits it and only its downstream — in place by default, re-deriving only on an anchor-set change — preserving anchor IDs, then re-validates. The walk-up, the downstream re-evaluation, and the one-deployment scope gate (split rather than grow) all live there now.
-3. **Resume implementation** only after `/revise` completes and the feature re-validates.
+1. **Record the drift as a justification.** Capture what implementation found — the contradiction, the missing verification path, the scope spill — as a `Delta` in `understanding-shifts.md`, or hand up an existing one. This is `leanplan-revise`'s required input, and it is what makes the correction an auditable update rather than a silent patch.
+2. **Invoke `leanplan-revise <KEY>`** — JIT-load `revise.md` and run the move in-session. It identifies the highest artifact the drift corrects (Requirements / Spec / Design / Tasks), edits it and only its downstream — in place by default, re-deriving only on an anchor-set change — preserving anchor IDs, then re-validates. The walk-up, the downstream re-evaluation, and the one-deployment scope gate (split rather than grow) all live there now.
+3. **Resume implementation** only after `leanplan-revise` completes and the feature re-validates.
 
-Never patch the current task around an upstream wrongness — that silent drift is exactly what `/revise`'s justified, downstream-only discipline exists to prevent.
+Never patch the current task around an upstream wrongness — that silent drift is exactly what `leanplan-revise`'s justified, downstream-only discipline exists to prevent.
 
 ## Guardrails
 

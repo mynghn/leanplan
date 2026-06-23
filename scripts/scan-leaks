@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Scan durable outputs for leaked round-scoped LeanPlan keys.
 
-`scan-leaks` is the narrow backstop sibling of validate.py. validate.py checks a
+`scan-leaks` is the narrow backstop sibling of leanplan-validate. leanplan-validate checks a
 feature dir's internal structure; scan-leaks checks that durable outputs *outside*
 the feature dir carry no round-scoped navigation handle used as a reference — the
 in-round anchor tokens and cross-artifact citations that resolve only against a
@@ -24,9 +24,9 @@ Usage:
   printf '%s' "$MSG" | scan-leaks   # scan stdin when no PATH/--text is given
   scan-leaks PATH --strict --json
 
-Exit codes follow validate.py's convention — 0 when clean or when leaks are warnings
+Exit codes follow leanplan-validate's convention — 0 when clean or when leaks are warnings
 (default), 1 when leaks are present under --strict / $LEANPLAN_STRICT=1 — plus 2 for
-an input error (a path that is not a readable file), which validate.py has no
+an input error (a path that is not a readable file), which leanplan-validate has no
 equivalent of.
 """
 
@@ -43,19 +43,20 @@ from pathlib import Path
 
 # Round-scoped token vocabulary. Source of truth: the anchor + cross-artifact
 # citation grammar in references/artifact-contract.md ("## Anchors"). This mirrors
-# validate.py's ANCHOR_RE / CITATION_RE *kinds*, narrowed to the leak-relevant
+# leanplan-validate's ANCHOR_RE / CITATION_RE *kinds*, narrowed to the leak-relevant
 # high-precision class; keep all three in sync if the contract's vocabulary moves.
 #
 # Bare anchor tokens — the `<kind>-<N>` anchors only. `T: <id>` is intentionally
 # absent: bare "T:" is low precision (it occurs in ordinary prose), so a task
 # handle is flagged only in citation form (`Tasks#…`), per the same decision.
-# Delta is listed before D because `D` is a prefix of `Delta` (ordering-sensitive).
-ANCHOR_TOKEN_RE = re.compile(r"\b(?:B|C|Delta|D)-\d+\b")
+# Delta and Defer are listed before D because `D` is a prefix of both
+# (ordering-sensitive); Defer is the deferral-lane anchor (`Deferrals#…` citation).
+ANCHOR_TOKEN_RE = re.compile(r"\b(?:B|C|Delta|Defer|D)-\d+\b")
 # Cross-artifact citations — `<ARTIFACT>#<target>`. The `:` in the target class
 # covers `T:`-style ids in the target. An `<ARTIFACT>#…` citation essentially
 # never occurs by accident, so the broad target class stays high precision.
 CITATION_RE = re.compile(
-    r"\b(?:Spec|Design|Tasks|Rationale|Research|Understanding)#[A-Za-z0-9:_-]+"
+    r"\b(?:Spec|Design|Tasks|Rationale|Research|Understanding|Deferrals)#[A-Za-z0-9:_-]+"
 )
 # Inline escape hatch for the rare legitimate match: a line carrying this directive
 # is exempt from flagging. Warn-mode absorbs the rest.

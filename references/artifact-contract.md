@@ -19,7 +19,8 @@ Archive artifacts, created when useful:
 
 - `design-rationale.md`
 - `research.md`
-- `understanding.md`
+- `understanding-shifts.md`
+- `deferrals.md`
 
 ## Surface / Archive layering
 
@@ -28,7 +29,8 @@ What loads when — each tier loads only via an explicit trigger from the layer 
 - **Surface** (`requirements.md`, `spec.md`, `design.md`, `tasks.md`) — loaded by default at review + implement time.
 - **`design-rationale.md`** — loaded on challenge to a Design decision (anchor link from Design).
 - **`research.md`** — loaded behind rationale, when raw evidence is needed.
-- **`understanding.md`** — off-pipeline delta log, not a challenge-loading tier; written by `sharpen`, consumed by `revise`.
+- **`understanding-shifts.md`** — off-pipeline delta log, not a challenge-loading tier; written by `sharpen`, consumed by `revise`.
+- **`deferrals.md`** — off-pipeline deferral lane, not a challenge-loading tier; written by any stage's capture hook, drained (JIT-loaded) at its owning stage's entry.
 
 The full tier model (L0/L1/L2 labels, design reasoning) lives in `framework-design.md` §4.
 
@@ -41,8 +43,9 @@ The full tier model (L0/L1/L2 labels, design reasoning) lives in `framework-desi
 | Design | Internal realization — the finished-system shape |
 | Design Rationale | Decision WHY |
 | Research | Evidence |
-| Understanding | Understanding deltas — mid-round re-derivation log |
-| Tasks (`tasks.md`) | Time-ordered work navigation |
+| Understanding Shifts | Understanding deltas — mid-round re-derivation log |
+| Deferrals | Deferred cross-stage decisions — open items addressed forward to their owning stage |
+| Tasks | Time-ordered work navigation |
 
 ## Anchors
 
@@ -53,8 +56,9 @@ Anchor headings live at any of H2 / H3 / H4 to fit document structure — the ma
 - `D-<N>: <slug>` — Design decision
 - `T: <id>` — Tasks card
 - `Delta-<N>: <slug>` — understanding delta (Understanding archive)
+- `Defer-<N>: <slug>` — deferred cross-stage decision (Deferrals archive); a trailing `(resolved -> <…>)` resolve-in-place marker is tolerated alongside the retired marker ` (retired)`, and keeps the anchor resolving
 
-Use kebab-case slugs. IDs are stable: never renumber an existing anchor after edits, and never delete a superseded `B` / `C` / `D` / `T:` — retire it in place by appending ` (retired)` to its anchor heading and recording the supersession reason in the body. The marker is not part of the slug, so the ID still resolves and prior review and traceability stay reconstructable — e.g. `### B-2: stale-behavior (retired)` keeps resolving as `B-2-stale-behavior`. (`validate.py` tolerates the heading marker; do not instead decorate the slug itself.)
+Use kebab-case slugs. IDs are stable: never renumber an existing anchor after edits, and never delete a superseded `B` / `C` / `D` / `T:` — retire it in place by appending ` (retired)` to its anchor heading and recording the supersession reason in the body. The marker is not part of the slug, so the ID still resolves and prior review and traceability stay reconstructable — e.g. `### B-2: stale-behavior (retired)` keeps resolving as `B-2-stale-behavior`. (`leanplan-validate` tolerates the heading marker; do not instead decorate the slug itself.)
 
 Citation forms:
 
@@ -62,7 +66,8 @@ Citation forms:
 - `Spec#C-1-mission-fail-safe`
 - `Design#D-2-direct-kafka-publisher`
 - `Tasks#T:A1`
-- `Understanding#Delta-1-premise-falsified`
+- `UnderstandingShifts#Delta-1-premise-falsified`
+- `Deferrals#Defer-1-cache-strategy`
 
 ## Required Shapes
 
@@ -84,7 +89,7 @@ Episode-triggered behavior belongs in B. Continuous properties belong in C.
 
 ### Design
 
-- `## Architecture` with a Mermaid diagram
+- `## Architecture` with at least one visual block: Mermaid diagram or fenced ASCII art
 - One `D-<N>: <slug>` block per material choice
 - Non-trivial decisions link to a matching block in `design-rationale.md`
 
@@ -96,9 +101,22 @@ Use matching `D-<N>: <slug>` anchors. Body is **free-form prose** — typically 
 
 Use descriptive topic headings. Store evidence only. Interpretation belongs in rationale.
 
-### Understanding
+### Understanding Shifts
 
-Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `Spec#…` / `Design#…` / `Tasks#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `Spec#` / `Design#` / `Tasks#` citations are resolution-checked, and *inbound* `Understanding#Delta-N-slug` citations now resolve against these `Delta-<N>` anchors too — a revised artifact cites the Delta that justified it. Research# citations stay recorded-for-retrieval only: Research carries descriptive headings, not a resolvable anchor set.
+Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `Spec#…` / `Design#…` / `Tasks#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `Spec#` / `Design#` / `Tasks#` citations are resolution-checked, and *inbound* `UnderstandingShifts#Delta-N-slug` citations now resolve against these `Delta-<N>` anchors too — a revised artifact cites the Delta that justified it. Research# citations stay recorded-for-retrieval only: Research carries descriptive headings, not a resolvable anchor set.
+
+### Deferrals
+
+Off-review-surface archive of deliberately-deferred cross-stage decisions, created when useful. One `Defer-<N>: <slug>` block per deferral, each addressed forward to the later stage that owns the decision. A sibling to the understanding-shift archive — never a blend: an understanding delta is a *committed* change to propagate; a deferral is an *open* question to re-decide. Not loaded at default review/implement time; JIT-loaded only by its owning stage's drain.
+
+Each block is shaped so it cannot read as a settled decision (conclusion-first):
+
+- **Owning stage** — one of Requirements / Spec / Design / Tasks; the stage the deferral is addressed to.
+- the open **question** + why it surfaced now
+- **forces** glimpsed
+- at most an **option seen** — explicitly marked *not chosen*. There is no "decision" field.
+
+Resolution is retire-in-place: when the owning stage drains it, append `(resolved -> <Spec#… | Design#… | Tasks#…>)` to the block heading, citing where the decision landed — the same convention as ` (retired)`, so the `Defer-<N>` ID keeps resolving. Append-only; IDs stable; duplicate `Defer-<N>` anchors are validator-caught. An unresolved deferral whose owning stage's artifact already exists is surfaced by `leanplan-validate` (advisory) — never silently dropped; once drained, the resolve-in-place marker cites where the decision landed and that anchor's normal coverage tracks it. The capture and drain procedures live in `references/deferral.md`.
 
 ### Tasks (`tasks.md`)
 
@@ -142,18 +160,19 @@ Each stage doc carries its seam's operational instance; the per-artifact Drift G
 
 Applies to every artifact, in any authoring language. Write-time guidance, not validator-enforced.
 
-- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support. The artifact should be graspable from headings and lead lines alone. The two prose-shaped fields most prone to collapsing into a blob — the Design `Decision` body and the Tasks `Goal` — get a worked good/bad example in `design.md` / `tasks.md`. Requirements and Spec are list-shaped by construction (user-story bullets; atomic `B` / `C` items) and already conform — the rule binds the free-prose fields, where the blob risk lives, not the lists.
+- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support, so it is graspable from headings and lead lines alone. The blob-prone free-prose fields — the Design `Decision` body and the Tasks `Goal` — carry a worked good/bad example in `design.md` / `tasks.md`; Requirements and Spec are list-shaped by construction and already conform.
 - **Lists over dense paragraphs.** When content enumerates parallel points, conditions, or steps, use bullet or ordered lists. Reserve flowing prose for a single causal chain.
 - **Short, declarative sentences.** Break run-ons; promote a buried qualifier to its own clause or bullet rather than nesting it in parentheses.
+- **Concise, not compressed.** Cut redundancy, not meaning: drop what's repeated or already implied, never a distinct piece of information the reader needs (`bypass-check save` ❌ drops *which* check; "save without the duplicate check" ✅ keeps it). The same loss hides in a separator-joined pile, or even in plain words ("the save" for the one that skips the duplicate check). Ask what answer went missing, not how long the line is — a term or `·` that drops nothing is fine. Spend the words. (context-engineering: literal-vs-latent-matching)
 
-Why: this serves the small-surface and LLM-aware principles — buried ledes and dense blocks get rubber-stamped by reviewers and dilute agent attention. Stage-specific shapes (e.g. Requirements user-story bullets, `requirements.md`) are instances of this rule, not exceptions.
+Why: this serves the small-surface and LLM-aware principles — buried ledes and dense blocks get rubber-stamped and dilute agent attention. Stage-specific shapes (e.g. Requirements user-story bullets) are instances of this rule, not exceptions.
 
 ## Surface Budget
 
 The surface artifacts (Requirements, Spec, Design, Tasks) are designed for **review fidelity, not completeness** — a lean surface is reviewed carefully; a verbose one gets rubber-stamped, and its over-specific detail leaks into implementation. Keep each surface tight; push depth into the archives (Rationale, Research) or split an oversized feature.
 
 - **Direction, not a hard cap.** Tightness is the target; the caps below are an advisory backstop for *pathological* bloat, not a budget to fill. A well-formed one-deployment artifact normally sits far under them.
-- **Soft per-stage caps, in *prose* lines** (advisory — `validate.py` warns above them, `--strict` escalates to error, `--allow-large` suppresses, mirroring the DAG-size guardrail): Requirements ~90, Spec ~110, Design ~160, Tasks ~220. **Mermaid diagrams, fenced code/schemas, and blank lines are excluded** — they are legit reference detail, not attention-diluting prose, and a big architecture diagram must not read as bloat. This list is the source of truth; `validate.py`'s `SURFACE_SOFT_CAP` mirrors it — keep the two in sync. A breach is a prompt to ask *"what prose belongs in an archive, or should this feature split?"* — not an automatic failure.
+- **Soft per-stage caps, in *prose* lines** (advisory — `leanplan-validate` warns above them, `--strict` escalates to error, `--allow-large` suppresses, mirroring the DAG-size guardrail): Requirements ~90, Spec ~110, Design ~160, Tasks ~220. **Visual blocks (Mermaid diagrams or ASCII art), fenced code/schemas, and blank lines are excluded** — they are legit reference detail, not attention-diluting prose, and a big architecture diagram must not read as bloat. This list is the source of truth; `leanplan-validate`'s `SURFACE_SOFT_CAP` mirrors it — keep the two in sync. A breach is a prompt to ask *"what prose belongs in an archive, or should this feature split?"* — not an automatic failure.
 - **Archive is lossless.** Moving reasoning to Rationale or evidence to Research removes it from the *review surface*, not from existence — it stays JIT-loadable on challenge. **Lean ≠ information loss.** This is the contract that lets the surface stay small without the team fearing lost context.
 - **The framework's own references apply this reflexively.** This budget caps user surface artifacts; the stage references themselves (`requirements.md` … `implement.md`) follow the same surface/tier discipline — stance, procedure, guardrails, and author-time calibration (worked examples, templates) stay always-loaded, while step-scoped lookup detail defers to an on-demand companion loaded at its consuming step. Advisory, not a validator-enforced gate.
 
@@ -167,5 +186,5 @@ Grounded in the small-surface and LLM-aware principles (`philosophy.md` P3). The
 - Tasks has no line-by-line edit script. Implementation agents re-derive against current code at task entry.
 - **Tasks fields carry process specifics, not tech-realization specifics (the Product↔Process cut, `framework-design.md` §2).** Plan cards describe the *work* (Goal: what outcome / Completion: how to verify / Guidelines: work-stance). Tech-realization details — proto/response field mappings, controller orchestration sequences, method signatures, code paths, schemas — belong in a Design `D-<N>` block. The task card anchors via `Design#D-<N>-<slug>`; it does not restate the Decision's content. Symmetric guard with the Design row above. Detection cue: a Goal bullet that answers "after the work lands, the system looks like X" is drift — push X to Design; keep "this task achieves Y, verified by Z" in the card.
 - MUST and MUST NOT are reserved for true invariants.
-- Mermaid is used for diagrams; no ASCII fallback.
+- Design visuals may be Mermaid diagrams or fenced ASCII art. Prefer a visual companion when prose would otherwise blur relationships, boundaries, sequences, state, or mappings; use as many visuals as clarify distinct structures. Tasks DAGs stay Mermaid unless the Tasks contract changes.
 - Frontmatter is discouraged on plan artifacts; the artifact type is implied by filename.
