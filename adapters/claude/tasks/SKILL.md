@@ -2,7 +2,7 @@
 name: tasks
 description: LeanPlan — produce a Tasks tasks.md from a Design. Track subgraphs, prefixed task IDs, bidirectional verification against Spec + Design.
 argument-hint: "<feature-key>"
-allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Bash(ls *), Bash(mkdir *), Bash(git *), Bash(python3 */scripts/validate.py *)
+allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Bash(ls *), Bash(mkdir *), Bash(git *), Bash(*/scripts/leanplan-validate *)
 ---
 
 # tasks
@@ -18,5 +18,5 @@ Load `<LEANPLAN_ROOT>/references/tasks.md` — it is authoritative for the proce
 Runtime glue:
 
 - **Output** — `<cwd>/docs/features/<KEY>/tasks.md` (the filename is `tasks.md`, not `task.md`).
-- **Validate** — `python3 <LEANPLAN_ROOT>/scripts/validate.py <cwd>/docs/features/<KEY> --stage tasks`.
+- **Validate** — `<LEANPLAN_ROOT>/scripts/leanplan-validate <cwd>/docs/features/<KEY> --stage tasks`.
 - **Hand off** — for each independently startable task, `/implement <KEY> <task-id>`.

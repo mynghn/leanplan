@@ -2,7 +2,7 @@
 name: implement
 description: LeanPlan — implement one task card from tasks.md against current code. Re-reason at task entry, enforce stop-the-line triggers, distill non-obvious WHYs into durable code forms at close-out.
 argument-hint: "<feature-key> <task-id>"
-allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(git *), Bash(./gradlew *), Bash(mise *), Bash(ls *), Bash(mkdir *), Bash(gh *), Bash(python3 */scripts/validate.py *), Bash(python3 */scripts/scan-leaks *), mcp__atlassian__getJiraIssue, mcp__atlassian__addCommentToJiraIssue
+allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(git *), Bash(./gradlew *), Bash(mise *), Bash(ls *), Bash(mkdir *), Bash(gh *), Bash(*/scripts/leanplan-validate *), Bash(*/scripts/scan-leaks *), mcp__atlassian__getJiraIssue, mcp__atlassian__addCommentToJiraIssue
 ---
 
 # implement

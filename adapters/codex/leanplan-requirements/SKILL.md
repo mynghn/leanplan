@@ -18,5 +18,5 @@ Runtime glue:
 
 - **Intent forms** — brief feature intent, tracker key, `--date` intent, or an existing feature id to revise.
 - **Allocator** — `<LEANPLAN_ROOT>/scripts/leanplan-new` is the single directory allocator: capture stdout path, stop on non-zero, never `mkdir`.
-- **Validate** — `python3 <LEANPLAN_ROOT>/scripts/validate.py <captured-path> --stage requirements`.
+- **Validate** — `<LEANPLAN_ROOT>/scripts/leanplan-validate <captured-path> --stage requirements`.
 - **Hand off** — next move is `leanplan-specify <KEY>`.

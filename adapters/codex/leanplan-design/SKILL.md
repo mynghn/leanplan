@@ -17,5 +17,5 @@ Load `<LEANPLAN_ROOT>/references/design.md` — it is authoritative for the proc
 Runtime glue:
 
 - **Input** — `<cwd>/docs/features/<KEY>/spec.md`; if absent, stop and point the user to `leanplan-specify`.
-- **Validate** — `python3 <LEANPLAN_ROOT>/scripts/validate.py <cwd>/docs/features/<KEY> --stage design`.
+- **Validate** — `<LEANPLAN_ROOT>/scripts/leanplan-validate <cwd>/docs/features/<KEY> --stage design`.
 - **Hand off** — next move is `leanplan-tasks <KEY>`.

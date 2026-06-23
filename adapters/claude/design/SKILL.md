@@ -2,7 +2,7 @@
 name: design
 description: LeanPlan — realize a Spec into a Design (chosen components, stack, decisions). Architecture diagram + per-decision blocks; archive rationale for non-trivial decisions.
 argument-hint: "<feature-key>"
-allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(ls *), Bash(mkdir *), Bash(git *), Bash(python3 */scripts/validate.py *), WebFetch, WebSearch, mcp__atlassian__getJiraIssue, mcp__atlassian__searchJiraIssuesUsingJql
+allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(ls *), Bash(mkdir *), Bash(git *), Bash(*/scripts/leanplan-validate *), WebFetch, WebSearch, mcp__atlassian__getJiraIssue, mcp__atlassian__searchJiraIssuesUsingJql
 ---
 
 # design
@@ -19,5 +19,5 @@ Load `<LEANPLAN_ROOT>/references/design.md` — it is authoritative for the proc
 Runtime glue:
 
 - **Missing input** — if `<cwd>/docs/features/<KEY>/spec.md` is absent, stop and point the user to `/specify` (see `design.md` Inputs).
-- **Validate** — `python3 <LEANPLAN_ROOT>/scripts/validate.py <cwd>/docs/features/<KEY> --stage design`.
+- **Validate** — `<LEANPLAN_ROOT>/scripts/leanplan-validate <cwd>/docs/features/<KEY> --stage design`.
 - **Hand off** — next edge is `/tasks <KEY>`.

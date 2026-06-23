@@ -17,5 +17,5 @@ Load `<LEANPLAN_ROOT>/references/specify.md` — it is authoritative for the pro
 Runtime glue:
 
 - **Input** — `<cwd>/docs/features/<KEY>/requirements.md`; if absent, stop and point the user to `leanplan-requirements`.
-- **Validate** — `python3 <LEANPLAN_ROOT>/scripts/validate.py <cwd>/docs/features/<KEY> --stage spec`.
+- **Validate** — `<LEANPLAN_ROOT>/scripts/leanplan-validate <cwd>/docs/features/<KEY> --stage spec`.
 - **Hand off** — next move is `leanplan-design <KEY>`.

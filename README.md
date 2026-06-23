@@ -14,7 +14,7 @@ The full framework design is in [`framework-design.md`](./framework-design.md).
 leanplan/
 ├── framework-design.md                 framework design (the canonical doc)
 ├── references/                 per-stage operational guidance
-├── scripts/                    validate.py + scaffold + selftest + pre-commit hook
+├── scripts/                    leanplan-validate + scaffold + selftest + pre-commit hook
 ├── fixtures/                   valid (incl. a GAP-ack) / invalid examples
 └── adapters/                   per-runtime skill implementations
     ├── claude/                 Claude Code (7-skill set)
@@ -63,7 +63,7 @@ LEANPLAN_ROOT="$HOME/src/leanplan"  # or your chosen checkout
 # ...
 
 # validate (use the path leanplan-new printed)
-python3 "$LEANPLAN_ROOT/scripts/validate.py" docs/features/0001-anomaly-publisher
+"$LEANPLAN_ROOT/scripts/leanplan-validate" docs/features/0001-anomaly-publisher
 
 # run the validator's own self-test
 "$LEANPLAN_ROOT/scripts/leanplan-selftest"
@@ -80,8 +80,8 @@ Editing the runtime tree is supported because it is a real working copy. Uncommi
 Open an issue or PR. The validator should pass on every commit:
 
 ```bash
-python3 scripts/validate.py fixtures/valid                # exit 0 (includes a GAP-acked Spec item)
-python3 scripts/validate.py fixtures/invalid-missing-coverage  # exit 1, expected
+scripts/leanplan-validate fixtures/valid                # exit 0 (includes a GAP-acked Spec item)
+scripts/leanplan-validate fixtures/invalid-missing-coverage  # exit 1, expected
 LEANPLAN_FIXTURE=$PWD/fixtures/valid scripts/leanplan-selftest # all pass (exit 0; prints "N passed, 0 failed")
 ```
 

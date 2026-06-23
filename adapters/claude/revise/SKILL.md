@@ -2,7 +2,7 @@
 name: revise
 description: LeanPlan — inject a justified change into already-committed artifacts at any in-flight stage and propagate it only to downstream stages, editing in place against a recorded justification. The repair counterpart to /sharpen (which only diagnoses); never edits without a recorded reason.
 argument-hint: "<KEY> [what drifted | a recorded delta]"
-allowed-tools: Read, Edit, Write, AskUserQuestion, Bash(python3 */scripts/validate.py *), Bash(*/scripts/leanplan-new *)
+allowed-tools: Read, Edit, Write, AskUserQuestion, Bash(*/scripts/leanplan-validate *), Bash(*/scripts/leanplan-new *)
 ---
 
 # revise
@@ -21,4 +21,4 @@ Runtime glue:
 - **Target** — `$ARGUMENTS` names the feature `<KEY>` and, optionally, the `Delta-<N>` to consume or the drift to inject. The move engages on `<cwd>/docs/features/<KEY>/`'s committed artifacts at whatever stage is in flight, including mid-task during implementation.
 - **Justification** — the only mutation-authorizing input is a `Delta-<N>` block in `docs/features/<KEY>/understanding-shifts.md`. Consume the named one, or record one from the planner's asserted drift before any edit. With none and nothing recordable, make no edit.
 - **Edit targets** — the artifact the drift corrects and every downstream artifact it implicates; artifacts upstream of the corrected one stay byte-unchanged.
-- **Validate** — after propagating, run `python3 <LEANPLAN_ROOT>/scripts/validate.py docs/features/<KEY>` (scope `--stage` to the in-flight stage if downstream artifacts are not yet authored) to confirm the committed set is consistent and references no superseded content.
+- **Validate** — after propagating, run `<LEANPLAN_ROOT>/scripts/leanplan-validate docs/features/<KEY>` (scope `--stage` to the in-flight stage if downstream artifacts are not yet authored) to confirm the committed set is consistent and references no superseded content.

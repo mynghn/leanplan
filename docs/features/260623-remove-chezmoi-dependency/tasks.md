@@ -41,7 +41,7 @@ The documentation task lands the guidance shape. The verification task then chec
 - **Repo**: this repo.
 - **Completion**:
   - A repository search shows remaining personal-workflow references are confined to optional current guidance, archival feature artifacts, fixtures, or upstream context (`Spec#C-2-remaining-references-are-classified`).
-  - The feature validates with `validate.py --stage tasks`, proving the plan keeps bidirectional coverage for `Spec#B-1-primary-install-path-is-self-contained`, `Spec#B-2-refresh-path-is-self-contained`, `Spec#B-3-plain-checkout-runtime-is-supported`, `Spec#B-4-optional-personal-workflow-is-separated`, `Spec#C-1-no-current-guidance-requires-personal-dotfiles`, and `Spec#C-2-remaining-references-are-classified`.
+  - The feature validates with `leanplan-validate --stage tasks`, proving the plan keeps bidirectional coverage for `Spec#B-1-primary-install-path-is-self-contained`, `Spec#B-2-refresh-path-is-self-contained`, `Spec#B-3-plain-checkout-runtime-is-supported`, `Spec#B-4-optional-personal-workflow-is-separated`, `Spec#C-1-no-current-guidance-requires-personal-dotfiles`, and `Spec#C-2-remaining-references-are-classified`.
 - **Dependencies**: D1
 
 ## T: D2
@@ -51,6 +51,7 @@ The documentation task lands the guidance shape. The verification task then chec
 - **Completion**:
   - Current install and refresh guidance use a user-selected LeanPlan root (`Spec#B-5-install-root-is-user-selected`).
   - Adapter wrapper instructions load references and scripts relative to the installed LeanPlan checkout (`Spec#B-5-install-root-is-user-selected`).
+  - Claude validation allow-tool entries target the LeanPlan-specific validator executable rather than a generic validator filename (`Design#D-6-adapters-and-hooks-resolve-from-their-installed-path`).
   - Current guidance and runtime wrappers have no normal-use required exact checkout path (`Spec#C-3-no-current-guidance-requires-fixed-checkout-path`).
 - **Dependencies**: V1
 
@@ -60,5 +61,5 @@ The documentation task lands the guidance shape. The verification task then chec
 - **Repo**: this repo.
 - **Completion**:
   - A repository search shows exact checkout-path references remain only in optional examples, archival feature artifacts, fixtures, or upstream context (`Spec#C-3-no-current-guidance-requires-fixed-checkout-path`).
-  - The feature validates with `validate.py`, proving bidirectional coverage includes `Spec#B-5-install-root-is-user-selected` and `Spec#C-3-no-current-guidance-requires-fixed-checkout-path`.
+  - The feature validates with `leanplan-validate`, proving bidirectional coverage includes `Spec#B-5-install-root-is-user-selected` and `Spec#C-3-no-current-guidance-requires-fixed-checkout-path`.
 - **Dependencies**: D2

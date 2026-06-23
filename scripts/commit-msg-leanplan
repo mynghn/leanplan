@@ -29,7 +29,7 @@ resolve_script_dir() {
 SHARE="$(resolve_script_dir)"
 SCAN="${LEANPLAN_SCAN:-$SHARE/scan-leaks}"
 
-[ -f "$SCAN" ] || exit 0                       # detector not installed; don't obstruct
+[ -x "$SCAN" ] || exit 0                       # detector not installed; don't obstruct
 command -v python3 >/dev/null 2>&1 || exit 0   # python3 unavailable; don't obstruct
 [ -n "$MSG_FILE" ] && [ -f "$MSG_FILE" ] || exit 0
 
@@ -46,7 +46,7 @@ strict_flag=""
 msg_body="$(git stripspace --strip-comments <"$MSG_FILE" 2>/dev/null || cat "$MSG_FILE")"
 
 # shellcheck disable=SC2086
-out=$(python3 "$SCAN" $strict_flag --text "$msg_body" 2>&1)
+out=$("$SCAN" $strict_flag --text "$msg_body" 2>&1)
 ec=$?
 
 if [ "$ec" -eq 0 ] && ! printf '%s' "$out" | grep -qE '^(WARNING|ERROR):'; then

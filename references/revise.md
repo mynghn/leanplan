@@ -26,7 +26,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules —
 2. **Identify the corrected artifact, and stay downstream of it.** From the Delta's scope-of-impact, find the *highest* artifact the drift actually corrects — Requirements for problem scope, Spec for the contract, Design for realization, Tasks for sequencing. Inject the correction there and leave every upstream artifact byte-unchanged. A drift detected late but rooted earlier is injected at its root, never rippled upward.
 3. **Edit, preserving identity.** Re-evaluate the corrected artifact **in place** by default — a local edit that keeps stable anchor IDs. Escalate to **re-derivation** (re-run the stage skill from the corrected upstream) only when the change is *structural*: the anchor set itself must change, not just prose inside stable anchors. Either way, surviving IDs are never renumbered, and superseded items are retired-by-note `(retired)`, not deleted (`artifact-contract.md` → Anchors).
 4. **Propagate downstream-only.** Walk each downstream artifact whose content depends on the change, in stage order, applying the same in-place-default / re-derive-on-structural rule. Leave no downstream artifact citing or restating the superseded content.
-5. **Re-validate.** Run `validate.py` on the feature; the committed set must pass and carry no surviving reference to superseded content. A revised artifact's `UnderstandingShifts#Delta-N-slug` citation of its justifying Delta is resolution-checked.
+5. **Re-validate.** Run `leanplan-validate` on the feature; the committed set must pass and carry no surviving reference to superseded content. A revised artifact's `UnderstandingShifts#Delta-N-slug` citation of its justifying Delta is resolution-checked.
 6. **Scope-gate.** If the correction would push Requirements past one-deployment size, stop and split rather than grow — the structural path, not an inline edit (see **Structural operations**).
 
 ## Structural operations
@@ -38,7 +38,7 @@ A feature **rename** or **split** is a first-class revise operation, not improvi
   1. **Allocate** the second feature through `leanplan-new` — dir creation stays in the one allocator; never hand-make a feature dir.
   2. **Partition** the anchors and artifact content between the two features. Items that stay keep their IDs — survivors are never renumbered; items that move are re-homed in the new feature's artifacts. Anything superseded in place retires-by-note as usual.
   3. **Propagate** within each resulting feature per the downstream-only / in-place-default rule above.
-  4. **Re-validate both** feature dirs; each must pass `validate.py` independently, with no artifact or citation pointing at the other's content unless a cross-reference is intended.
+  4. **Re-validate both** feature dirs; each must pass `leanplan-validate` independently, with no artifact or citation pointing at the other's content unless a cross-reference is intended.
 
 Both operations end where every revise ends — a re-validated committed set. A rename or split that leaves a dangling path, an unread artifact, or a renumbered survivor is not complete.
 
@@ -49,7 +49,7 @@ Both operations end where every revise ends — a re-validated committed set. A 
 - **Preserve, don't overwrite.** Surviving anchor IDs still resolve and are not renumbered; superseded items retire-by-note so prior review and traceability history stays reconstructable.
 - **In-place by default; re-derive only on an anchor-set change.** This is the implementation loop's existing default, generalized to every stage — effort proportional to how far the drift actually reshapes the artifact.
 - **Repair, don't re-judge.** revise trusts the Delta it is handed and propagates it; it never re-verifies whether the understanding moved.
-- **Re-validate before done.** A revise that leaves the feature failing `validate.py`, or with a surviving reference to superseded content, is not complete.
+- **Re-validate before done.** A revise that leaves the feature failing `leanplan-validate`, or with a surviving reference to superseded content, is not complete.
 - **Any stage, including mid-implementation.** The one entry serves a stage boundary, a between-task pause, and a mid-task drift during implementation alike. implementation's stop-the-line triggers *detect* the drift; they delegate the edit-and-propagate to this move (`implement.md`).
 
 ## Hand-off

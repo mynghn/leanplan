@@ -18,5 +18,5 @@ Runtime glue:
 
 - **Input** — `<cwd>/docs/features/<KEY>/design.md`; if absent, stop and point the user to `leanplan-design`.
 - **Output** — `<cwd>/docs/features/<KEY>/tasks.md`.
-- **Validate** — `python3 <LEANPLAN_ROOT>/scripts/validate.py <cwd>/docs/features/<KEY> --stage tasks`.
+- **Validate** — `<LEANPLAN_ROOT>/scripts/leanplan-validate <cwd>/docs/features/<KEY> --stage tasks`.
 - **Hand off** — for each independently startable task: `leanplan-implement <KEY> <task-id>`.

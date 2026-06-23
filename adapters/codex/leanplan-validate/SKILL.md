@@ -12,7 +12,7 @@ Resolve `<LEANPLAN_ROOT>` as the LeanPlan checkout containing this adapter: foll
 Run:
 
 ```bash
-python3 <LEANPLAN_ROOT>/scripts/validate.py <feature-path>
+<LEANPLAN_ROOT>/scripts/leanplan-validate <feature-path>
 ```
 
 Flags:

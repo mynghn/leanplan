@@ -18,5 +18,5 @@ Runtime glue:
 
 - **Disturbance** — the argument is what shifted or a claim to check.
 - **Write target** — append only to `<cwd>/docs/features/<KEY>/understanding.md`; do not edit committed surface artifacts.
-- **Validate** — after emitting a delta, run `python3 <LEANPLAN_ROOT>/scripts/validate.py docs/features/<KEY>` or scope `--stage` to the in-flight stage if downstream artifacts do not yet exist.
+- **Validate** — after emitting a delta, run `<LEANPLAN_ROOT>/scripts/leanplan-validate docs/features/<KEY>` or scope `--stage` to the in-flight stage if downstream artifacts do not yet exist.
 - **Hand off** — return to the interrupted move; use `leanplan-revise` only when artifacts need repair.

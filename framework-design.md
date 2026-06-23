@@ -150,11 +150,11 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 
 ## 7. Drift guards
 
-The per-artifact drift guards are part of the **structural contract**, owned by `artifact-contract.md` → Drift Guards (skill-prompt-enforced at write time; `validate.py`-checked where regex-detectable). This doc does not restate them; the reasoning for what is enforced versus deliberately dropped is §6 (Ceremonial) and §9 (resolutions).
+The per-artifact drift guards are part of the **structural contract**, owned by `artifact-contract.md` → Drift Guards (skill-prompt-enforced at write time; `leanplan-validate`-checked where regex-detectable). This doc does not restate them; the reasoning for what is enforced versus deliberately dropped is §6 (Ceremonial) and §9 (resolutions).
 
 ## 8. Naming decisions
 
-**This section is the naming authority.** Every name the redesign settles follows from the coordinate model (§2) — given the axes it is predictable and resolves to exactly one element; a few established names (Decision, the Rationale / Research / Understanding archives, Guidelines, the `<KEY>` id) are retained by deliberate fiat, not re-derived (flagged below). The scheme below is the framework's vocabulary; the dedicated framework-wide rename that rolled it out across all ~1,000 sites (artifacts, edges, items, anchors, `validate.py`, fixtures, adapters, every shipped feature) landed via backlog **#34**. The framework now runs in this vocabulary throughout; the **prior vocab** (last column) is retained as the migration record.
+**This section is the naming authority.** Every name the redesign settles follows from the coordinate model (§2) — given the axes it is predictable and resolves to exactly one element; a few established names (Decision, the Rationale / Research / Understanding archives, Guidelines, the `<KEY>` id) are retained by deliberate fiat, not re-derived (flagged below). The scheme below is the framework's vocabulary; the dedicated framework-wide rename that rolled it out across all ~1,000 sites (artifacts, edges, items, anchors, `leanplan-validate`, fixtures, adapters, every shipped feature) landed via backlog **#34**. The framework now runs in this vocabulary throughout; the **prior vocab** (last column) is retained as the migration record.
 
 | Stage (edge · verb) | Artifact (node · noun) | File | Items (anchor) | Prior vocab |
 |---|---|---|---|---|
@@ -283,7 +283,7 @@ Framework ships incrementally; not every phase is required to start.
 | Phase | Addition | Status |
 |---|---|---|
 | 1 | 7 skill prompts (§12) — 1 standalone (`requirements`) + 4 edge + 2 off-pipeline (`sharpen`, `revise`) | ✅ shipped |
-| 2 | Bash validators + scaffolds + git hooks (structural safety nets) | ✅ shipped — `validate.py`, `leanplan-new`, `pre-commit` / `commit-msg` hooks |
+| 2 | Bash validators + scaffolds + git hooks (structural safety nets) | ✅ shipped — `leanplan-validate`, `leanplan-new`, `pre-commit` / `commit-msg` hooks |
 | 3 | CLI wrapper + per-feature progress state files | ◐ partial — `leanplan-new` shipped; progress-state files dropped as informational-only (§14; principle 7) |
 | 4 | Harness-flavored capabilities (see below) | ○ future (post-v1) |
 | 5 | Integrations (LSP, Jira deep-link, CI gates) | ○ future |
@@ -326,5 +326,5 @@ Genuinely open — not yet built or decided:
 
 Resolved / shipped — moved out of "open", kept for provenance:
 
-- **Phase 2 validator** — shipped (§13). `scripts/validate.py` covers anchor integrity, bidirectional coverage, drift regex, duplicate-anchor detection, broken-citation detection, frontmatter discouragement, MUST/MUST NOT misuse, design architecture visual validation, Tasks ASCII DAG detection, checkbox detection, and design ↔ rationale consistency, plus the `**GAP**` ack for deliberately-uncovered Spec items.
+- **Phase 2 validator** — shipped (§13). `scripts/leanplan-validate` covers anchor integrity, bidirectional coverage, drift regex, duplicate-anchor detection, broken-citation detection, frontmatter discouragement, MUST/MUST NOT misuse, design architecture visual validation, Tasks ASCII DAG detection, checkbox detection, and design ↔ rationale consistency, plus the `**GAP**` ack for deliberately-uncovered Spec items.
 - **Cross-session continuity** — decided: no plan-doc artifact. Multi-session implementation rests on harness task-state + git commits carrying distilled WHYs (principles 7–8); no artifact addition planned.

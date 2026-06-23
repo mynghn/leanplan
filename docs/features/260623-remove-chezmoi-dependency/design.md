@@ -58,8 +58,9 @@ Existing `docs/features/**` and `fixtures/**` references to the personal workflo
 
 ## D-6: adapters-and-hooks-resolve-from-their-installed-path
 
-Adapter wrappers and hook scripts resolve LeanPlan references and scripts from their installed file path or symlink target, not from a hardcoded checkout path (`UnderstandingShifts#Delta-2-install-root-is-not-fixed`). See rationale at [design-rationale.md#D-6-adapters-and-hooks-resolve-from-their-installed-path].
+Adapter wrappers and hook scripts resolve LeanPlan references and scripts from their installed file path or symlink target, not from a hardcoded checkout path (`UnderstandingShifts#Delta-2-install-root-is-not-fixed`, `UnderstandingShifts#Delta-3-validator-allow-pattern-is-too-broad`). See rationale at [design-rationale.md#D-6-adapters-and-hooks-resolve-from-their-installed-path].
 
 - Satisfies `Spec#B-5-install-root-is-user-selected` and `Spec#C-3-no-current-guidance-requires-fixed-checkout-path`.
 - Codex and Claude adapter docs define `<LEANPLAN_ROOT>` as the checkout containing the adapter file after resolving symlinks, then refer to `<LEANPLAN_ROOT>/references/*` and `<LEANPLAN_ROOT>/scripts/*`.
+- Claude validation allow-tool entries target the LeanPlan-specific executable `leanplan-validate` instead of a generic `python3 */scripts/validate.py` pattern.
 - Hook scripts use their resolved script directory as the default tool directory, with environment-variable overrides still available for callers that need them.

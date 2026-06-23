@@ -2,7 +2,7 @@
 name: sharpen
 description: LeanPlan — sharpen a disturbed understanding mid-round via reflect → verify → re-derive → decide → emit, logging a durable delta. Off-pipeline and opt-in; reads committed artifacts, never edits them.
 argument-hint: "[what shifted | a claim to check]"
-allowed-tools: Read, AskUserQuestion, WebSearch, WebFetch, Write, Bash(python3 */scripts/validate.py *)
+allowed-tools: Read, AskUserQuestion, WebSearch, WebFetch, Write, Bash(*/scripts/leanplan-validate *)
 ---
 
 # sharpen
@@ -20,4 +20,4 @@ Runtime glue:
 
 - **Disturbance** — `$ARGUMENTS` is what shifted, or the external claim to check. The move engages within the in-flight stage and returns control to it; it never gates the stage.
 - **Write target** — the only write is an appended `Delta-<N>: <slug>` block in `<cwd>/docs/features/<KEY>/understanding-shifts.md`. No committed surface artifact is edited.
-- **Validate** — after emitting a delta, run `python3 <LEANPLAN_ROOT>/scripts/validate.py docs/features/<KEY>` to confirm its scope-of-impact citations resolve. If you paused **before all surface artifacts exist** (mid-requirements/spec/design), scope `--stage` to the in-flight stage so validation fails on the delta, not on not-yet-authored downstream files; mid-tasks or mid-implementation the full surface exists, so omit `--stage` (there is no `implement` stage value).
+- **Validate** — after emitting a delta, run `<LEANPLAN_ROOT>/scripts/leanplan-validate docs/features/<KEY>` to confirm its scope-of-impact citations resolve. If you paused **before all surface artifacts exist** (mid-requirements/spec/design), scope `--stage` to the in-flight stage so validation fails on the delta, not on not-yet-authored downstream files; mid-tasks or mid-implementation the full surface exists, so omit `--stage` (there is no `implement` stage value).
