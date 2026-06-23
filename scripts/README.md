@@ -1,6 +1,6 @@
 # LeanPlan canonical scripts
 
-All LeanPlan tooling lives at `~/.local/share/leanplan/scripts/`, applied via chezmoi from `dot_local/share/leanplan/scripts/`. Both Claude Code (`~/.claude/skills/{requirements,specify,design,tasks,implement,sharpen,revise}`) and Codex (`~/.agents/skills/{leanplan,leanplan-*}`) adapters dereference this canonical path.
+All LeanPlan tooling lives in the installed checkout at `~/.local/share/leanplan/scripts/`. Both Claude Code (`~/.claude/skills/{requirements,specify,design,tasks,implement,sharpen,revise}`) and Codex (`~/.agents/skills/{leanplan,leanplan-*}`) adapters dereference this canonical path.
 
 ## Tools
 

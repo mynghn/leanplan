@@ -24,59 +24,27 @@ leanplan/
 
 ## Install
 
-### Via chezmoi (recommended for personal-phase use)
-
-Add this to your chezmoi source's `.chezmoiexternal.toml`:
-
-```toml
-[".local/share/leanplan"]
-    type = "git-repo"
-    url = "https://github.com/mynghn/leanplan.git"
-    refreshPeriod = "168h"
-
-[".local/share/leanplan.clone"]
-    args = ["--depth=1"]
-
-[".local/share/leanplan.pull"]
-    args = ["--ff-only"]
-```
-
-Then add `symlink_*.tmpl` source files for each adapter target so chezmoi creates the runtime-registry symlinks. For Claude Code skills:
-
-```
-dot_claude/skills/symlink_requirements.tmpl  →  {{ .chezmoi.homeDir }}/.local/share/leanplan/adapters/claude/requirements
-dot_claude/skills/symlink_specify.tmpl       →  ... /adapters/claude/specify
-dot_claude/skills/symlink_design.tmpl        →  ... /adapters/claude/design
-dot_claude/skills/symlink_tasks.tmpl         →  ... /adapters/claude/tasks
-dot_claude/skills/symlink_implement.tmpl     →  ... /adapters/claude/implement
-dot_claude/skills/symlink_sharpen.tmpl       →  ... /adapters/claude/sharpen
-dot_claude/skills/symlink_revise.tmpl        →  ... /adapters/claude/revise
-```
-
-For Codex:
-
-```
-dot_agents/skills/symlink_leanplan.tmpl               →  {{ .chezmoi.homeDir }}/.local/share/leanplan/adapters/codex/leanplan
-dot_agents/skills/symlink_leanplan-requirements.tmpl  →  ... /adapters/codex/leanplan-requirements
-dot_agents/skills/symlink_leanplan-specify.tmpl       →  ... /adapters/codex/leanplan-specify
-dot_agents/skills/symlink_leanplan-design.tmpl        →  ... /adapters/codex/leanplan-design
-dot_agents/skills/symlink_leanplan-tasks.tmpl         →  ... /adapters/codex/leanplan-tasks
-dot_agents/skills/symlink_leanplan-implement.tmpl     →  ... /adapters/codex/leanplan-implement
-dot_agents/skills/symlink_leanplan-sharpen.tmpl       →  ... /adapters/codex/leanplan-sharpen
-dot_agents/skills/symlink_leanplan-revise.tmpl        →  ... /adapters/codex/leanplan-revise
-dot_agents/skills/symlink_leanplan-validate.tmpl      →  ... /adapters/codex/leanplan-validate
-```
-
-`chezmoi apply` clones LeanPlan into `~/.local/share/leanplan/` and creates the symlinks. `chezmoi update` pulls latest LeanPlan.
-
-### Without chezmoi
+Clone LeanPlan into its runtime location, then run the adapter installer:
 
 ```bash
 git clone https://github.com/mynghn/leanplan.git ~/.local/share/leanplan
 ~/.local/share/leanplan/install.sh
 ```
 
-`install.sh` creates the same per-runtime symlinks (Claude Code at `~/.claude/skills/<name>`, Codex at `~/.agents/skills/{leanplan,leanplan-*}`).
+`install.sh` creates the per-runtime symlinks: Claude Code at `~/.claude/skills/<name>`, and Codex at `~/.agents/skills/{leanplan,leanplan-*}`.
+
+To update an installed copy:
+
+```bash
+git -C ~/.local/share/leanplan pull --ff-only
+~/.local/share/leanplan/install.sh
+```
+
+Re-running `install.sh` is safe and refreshes adapter symlinks after the adapter list changes.
+
+### Optional dotfile-manager use
+
+If you already manage local tooling through a dotfile manager such as chezmoi, you can manage the same `~/.local/share/leanplan` checkout and registry symlinks there. This is optional; normal LeanPlan use follows the primary path above.
 
 ## Quick start
 
@@ -99,9 +67,9 @@ python3 ~/.local/share/leanplan/scripts/validate.py docs/features/0001-anomaly-p
 
 ## Edits
 
-Run-time content at `~/.local/share/leanplan/` is a working git clone. Edit there directly for fast iteration; commit + push from that working tree to publish. Or work in a separate clone and `chezmoi update` to pull.
+Runtime content at `~/.local/share/leanplan/` is a working git clone. Edit there directly for fast iteration; commit and push from that working tree to publish. Or work in a separate clone, merge there, then pull the runtime checkout with `git -C ~/.local/share/leanplan pull --ff-only`.
 
-Editing the runtime tree is supported (it is a real working copy), but understand that `chezmoi update` from a stale local working copy will fast-forward only — uncommitted local edits are preserved.
+Editing the runtime tree is supported because it is a real working copy. Uncommitted local edits are preserved across a failed fast-forward; commit, stash, or move them before pulling remote changes.
 
 ## Contributing
 
