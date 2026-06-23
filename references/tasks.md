@@ -22,7 +22,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 *Default flow, not a rigid script — re-derive it against the actual Design. Load-bearing (don't skip or reorder): the bidirectional verification (step 6), the one-deployment guardrail (step 7), the self-check (step 8).*
 
-1. **Load** artifact contract + Spec + Design.
+1. **Load** artifact contract + Spec + Design. Then **drain deferrals** (load-bearing): if `deferrals.md` exists, surface each unresolved `Defer-<N>` addressed to this stage, `Tasks`, and re-examine it against the current option space — non-binding, re-derive not replay; resolve in place (refer to `references/deferral.md` for detailed procedure guide).
 2. **Compose doc-level Guidelines (conditional)** — only when feature-wide work-stance rules genuinely apply (base branch, canary sequence, cross-team coordination). Skip otherwise.
 3. **Identify tracks** — group work by a coordination-relevant axis (common: repo, or protocol-vs-service, or infra-vs-app). Each track becomes a Mermaid subgraph + a prefix letter (e.g. `P` = protocol, `A` = api, `D` = data, `I` = infra). Tracks are navigational aid for humans; the implementation agent doesn't consume them as a formal concept.
 4. **Author `T: <id>` cards**, each with:
@@ -42,6 +42,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
    - No tech-realization restatement in Goals (field mappings, response/proto shapes, controller orchestration sequences, signatures, code paths). If a Goal explains *what the system looks like after the work lands*, that content belongs in a Design Decision — the Goal anchors in.
    - Every Completion is observable (you could write the verification).
    - Task cards are self-sufficient at cut-off (sentences complete without the anchor target).
+   - **No deferral is stranded.** Every `Defer-N` in `deferrals.md` is resolved (drained) before handing off to implement — Tasks is the last planning stage, so an unresolved one here is a lost decision, not a not-yet-reached one (`validate.py` flags it; `--strict` escalates).
    - DAG renders.
    - For a plan past ~100 lines, high-stakes / blocking cards sit at the edges (top and tail), not buried mid-file, and critical feature-level Guidelines are re-anchored near the tail (edge-placement; `framework-design.md` §6, `artifact-contract.md` → Prose Style).
 

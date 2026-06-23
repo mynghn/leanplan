@@ -63,7 +63,7 @@ flowchart LR
 
 **Reading the model.** An **artifact is a node** — a coordinate, a noun; a **stage is an edge** — one axis-flip, the skill/activity, a verb. Each pipeline step flips exactly one axis: `specify` flips World→Machine, `design` flips Contract→Realization, `tasks` flips Product→Process. So the "distance" between two artifacts is the number of axes between them — adjacent pairs differ by one axis (the blurrable, high-traffic seams above) and non-adjacent pairs by two or three (robustly distinct, never blurred). The empty (World, Realization) cell — **World Design**, the non-software means to change the world ("offer a discount") — is a deliberate scope marker: LeanPlan does Machine design, not World design. Progression runs from the (World, Contract) origin (Requirements) to running software past the (Machine, Realization · Process) corner.
 
-Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations. Not shown: the off-pipeline `sharpen` / `revise` moves and their `understanding.md` delta archive (§5.7, §12), which sit beside the pipeline rather than on it.
+Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations. Not shown: the off-pipeline `sharpen` / `revise` moves and their `understanding-shifts.md` delta archive (§5.7, §12), which sit beside the pipeline rather than on it.
 
 Request (pre-Requirements immature problem request) is acknowledged but deferred. Framework currently assumes Requirements is well-formed via human-agent interaction.
 
@@ -104,6 +104,8 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 Each level loads only via explicit trigger (anchor link from the layer above). JIT by construction. (context-engineering: jit-loading, context-as-working-set)
 
 The runtime-loadable form — which artifact loads when — is owned by `artifact-contract.md` → Surface / Archive layering; the table above is the design-level detail.
+
+Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The understanding-shift archive is written by `sharpen` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Structural shape and what-loads-when are owned by `artifact-contract.md`.
 
 ## 5. Artifact shapes
 

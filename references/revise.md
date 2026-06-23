@@ -9,13 +9,13 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules —
 ## Inputs
 
 - `<cwd>/docs/features/<KEY>/` — the feature's committed artifacts. The corrected artifact and its downstream are edited; everything upstream is read-only.
-- The justification — a `Delta-<N>` block in `understanding.md` (`artifact-contract.md` → Understanding). Either named at invocation (the `/sharpen` handoff, or a hand-up from an implementation stop-the-line) or recorded at intake from the planner's asserted drift before any edit. With no Delta and no recordable justification, stop without mutating.
+- The justification — a `Delta-<N>` block in `understanding-shifts.md` (`artifact-contract.md` → Understanding). Either named at invocation (the `/sharpen` handoff, or a hand-up from an implementation stop-the-line) or recorded at intake from the planner's asserted drift before any edit. With no Delta and no recordable justification, stop without mutating.
 - The Delta's scope-of-impact — its bare `Spec#` / `Design#` / `Tasks#` citations name the committed work the drift bears on. JIT-load only those anchors. (context-engineering: jit-loading)
 
 ## Output
 
 - The corrected artifact and every downstream artifact the drift implicates, revised in place — surviving anchor IDs preserved, superseded items retired-by-note, the committed set re-validated and carrying no reference to superseded content.
-- A durable `Delta-<N>` in `understanding.md` justifying the change (recorded at intake when not already present), which the revised artifacts may cite as `Understanding#Delta-N-slug`.
+- A durable `Delta-<N>` in `understanding-shifts.md` justifying the change (recorded at intake when not already present), which the revised artifacts may cite as `Understanding#Delta-N-slug`.
 - Zero edits to any artifact upstream of the corrected one.
 
 ## Procedure
