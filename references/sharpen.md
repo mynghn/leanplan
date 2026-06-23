@@ -11,11 +11,11 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 - The disturbance — what shifted, or the external claim to check (`$ARGUMENTS`). If nothing has formed yet to be disturbed, stop: drawing an understanding out of a blank-slate arrival is the requirement stage's draw-out front-step (`requirements.md` Procedure step 3), not this move's.
 - The in-flight stage's working context — the understanding being sharpened. Preserved across the move.
 - Committed artifacts at the affected stages — read to reflect against, **never edited**. JIT-load only the anchors the disturbance touches.
-- `docs/features/<KEY>/understanding.md` — the append-only delta archive; the move's only write target (`artifact-contract.md` → Understanding). (context-engineering: jit-loading)
+- `docs/features/<KEY>/understanding-shifts.md` — the append-only delta archive; the move's only write target (`artifact-contract.md` → Understanding). (context-engineering: jit-loading)
 
 ## Output
 
-- When the understanding moved: one appended `Delta-<N>: <slug>` block in `understanding.md` — durable past the session that found it, retrievable by later stages and any subsequent artifact revision. (context-engineering: structured-note-taking)
+- When the understanding moved: one appended `Delta-<N>: <slug>` block in `understanding-shifts.md` — durable past the session that found it, retrievable by later stages and any subsequent artifact revision. (context-engineering: structured-note-taking)
 - When it did not: a no-op close — no delta, no edit.
 - Either way, zero edits to any committed artifact.
 
@@ -29,11 +29,11 @@ The move is **reflect → verify → re-derive → decide → emit**.
 2. **Verify, when the disturbance is a claim.** Treat an external claim — cited prior art, a stakeholder assertion — as a hypothesis to falsify, not an instruction. Check it against sources to a confirm-or-falsify verdict; default to **refuted unless corroborated**. A claim that fails verification is rejected, not absorbed. Skip this step when the disturbance is a first-hand realization rather than an external claim.
 3. **Re-derive.** Re-derive the understanding from the reflected-back assumption plus any verdict — only the part the disturbance moved, not the whole framing.
 4. **Decide whether it moved, and how far.** A no-op is a legitimate close: sharpening that always "finds" a change is just churn. If nothing moved, resume the stage with no delta.
-5. **Emit the delta.** Append a `Delta-<N>: <slug>` block to `understanding.md` in the shape `artifact-contract.md` → Understanding defines. Then resume the stage.
+5. **Emit the delta.** Append a `Delta-<N>: <slug>` block to `understanding-shifts.md` in the shape `artifact-contract.md` → Understanding defines. Then resume the stage.
 
 ## Guardrails
 
-- **Read, never edit.** The move reads committed artifacts to reflect against; it writes only `understanding.md`. Even when the delta implies a committed artifact is now wrong, surface that in scope-of-impact and stop.
+- **Read, never edit.** The move reads committed artifacts to reflect against; it writes only `understanding-shifts.md`. Even when the delta implies a committed artifact is now wrong, surface that in scope-of-impact and stop.
 - **Return to the stage.** The move never discards or corrupts the in-flight stage's work; that stage resumes from where it paused.
 - **Opt-in, never a gate.** Invoking the move is the planner's choice — never required pre-work, never a stage precondition. A disturbance is a *reason* to reach for it, not a trigger that fires it.
 - **A no-op is success.** Concluding the understanding did not move is a valid close; it is what keeps the move bounded rather than thrashing.
@@ -42,4 +42,4 @@ The move is **reflect → verify → re-derive → decide → emit**.
 
 ## Hand-off
 
-Return control to the stage that invoked the move — there is no next edge. A surfaced delta waits in `understanding.md` for a later stage or revision to consume; the move itself stops at the delta.
+Return control to the stage that invoked the move — there is no next edge. A surfaced delta waits in `understanding-shifts.md` for a later stage or revision to consume; the move itself stops at the delta.

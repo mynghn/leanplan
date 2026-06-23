@@ -63,7 +63,7 @@ flowchart LR
 
 **Reading the model.** An **artifact is a node** — a coordinate, a noun; a **stage is an edge** — one axis-flip, the skill/activity, a verb. Each pipeline step flips exactly one axis: `specify` flips World→Machine, `design` flips Contract→Realization, `tasks` flips Product→Process. So the "distance" between two artifacts is the number of axes between them — adjacent pairs differ by one axis (the blurrable, high-traffic seams above) and non-adjacent pairs by two or three (robustly distinct, never blurred). The empty (World, Realization) cell — **World Design**, the non-software means to change the world ("offer a discount") — is a deliberate scope marker: LeanPlan does Machine design, not World design. Progression runs from the (World, Contract) origin (Requirements) to running software past the (Machine, Realization · Process) corner.
 
-Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations. Not shown: the off-pipeline `sharpen` / `revise` moves and their `understanding.md` delta archive (§5.7, §12), which sit beside the pipeline rather than on it.
+Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations. Not shown: the off-pipeline `sharpen` / `revise` moves and their `understanding-shifts.md` delta archive (§5.7, §12), which sit beside the pipeline rather than on it.
 
 Request (pre-Requirements immature problem request) is acknowledged but deferred. Framework currently assumes Requirements is well-formed via human-agent interaction.
 

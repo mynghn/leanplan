@@ -54,7 +54,7 @@ A stop-the-line trigger is an implementation-time *detection*; the edit it impli
 
 On any trigger:
 
-1. **Record the drift as a justification.** Capture what implementation found — the contradiction, the missing verification path, the scope spill — as a `Delta` in `understanding.md`, or hand up an existing one. This is `/revise`'s required input, and it is what makes the correction an auditable update rather than a silent patch.
+1. **Record the drift as a justification.** Capture what implementation found — the contradiction, the missing verification path, the scope spill — as a `Delta` in `understanding-shifts.md`, or hand up an existing one. This is `/revise`'s required input, and it is what makes the correction an auditable update rather than a silent patch.
 2. **Invoke `/revise <KEY>`** (Claude) / **`revise <KEY>`** (Codex) — JIT-load `revise.md` and run the move in-session. It identifies the highest artifact the drift corrects (Requirements / Spec / Design / Tasks), edits it and only its downstream — in place by default, re-deriving only on an anchor-set change — preserving anchor IDs, then re-validates. The walk-up, the downstream re-evaluation, and the one-deployment scope gate (split rather than grow) all live there now.
 3. **Resume implementation** only after `/revise` completes and the feature re-validates.
 

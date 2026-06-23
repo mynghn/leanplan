@@ -26,7 +26,7 @@ SURFACE_FILES = {
 OPTIONAL_FILES = {
     "rationale": "design-rationale.md",
     "research": "research.md",
-    "understanding": "understanding.md",
+    "understanding": "understanding-shifts.md",
     "deferrals": "deferrals.md",
 }
 
@@ -369,7 +369,7 @@ class Validator:
             "Design": {a["target"] for a in self._anchors("design")},
             "Rationale": {a["target"] for a in self._anchors("rationale")},
             "Tasks": {f"T:{t['id']}" for t in self._parse_tasks(self.texts.get("tasks", ""))},
-            # Inbound Understanding#Delta-N citations resolve against understanding.md's
+            # Inbound Understanding#Delta-N citations resolve against understanding-shifts.md's
             # delta anchors — a revised artifact cites the Delta that justified it. Research
             # stays skipped below: it carries descriptive headings, not a resolvable anchor set.
             "Understanding": {a["target"] for a in self._anchors("understanding")},

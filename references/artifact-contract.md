@@ -19,7 +19,7 @@ Archive artifacts, created when useful:
 
 - `design-rationale.md`
 - `research.md`
-- `understanding.md`
+- `understanding-shifts.md`
 - `deferrals.md`
 
 ## Surface / Archive layering
@@ -29,7 +29,7 @@ What loads when — each tier loads only via an explicit trigger from the layer 
 - **Surface** (`requirements.md`, `spec.md`, `design.md`, `tasks.md`) — loaded by default at review + implement time.
 - **`design-rationale.md`** — loaded on challenge to a Design decision (anchor link from Design).
 - **`research.md`** — loaded behind rationale, when raw evidence is needed.
-- **`understanding.md`** — off-pipeline delta log, not a challenge-loading tier; written by `sharpen`, consumed by `revise`.
+- **`understanding-shifts.md`** — off-pipeline delta log, not a challenge-loading tier; written by `sharpen`, consumed by `revise`.
 - **`deferrals.md`** — off-pipeline deferral lane, not a challenge-loading tier; written by any stage's capture hook, drained (JIT-loaded) at its owning stage's entry.
 
 The full tier model (L0/L1/L2 labels, design reasoning) lives in `framework-design.md` §4.
