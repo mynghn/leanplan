@@ -2,7 +2,7 @@
 
 ## Architecture
 
-A new per-feature archive, `deferrals.md`, holds deliberately-deferred decisions as `Defer-N` blocks, each addressed to a later stage. Capture and drain are woven into the *existing* stage procedures (not a new skill): a stage captures off-altitude decisions as it works, and at entry drains the ones addressed to it, re-examining each non-bindingly. The block shape and the capture/drain procedure live in an on-demand companion, `references/deferral.md`; each stage doc carries only a terse hook, so the always-loaded surface stays lean. No deferral is lost: close-out reconciliation plus an advisory `validate.py` check surface an unresolved one. Separately, the adjacent understanding-shift archive `understanding.md` is renamed `deltas.md`, so the open record and the committed record are unmistakable.
+A new per-feature archive, `deferrals.md`, holds deliberately-deferred decisions as `Defer-N` blocks, each addressed to a later stage. Capture and drain are woven into the *existing* stage procedures (not a new skill): a stage captures off-altitude decisions as it works, and at entry drains the ones addressed to it, re-examining each non-bindingly. The block shape and the capture/drain procedure live in an on-demand companion, `references/deferral.md`; each stage doc carries only a terse hook, so the always-loaded surface stays lean. No deferral is lost: close-out reconciliation plus an advisory `validate.py` check surface an unresolved one. Separately, the adjacent understanding-shift archive `understanding.md` is renamed `understanding-shifts.md`, so the open record and the committed record are unmistakable.
 
 ```mermaid
 flowchart TB
