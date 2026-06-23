@@ -15,7 +15,7 @@ flowchart TB
     REC["close-out reconciliation + validate.py advisory check"]
 
     DEF -. JIT-loaded at capture and drain .-> CAP
-    DEF -. .-> DR
+    DEF -.-> DR
     CAP -- append Defer-N to its owning stage --> LANE
     LANE -- JIT-loaded at the owning stage --> DR
     DR -- resolve in place, cite where it landed --> LANE
