@@ -44,7 +44,7 @@ Both operations end where every revise ends — a re-validated committed set. A 
 
 ## Guardrails
 
-- **Justified or nothing.** No Delta, no recordable justification → zero mutation. Recording an *asserted* justification is intake; adjudicating a *contested* one is `/sharpen`.
+- **Justified or nothing.** No Delta, no recordable justification → zero mutation. Recording an *asserted* justification is intake; adjudicating a *contested* one is `/sharpen` (Claude) / `leanplan-sharpen` (Codex).
 - **Downstream-only.** Inject at the corrected artifact; never edit upstream of it. Late detection rooted earlier is injected at the root, not rippled upward.
 - **Preserve, don't overwrite.** Surviving anchor IDs still resolve and are not renumbered; superseded items retire-by-note so prior review and traceability history stays reconstructable.
 - **In-place by default; re-derive only on an anchor-set change.** This is the implementation loop's existing default, generalized to every stage — effort proportional to how far the drift actually reshapes the artifact.

@@ -32,9 +32,9 @@ OPTIONAL_FILES = {
 
 ARTIFACT_ORDER = ("requirements", "spec", "design", "tasks")
 
-# Surface-budget soft caps, in PROSE lines (fenced code/diagrams and blank lines
+# Surface-budget soft caps, in PROSE lines (fenced code/visuals and blank lines
 # excluded — see _prose_line_count). The grounding is distractor/review-fidelity
-# density, which is a prose property; a big Mermaid diagram or inline schema is
+# density, which is a prose property; a big visual block or inline schema is
 # legit reference detail, not bloat, so it must not trip the cap. Advisory
 # backstop for pathological bloat, NOT a budget to fill — a well-formed
 # one-deployment artifact sits far under these. Mirrors the DAG-size guardrail:
@@ -84,6 +84,8 @@ DEFER_OWNER_RE = re.compile(r"\*\*Owning stage\*\*:[^\n]*?\b(requirements|spec|d
 GAP_RE = re.compile(r"\*\*GAP\*\*")
 FRONTMATTER_RE = re.compile(r"^---\s*\n.*?\n---\s*\n", re.DOTALL)
 CODE_FENCE_RE = re.compile(r"```(?P<lang>[A-Za-z0-9_-]*)\n(?P<body>.*?)```", re.DOTALL)
+ASCII_VISUAL_FENCE_LANGS = {"", "ascii", "text", "txt", "plain"}
+ASCII_VISUAL_RE = re.compile(r"(-->|->|<-|<->|=>|<=|\+-[-+]+\+?|\|[^\n]*\|)")
 SCRIPTY_TASK_RE = re.compile(
     r"\b(edit|modify|change|replace)\s+(?:file\s+)?[`'\"]?[^`\n'\"]+[`'\"]?\s+"
     r"(?:at|on)\s+(?:line|L)\s*\d+",
@@ -155,8 +157,8 @@ class Validator:
             self._check_must_usage(filename, text)
 
     def _prose_line_count(self, text: str) -> int:
-        # Review-surface prose only: exclude fenced code/diagram blocks (Mermaid,
-        # schemas, code samples are legit reference detail, not attention-diluting
+        # Review-surface prose only: exclude fenced code/visual blocks (Mermaid,
+        # ASCII art, schemas, code samples are legit reference detail, not attention-diluting
         # prose) and blank lines (whitespace aids review; don't penalize it).
         # Toggle in/out of a fence on any ``` or ~~~ line so unclosed, tilde,
         # indented, or info-stringed fences are all handled (a paired-regex
@@ -185,7 +187,7 @@ class Validator:
                 continue
             msg = (
                 f"{SURFACE_FILES[stage]} has {lines} prose lines (> {cap} soft cap; "
-                "diagrams/code excluded); small-surface guardrail — tighten the prose, "
+                "visuals/code excluded); small-surface guardrail — tighten the prose, "
                 "move depth to Rationale/Research, or split the feature"
             )
             if self.strict:
@@ -265,8 +267,8 @@ class Validator:
         if not text:
             return
         self._require_sections("design.md", text, ("Architecture",))
-        if "```mermaid" not in text:
-            self._error("design.md", "Architecture must include a Mermaid diagram")
+        if not self._has_visual_block(self._section_body(text, "Architecture")):
+            self._error("design.md", "Architecture must include a Mermaid diagram or ASCII visual")
         if not self._anchors("design", kind="D"):
             self._error("design.md", "Design must contain at least one D anchor")
         self._check_design_rationale_consistency()
@@ -420,6 +422,18 @@ class Validator:
         if re.search(r"\b(Spec#(?:B|C)-\d+-[a-z0-9-]+|Design#D-\d+-[a-z0-9-]+)", body):
             return True
         return bool(re.search(r"\*\*Guidelines\*\*:\s*\S|^## Guidelines\b", body, re.MULTILINE))
+
+    def _has_visual_block(self, text: str) -> bool:
+        for fence in CODE_FENCE_RE.finditer(text):
+            lang = fence.group("lang").strip().lower()
+            body = fence.group("body")
+            if lang == "mermaid":
+                return True
+            if lang == "ascii":
+                return True
+            if lang in ASCII_VISUAL_FENCE_LANGS and ASCII_VISUAL_RE.search(body):
+                return True
+        return False
 
     def _warn_ascii_diagram(self, filename: str, text: str) -> None:
         for fence in CODE_FENCE_RE.finditer(text):

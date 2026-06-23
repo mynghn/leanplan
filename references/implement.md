@@ -6,7 +6,7 @@ This doc carries the procedure for the implementation stage — taking one task 
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
-Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them, distinct from the Stop-The-Line / Artifact Update Loop below, which deliberately walks up and edits the affected layer (via `/revise`).
+Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `leanplan-sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them, distinct from the Stop-The-Line / Artifact Update Loop below, which deliberately walks up and edits the affected layer (via `/revise`).
 
 ## Inputs
 
@@ -56,7 +56,7 @@ A stop-the-line trigger is an implementation-time *detection*; the edit it impli
 On any trigger:
 
 1. **Record the drift as a justification.** Capture what implementation found — the contradiction, the missing verification path, the scope spill — as a `Delta` in `understanding-shifts.md`, or hand up an existing one. This is `/revise`'s required input, and it is what makes the correction an auditable update rather than a silent patch.
-2. **Invoke `/revise <KEY>`** (Claude) / **`revise <KEY>`** (Codex) — JIT-load `revise.md` and run the move in-session. It identifies the highest artifact the drift corrects (Requirements / Spec / Design / Tasks), edits it and only its downstream — in place by default, re-deriving only on an anchor-set change — preserving anchor IDs, then re-validates. The walk-up, the downstream re-evaluation, and the one-deployment scope gate (split rather than grow) all live there now.
+2. **Invoke `/revise <KEY>`** (Claude) / **`leanplan-revise <KEY>`** (Codex) — JIT-load `revise.md` and run the move in-session. It identifies the highest artifact the drift corrects (Requirements / Spec / Design / Tasks), edits it and only its downstream — in place by default, re-deriving only on an anchor-set change — preserving anchor IDs, then re-validates. The walk-up, the downstream re-evaluation, and the one-deployment scope gate (split rather than grow) all live there now.
 3. **Resume implementation** only after `/revise` completes and the feature re-validates.
 
 Never patch the current task around an upstream wrongness — that silent drift is exactly what `/revise`'s justified, downstream-only discipline exists to prevent.

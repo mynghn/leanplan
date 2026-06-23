@@ -1,9 +1,9 @@
 ---
 name: leanplan-validate
-description: LeanPlan — validate a LeanPlan feature path in Codex. Use for `leanplan validate <feature-path>` or direct validation requests.
+description: LeanPlan — validate a LeanPlan feature path in Codex. Use for `leanplan-validate <feature-path>` or direct validation requests.
 ---
 
-# leanplan validate
+# leanplan-validate
 
 LeanPlan validation is the utility move that runs the shared structural validator. It does not author an artifact.
 
