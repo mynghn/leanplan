@@ -6,11 +6,11 @@ This doc carries the procedure for the Design stage — choosing the realization
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
-Mid-stage, if a disturbance shifts the understanding, `/leanplan-sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
+Mid-stage, if a disturbance shifts the understanding, `/leanplan-sharpen` (Claude) or `leanplan-sharpen` / `$leanplan sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
 
 ## Inputs
 
-- `<cwd>/docs/features/<KEY>/spec.md` (required). If absent, stop and point user at `specify`.
+- `<cwd>/docs/features/<KEY>/spec.md` (required). If absent, stop and point user at `/leanplan-specify` (Claude) or `leanplan-specify` / `$leanplan specify` (Codex).
 - Current code and repo conventions (inspect before choosing architecture).
 - `<cwd>/docs/features/<KEY>/research.md` (optional, for context reuse).
 
@@ -37,7 +37,7 @@ Mid-stage, if a disturbance shifts the understanding, `/leanplan-sharpen` (Claud
    - an Architecture element,
    - **or** (for trivial realization not worth a Decision block) a directly-cited Tasks Completion criterion that the downstream `plan` skill will add.
    Surface any uncovered items that *no* path realizes. Do not force-create a Decision for a trivial realization that the Tasks layer handles directly.
-8. **Stop** if a design choice changes the Spec contract — Spec is wrong, not just this Design. Record the drift as a `Delta` in `understanding-shifts.md`, then run `/leanplan-revise <KEY>` (Claude) / `revise <KEY>` (Codex) — it injects the fix at Spec and propagates downstream-only (`revise.md`). Don't hand-edit Spec inline.
+8. **Stop** if a design choice changes the Spec contract — Spec is wrong, not just this Design. Record the drift as a `Delta` in `understanding-shifts.md`, then run `/leanplan-revise <KEY>` (Claude) or `leanplan-revise <KEY>` / `$leanplan revise <KEY>` (Codex) — it injects the fix at Spec and propagates downstream-only (`revise.md`). Don't hand-edit Spec inline.
 9. **Self-check** before exit:
    - No work ordering, cross-team request filing, or rollout text (those belong in Tasks).
    - No top-level `## Schemas` or `## Interfaces` section — schemas live inside their Decisions.
@@ -68,4 +68,4 @@ Mid-stage, if a disturbance shifts the understanding, `/leanplan-sharpen` (Claud
 
 ## Hand-off
 
-Next edge: `/leanplan-tasks <KEY>` (Claude) or `tasks <KEY>` (Codex).
+Next edge: `/leanplan-tasks <KEY>` (Claude) or `leanplan-tasks <KEY>` / `$leanplan tasks <KEY>` (Codex).

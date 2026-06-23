@@ -1,6 +1,6 @@
 ---
 name: leanplan
-description: LeanPlan front door for Codex. Use for `$leanplan-<move>`; routes requirements, specify, design, tasks, implement, sharpen, revise, and validate to the matching leanplan-* skill.
+description: LeanPlan front door for Codex. Use for `$leanplan <move>`; routes requirements, specify, design, tasks, implement, sharpen, revise, and validate to the matching leanplan-* skill.
 ---
 
 # LeanPlan Front Door
