@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — non-chezmoi installer for LeanPlan adapters.
+# install.sh — LeanPlan adapter installer.
 #
 # Usage:
 #   bash install.sh                       # install symlinks pointing at this repo's adapters/
@@ -7,8 +7,7 @@
 #
 # Run from inside a checked-out LeanPlan repo. Creates symlinks from the runtime
 # skill registries (~/.claude/skills/<name>, ~/.agents/skills/<name>) into
-# this repo's adapters/ subtree. The chezmoi-managed equivalent is described in
-# README.md.
+# this repo's adapters/ subtree.
 
 set -euo pipefail
 

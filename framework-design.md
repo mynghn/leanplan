@@ -1,6 +1,6 @@
 # LeanPlan — Framework Design
 
-> Source of truth: this repo. Runtime install via chezmoi external (or `install.sh`) places the tree at `~/.local/share/leanplan/`.
+> Source of truth: this repo. The runtime install described in `README.md` uses the LeanPlan checkout location chosen by the user.
 
 **LeanPlan** is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. It is shaped around how LLM agents actually consume and act on planning artifacts — limited useful context, weak long-range attention over verbose instructions, stronger performance with JIT-loaded intent plus current code. Each artifact keeps only the durable state native to its stage. Not adopted from pre-existing SDD frameworks (spec-kit, Kiro, IEEE 830).
 
@@ -150,11 +150,11 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 
 ## 7. Drift guards
 
-The per-artifact drift guards are part of the **structural contract**, owned by `artifact-contract.md` → Drift Guards (skill-prompt-enforced at write time; `validate.py`-checked where regex-detectable). This doc does not restate them; the reasoning for what is enforced versus deliberately dropped is §6 (Ceremonial) and §9 (resolutions).
+The per-artifact drift guards are part of the **structural contract**, owned by `artifact-contract.md` → Drift Guards (skill-prompt-enforced at write time; `leanplan-validate`-checked where regex-detectable). This doc does not restate them; the reasoning for what is enforced versus deliberately dropped is §6 (Ceremonial) and §9 (resolutions).
 
 ## 8. Naming decisions
 
-**This section is the naming authority.** Every name the redesign settles follows from the coordinate model (§2) — given the axes it is predictable and resolves to exactly one element; a few established names (Decision, the Rationale / Research / Understanding archives, Guidelines, the `<KEY>` id) are retained by deliberate fiat, not re-derived (flagged below). The scheme below is the framework's vocabulary; the dedicated framework-wide rename that rolled it out across all ~1,000 sites (artifacts, edges, items, anchors, `validate.py`, fixtures, adapters, every shipped feature) landed via backlog **#34**. The framework now runs in this vocabulary throughout; the **prior vocab** (last column) is retained as the migration record.
+**This section is the naming authority.** Every name the redesign settles follows from the coordinate model (§2) — given the axes it is predictable and resolves to exactly one element; a few established names (Decision, the Rationale / Research / Understanding archives, Guidelines, the `<KEY>` id) are retained by deliberate fiat, not re-derived (flagged below). The scheme below is the framework's vocabulary; the dedicated framework-wide rename that rolled it out across all ~1,000 sites (artifacts, edges, items, anchors, `leanplan-validate`, fixtures, adapters, every shipped feature) landed via backlog **#34**. The framework now runs in this vocabulary throughout; the **prior vocab** (last column) is retained as the migration record.
 
 | Stage (edge · verb) | Artifact (node · noun) | File | Items (anchor) | Prior vocab |
 |---|---|---|---|---|
@@ -186,7 +186,7 @@ Decisions unchanged by the rename:
 - **External blockers promoted to tasks.** When a blocker requires explicit action (filing an infrastructure or database request — a ticket to another team), that request becomes a first-class task in the DAG. Avoids hidden "waiting state". Truly out-of-control external blockers remain as dependency notes.
 - **DAG tracks explicit.** Cross-repo vs. in-repo edges carry different meanings. Mermaid subgraphs + track-prefixed task IDs (P / A / D / I) surface this.
 - **Behavior/Constraint split (formerly "AC split").** Traditional "Acceptance Criteria" conflates episode-verifiable ("when X, Y happens") with continuous constraints ("p99 < 5s"). Split: former → Behavior items (`### B-<N>`); latter → Constraint (`### C-<N>`). Different observability downstream (test vs. SLO dashboard). "AC" (Acceptance Criteria, traditional SDLC term) dropped in favor of B/C — precise, symmetric, unambiguous.
-- **References carry ID + slug (identity, not restatement).** Anchors look like `Spec#B-1-detected-anomaly-published`. ID enables stable citation across slug edits; slug names the reference at-a-glance so agents and humans can orient without JIT-loading every hop. This is the reference's *identity*, not a restatement of its *content* (the item's conditions and constraints). Agent still JIT-loads full content when needed. At the code-migration boundary (principle 8), distill semantic content into commit/comment body; ID becomes an optional in-cycle breadcrumb (e.g., `(B-1)`) that gracefully decays when the surface artifact is discarded.
+- **References carry ID + slug (identity, not restatement).** A citation combines artifact namespace, stable item ID, and readable slug. ID enables stable citation across slug edits; slug names the reference at-a-glance so agents and humans can orient without JIT-loading every hop. This is the reference's *identity*, not a restatement of its *content* (the item's conditions and constraints). Agent still JIT-loads full content when needed. At the code-migration boundary (principle 8), distill semantic content into commit/comment body; ID becomes an optional in-cycle breadcrumb that gracefully decays when the surface artifact is discarded.
 - **Challenge mechanism.** Implementation agent is expected to re-derive against current code at implement time. Prior-authored invalidation triggers are optional hints, not gates. Stop-the-line triggers (enumerated in `implement` skill) include: current code contradicts Design, no verification path exists, dependency missing or invalidated, implementation requires Spec behavior change, invariant unprovable by current test strategy, task scope expands beyond feature boundary. Aligned with the "no flat scripting" principle.
 - **Spec / Design contract line.** Spec carries generic-category tech (the observable contract), Design carries chosen stack + realization (the internal realization). Swapping Kafka → SQS is a Design change, not a Spec rewrite — the cut is observable-outside vs. internal-inside (Contract↔Realization, §2), not a relative WHAT/HOW ladder.
 - **Dependencies are enablers, not gates.** The DAG signals what becomes *possible* when prior tasks land, not rigid order requirements. Implementation agent re-evaluates at task entry. Framing borrowed from OpenSpec.
@@ -283,7 +283,7 @@ Framework ships incrementally; not every phase is required to start.
 | Phase | Addition | Status |
 |---|---|---|
 | 1 | 7 skill prompts (§12) — 1 standalone (`requirements`) + 4 edge + 2 off-pipeline (`sharpen`, `revise`) | ✅ shipped |
-| 2 | Bash validators + scaffolds + git hooks (structural safety nets) | ✅ shipped — `validate.py`, `leanplan-new`, `pre-commit` / `commit-msg` hooks |
+| 2 | Bash validators + scaffolds + git hooks (structural safety nets) | ✅ shipped — `leanplan-validate`, `leanplan-new`, `pre-commit` / `commit-msg` hooks |
 | 3 | CLI wrapper + per-feature progress state files | ◐ partial — `leanplan-new` shipped; progress-state files dropped as informational-only (§14; principle 7) |
 | 4 | Harness-flavored capabilities (see below) | ○ future (post-v1) |
 | 5 | Integrations (LSP, Jira deep-link, CI gates) | ○ future |
@@ -326,5 +326,5 @@ Genuinely open — not yet built or decided:
 
 Resolved / shipped — moved out of "open", kept for provenance:
 
-- **Phase 2 validator** — shipped (§13). `scripts/validate.py` covers anchor integrity, bidirectional coverage, drift regex, duplicate-anchor detection, broken-citation detection, frontmatter discouragement, MUST/MUST NOT misuse, design architecture visual validation, Tasks ASCII DAG detection, checkbox detection, and design ↔ rationale consistency, plus the `**GAP**` ack for deliberately-uncovered Spec items.
+- **Phase 2 validator** — shipped (§13). `scripts/leanplan-validate` covers anchor integrity, bidirectional coverage, drift regex, duplicate-anchor detection, broken-citation detection, frontmatter discouragement, MUST/MUST NOT misuse, design architecture visual validation, Tasks ASCII DAG detection, checkbox detection, and design ↔ rationale consistency, plus the `**GAP**` ack for deliberately-uncovered Spec items.
 - **Cross-session continuity** — decided: no plan-doc artifact. Multi-session implementation rests on harness task-state + git commits carrying distilled WHYs (principles 7–8); no artifact addition planned.

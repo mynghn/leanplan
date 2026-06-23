@@ -169,7 +169,7 @@ do_rename() {
 
     # 3.5 Residual-reference gate — the real "nothing stranded" proof. After the
     #     rewrite, NO boundary-correct docs/features/<old> reference may survive
-    #     anywhere. validate.py can't see this (it resolves only FILE#ANCHOR
+    #     anywhere. leanplan-validate can't see this (it resolves only FILE#ANCHOR
     #     citations, never docs/features/<X> path tokens), so THIS re-scan — not
     #     re-validation — is what proves the rewrite was complete. Same boundary as
     #     step 2, so a sibling sharing the prefix never counts. A survivor is a
@@ -191,11 +191,11 @@ do_rename() {
     # 4. Re-validate the renamed feature (informational, NOT the stranding gate —
     #    that is 3.5). The rewrite + line-1 H1 refresh cannot break the feature's
     #    own validation: citations are key-agnostic FILE#ANCHOR anchors and
-    #    validate.py never inspects the H1. So a non-clean result here is the
+    #    leanplan-validate never inspects the H1. So a non-clean result here is the
     #    feature's pre-existing state (e.g. mid-flight stubs), reported but not a
     #    rename fault — a rename must work at any in-flight stage.
     local out validation_note=""
-    if ! out=$(python3 "$SCRIPT_DIR/validate.py" "$NEW_DIR" 2>&1); then
+    if ! out=$("$SCRIPT_DIR/leanplan-validate" "$NEW_DIR" 2>&1); then
         validation_note="$out"
     fi
 

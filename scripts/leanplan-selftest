@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# leanplan-selftest: verify validate.py catches injected defects against a known-good fixture.
+# leanplan-selftest: verify leanplan-validate catches injected defects against a known-good fixture.
 #
 # Fixture defaults to the bundled valid/ fixture; override via
 # LEANPLAN_FIXTURE=<path-to-known-good-feature-dir>. Scenarios run in ephemeral
@@ -12,7 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEFAULT_FIXTURE="$(cd "$SCRIPT_DIR/.." && pwd)/fixtures/valid"
 
 FIXTURE="${LEANPLAN_FIXTURE:-$DEFAULT_FIXTURE}"
-VALIDATE="${LEANPLAN_VALIDATE:-$SCRIPT_DIR/validate.py}"
+VALIDATE="${LEANPLAN_VALIDATE:-$SCRIPT_DIR/leanplan-validate}"
 SCAN="${LEANPLAN_SCAN:-$SCRIPT_DIR/scan-leaks}"
 LEANPLAN_NEW="${LEANPLAN_NEW:-$SCRIPT_DIR/leanplan-new}"
 
@@ -20,11 +20,11 @@ if [ ! -d "$FIXTURE" ]; then
     echo "error: fixture not found at $FIXTURE (set LEANPLAN_FIXTURE to override)" >&2
     exit 2
 fi
-if [ ! -x "$VALIDATE" ] && ! [ -f "$VALIDATE" ]; then
-    echo "error: validate.py not found at $VALIDATE" >&2
+if [ ! -x "$VALIDATE" ]; then
+    echo "error: leanplan-validate not found at $VALIDATE" >&2
     exit 2
 fi
-if [ ! -x "$SCAN" ] && ! [ -f "$SCAN" ]; then
+if [ ! -x "$SCAN" ]; then
     echo "error: scan-leaks not found at $SCAN" >&2
     exit 2
 fi
@@ -57,7 +57,7 @@ assert_case() {
 
     local out ec
     # shellcheck disable=SC2086
-    out=$(python3 "$VALIDATE" "$case_dir" $extra_flags 2>&1)
+    out=$("$VALIDATE" "$case_dir" $extra_flags 2>&1)
     ec=$?
 
     if [ "$ec" -eq "$expected_ec" ] && printf '%s' "$out" | grep -qF -- "$expected_stderr_substr"; then
@@ -73,7 +73,7 @@ assert_case() {
 
 # scan_case: write CONTENT to a temp non-artifact file, run scan-leaks over it,
 # and check exit code + an expected output substring. The leak detector's
-# regression backstop — assert_case's role, for scan-leaks instead of validate.py.
+# regression backstop — assert_case's role, for scan-leaks instead of leanplan-validate.
 scan_case() {
     local label="$1" content="$2" expected_ec="$3" expected_substr="$4"
     local extra_flags="${5:-}"
@@ -83,7 +83,7 @@ scan_case() {
 
     local out ec
     # shellcheck disable=SC2086
-    out=$(python3 "$SCAN" "$f" $extra_flags 2>&1)
+    out=$("$SCAN" "$f" $extra_flags 2>&1)
     ec=$?
 
     if [ "$ec" -eq "$expected_ec" ] && printf '%s' "$out" | grep -qF -- "$expected_substr"; then
@@ -101,7 +101,7 @@ scan_case() {
 # docs/features/<old> from the fixture (H1 set to match the key so the H1 refresh
 # has work), runs an optional SETUP_FN against the repo root (siblings, refs), runs
 # the rename, then checks exit code + a PREDICATE eval'd at the repo root. This is
-# do_rename's only automated coverage — assert_case/scan_case drive validate.py /
+# do_rename's only automated coverage — assert_case/scan_case drive leanplan-validate /
 # scan-leaks, so the move/rewrite/H1/residual-gate/rollback/guards path would
 # otherwise regress with the suite still green.
 rename_case() {
@@ -451,7 +451,7 @@ assert_case "design links absent rationale"    1 "Design links to missing ration
 
 # scan-leaks defect injection: round-scoped keys leaked into a non-artifact file
 # must be caught — defect-injection coverage for the per-surface leak backstop.
-# Exit semantics mirror validate.py —
+# Exit semantics mirror leanplan-validate —
 # a leak warns (exit 0) by default and escalates to error (exit 1) under --strict;
 # the grey zone (feature ids, readable scope labels, bare numbers) stays clean,
 # and the inline directive suppresses even under --strict.
@@ -474,7 +474,7 @@ scan_case "scan: citation Deferrals# leak (strict)"    'see Deferrals#Defer-1-ca
 
 # --text is the commit-msg hook's only input path; exercise it, the exit-2 input
 # error contract, and the anchor-inside-citation dedup directly.
-out=$(python3 "$SCAN" --strict --text 'satisfies C-1 here' 2>&1); ec=$?
+out=$("$SCAN" --strict --text 'satisfies C-1 here' 2>&1); ec=$?
 if [ "$ec" -eq 1 ] && printf '%s' "$out" | grep -qF -- "C-1"; then
     printf 'PASS %s\n' "scan: --text mode leak (strict)"; pass=$((pass + 1))
 else
@@ -482,7 +482,7 @@ else
         "scan: --text mode leak (strict)" "$ec" "$out"; fail=$((fail + 1))
 fi
 
-out=$(python3 "$SCAN" "$TMP/nonexistent-$$.txt" 2>&1); ec=$?
+out=$("$SCAN" "$TMP/nonexistent-$$.txt" 2>&1); ec=$?
 if [ "$ec" -eq 2 ]; then
     printf 'PASS %s\n' "scan: missing file -> exit 2"; pass=$((pass + 1))
 else
@@ -490,7 +490,7 @@ else
         "scan: missing file -> exit 2" "$ec" "$out"; fail=$((fail + 1))
 fi
 
-out=$(python3 "$SCAN" --json --text 'see Spec#C-1-durable here' 2>&1)
+out=$("$SCAN" --json --text 'see Spec#C-1-durable here' 2>&1)
 ntok=$(printf '%s' "$out" | grep -c '"token"')
 if [ "$ntok" -eq 1 ]; then
     printf 'PASS %s\n' "scan: citation dedup (single token)"; pass=$((pass + 1))
