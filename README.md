@@ -8,6 +8,8 @@ LeanPlan defines five stages — **Requirements → Spec → Design → Tasks �
 
 The full framework design is in [`framework-design.md`](./framework-design.md).
 
+New to LeanPlan? Start with the human-facing [`USER_GUIDE.md`](./USER_GUIDE.md) for the first-use path and workflow orientation.
+
 ## Layout
 
 ```
