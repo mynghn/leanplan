@@ -22,7 +22,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 *Default flow, not a rigid script — re-derive it against the actual Design. Load-bearing (don't skip or reorder): the bidirectional verification (step 6), the one-deployment guardrail (step 7), the self-check (step 8).*
 
-1. **Load** artifact contract + Spec + Design.
+1. **Load** artifact contract + Spec + Design. Then **drain deferrals** (load-bearing): if `deferrals.md` exists, surface each unresolved `Defer-<N>` addressed to Tasks and re-examine it against the current option space — non-binding, re-derive not replay; resolve in place (`references/deferral.md`).
 2. **Compose doc-level Guidelines (conditional)** — only when feature-wide work-stance rules genuinely apply (base branch, canary sequence, cross-team coordination). Skip otherwise.
 3. **Identify tracks** — group work by a coordination-relevant axis (common: repo, or protocol-vs-service, or infra-vs-app). Each track becomes a Mermaid subgraph + a prefix letter (e.g. `P` = protocol, `A` = api, `D` = data, `I` = infra). Tracks are navigational aid for humans; the implementation agent doesn't consume them as a formal concept.
 4. **Author `T: <id>` cards**, each with:
@@ -52,6 +52,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
   - ✅ healthy in Goal: *"BFF facade for ListMyCoupons — thin delegation to D2 (`Design#D-13-cross-domain-wrapping`); itinerary-aware logic stays in socar-server (`Spec#C-2-shared-domain-policy`)."*
   - ✅ healthy in Completion: *"(a) authed + valid spec → response with `is_available` accurate; (b) anon → UNAUTHENTICATED; (c) parity with app channel for identical input."*
   - ❌ drift in Goal: *"Request mapping: `web.{a, b, c}` → `domain.{a', b', c'}`; response mapping: `repeated PriceItem price_items=1 ...`; controller orchestration: `resolve(ctx) → checkPaymentCard → checkApprovedDriver → previewV2`."* — push these to Design.
+- **Park a genuine deferral; don't discard it.** A real cross-stage decision that surfaces here goes into `deferrals.md` as a `Defer-<N>` addressed to its owning stage, rather than being discarded — opt-in planner judgment; procedure in `references/deferral.md`.
 - **Conclusion-first Goal.** Lead with the outcome this task achieves; the how and the anchors follow. The Goal's bottom line is graspable from its first clause (`artifact-contract.md` → Prose Style).
   - ✅ *"Publish detected anomalies on detection (`Spec#B-1-detected-anomaly-published`) — direct publisher per `Design#D-2-direct-kafka-publisher`."* — outcome first, anchors trailing.
   - ❌ *"Since the detector runs in-process and the team wants no new component, this task adds a direct Kafka publisher (`Design#D-2-direct-kafka-publisher`) to publish anomalies on detection (`Spec#B-1-detected-anomaly-published`)."* — the outcome lands last, after the rationale.

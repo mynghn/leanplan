@@ -21,7 +21,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 *Default flow, not a rigid script — re-derive it against the actual input. Load-bearing (don't skip or reorder): allocate-before-write (step 1), the sparse-arrival judgment (step 3), the Problem-framing confirmation (step 4), the self-check (step 6).*
 
-1. **Allocate the feature.** Parse `$ARGUMENTS` and pick the id form, then let `leanplan-new` create the dir (it is the single allocator — never `mkdir` yourself). It prints the resolved `docs/features/<id>` path on stdout — **capture that path** and use it for every subsequent write; if it exits non-zero, stop (don't write).
+1. **Allocate the feature.** Parse `$ARGUMENTS` and pick the id form, then let `leanplan-new` create the dir (it is the single allocator — never `mkdir` yourself). It prints the resolved `docs/features/<id>` path on stdout — **capture that path** and use it for every subsequent write; if it exits non-zero, stop (don't write). Then, when a `deferrals.md` already exists for the feature (a later stage or a revise parked a Requirements-level decision), **drain deferrals** (load-bearing): surface each unresolved `Defer-<N>` addressed to Requirements and re-examine it against the current option space — non-binding, re-derive not replay; resolve in place (`references/deferral.md`).
    - **Revising** — if `$ARGUMENTS` already names an existing dir under `docs/features/` (any form), operate on `docs/features/<that-id>/` directly; skip allocation.
    - **Tracker key** — if `$ARGUMENTS` is a Jira-style key (`[A-Z]+-\d+`) and the user wants the feature anchored to it, run `leanplan-new "<KEY>"`; the dir is the bare key (no slug). Still fetch the issue for problem context (step 2). If instead the key is only context (not the identity), treat it as upstream and allocate by title below.
    - **Date** — if the user wants a date-keyed feature, confirm a short kebab slug, then run `leanplan-new --date "<slug-or-title>"` (today's `YYMMDD`; pass `--date=YYMMDD` to override).
@@ -54,6 +54,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 ## Guardrails
 
 - **No implementation choices.** No specific stack (Kafka, Redis, Postgres, gRPC), no internal architecture, no chosen pattern. Domain-vocabulary channels — "admin tool", "partner API", "batch integration" — are fine; they name channels, not choices.
+- **Park a genuine deferral; don't discard it.** A real cross-stage decision that surfaces here goes into `deferrals.md` as a `Defer-<N>` addressed to its owning stage, rather than being discarded — opt-in planner judgment; procedure in `references/deferral.md`.
 - **Outcome folds the success signal.** Desired future state + observable signal in the same section. Don't split into a separate "Success metric" subsection.
 - **User-story bullets where it fits.** When an outcome describes a user-visible behavior, write it as `**short title** — one-line summary. detail.` so reviewers can scan the feature shape. Don't twist system policies into fake user stories — they belong under `## Guarantee`.
 - **Conditional sections must earn their place.** Non-goals only when scope is ambiguous; Upstream only when refs exist. Otherwise omit — empty sections dilute the review surface.
