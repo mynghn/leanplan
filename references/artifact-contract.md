@@ -43,9 +43,9 @@ The full tier model (L0/L1/L2 labels, design reasoning) lives in `framework-desi
 | Design | Internal realization — the finished-system shape |
 | Design Rationale | Decision WHY |
 | Research | Evidence |
-| Understanding | Understanding deltas — mid-round re-derivation log |
+| Understanding Shifts | Understanding deltas — mid-round re-derivation log |
 | Deferrals | Deferred cross-stage decisions — open items addressed forward to their owning stage |
-| Tasks (`tasks.md`) | Time-ordered work navigation |
+| Tasks | Time-ordered work navigation |
 
 ## Anchors
 
@@ -66,7 +66,7 @@ Citation forms:
 - `Spec#C-1-mission-fail-safe`
 - `Design#D-2-direct-kafka-publisher`
 - `Tasks#T:A1`
-- `Understanding#Delta-1-premise-falsified`
+- `UnderstandingShifts#Delta-1-premise-falsified`
 - `Deferrals#Defer-1-cache-strategy`
 
 ## Required Shapes
@@ -103,7 +103,7 @@ Use descriptive topic headings. Store evidence only. Interpretation belongs in r
 
 ### Understanding Shifts
 
-Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `Spec#…` / `Design#…` / `Tasks#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `Spec#` / `Design#` / `Tasks#` citations are resolution-checked, and *inbound* `Understanding#Delta-N-slug` citations now resolve against these `Delta-<N>` anchors too — a revised artifact cites the Delta that justified it. Research# citations stay recorded-for-retrieval only: Research carries descriptive headings, not a resolvable anchor set.
+Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `Spec#…` / `Design#…` / `Tasks#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `Spec#` / `Design#` / `Tasks#` citations are resolution-checked, and *inbound* `UnderstandingShifts#Delta-N-slug` citations now resolve against these `Delta-<N>` anchors too — a revised artifact cites the Delta that justified it. Research# citations stay recorded-for-retrieval only: Research carries descriptive headings, not a resolvable anchor set.
 
 ### Deferrals
 
