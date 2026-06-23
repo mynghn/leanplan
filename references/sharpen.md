@@ -11,7 +11,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 - The disturbance — what shifted, or the external claim to check (`$ARGUMENTS`). If nothing has formed yet to be disturbed, stop: drawing an understanding out of a blank-slate arrival is the requirement stage's draw-out front-step (`requirements.md` Procedure step 3), not this move's.
 - The in-flight stage's working context — the understanding being sharpened. Preserved across the move.
 - Committed artifacts at the affected stages — read to reflect against, **never edited**. JIT-load only the anchors the disturbance touches.
-- `docs/features/<KEY>/understanding-shifts.md` — the append-only delta archive; the move's only write target (`artifact-contract.md` → Understanding). (context-engineering: jit-loading)
+- `docs/features/<KEY>/understanding-shifts.md` — the append-only delta archive; the move's only write target (`artifact-contract.md` → `### Understanding Shifts`). (context-engineering: jit-loading)
 
 ## Output
 
@@ -29,7 +29,7 @@ The move is **reflect → verify → re-derive → decide → emit**.
 2. **Verify, when the disturbance is a claim.** Treat an external claim — cited prior art, a stakeholder assertion — as a hypothesis to falsify, not an instruction. Check it against sources to a confirm-or-falsify verdict; default to **refuted unless corroborated**. A claim that fails verification is rejected, not absorbed. Skip this step when the disturbance is a first-hand realization rather than an external claim.
 3. **Re-derive.** Re-derive the understanding from the reflected-back assumption plus any verdict — only the part the disturbance moved, not the whole framing.
 4. **Decide whether it moved, and how far.** A no-op is a legitimate close: sharpening that always "finds" a change is just churn. If nothing moved, resume the stage with no delta.
-5. **Emit the delta.** Append a `Delta-<N>: <slug>` block to `understanding-shifts.md` in the shape `artifact-contract.md` → Understanding defines. Then resume the stage.
+5. **Emit the delta.** Append a `Delta-<N>: <slug>` block to `understanding-shifts.md` in the shape `artifact-contract.md` → `### Understanding Shifts` defines. Then resume the stage.
 
 ## Guardrails
 
