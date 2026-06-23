@@ -6,7 +6,7 @@
 #   bash install.sh --uninstall           # remove the LeanPlan symlinks
 #
 # Run from inside a checked-out LeanPlan repo. Creates symlinks from the runtime
-# skill registries (~/.claude/skills/<name>, ~/.agents/skills/leanplan) into
+# skill registries (~/.claude/skills/<name>, ~/.agents/skills/<name>) into
 # this repo's adapters/ subtree. The chezmoi-managed equivalent is described in
 # README.md.
 
@@ -16,7 +16,8 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
 CODEX_SKILLS_DIR="$HOME/.agents/skills"
 
-CLAUDE_SKILLS=(requirement specify design plan impl sharpen revise)
+CLAUDE_SKILLS=(requirements specify design tasks implement sharpen revise)
+CODEX_SKILLS=(leanplan leanplan-requirements leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-sharpen leanplan-revise leanplan-validate)
 
 action="${1:-install}"
 
@@ -30,8 +31,10 @@ install_symlinks() {
         ln -sfn "$REPO_DIR/adapters/claude/$s" "$CLAUDE_SKILLS_DIR/$s"
         echo "linked $CLAUDE_SKILLS_DIR/$s -> $REPO_DIR/adapters/claude/$s"
     done
-    ln -sfn "$REPO_DIR/adapters/codex/leanplan" "$CODEX_SKILLS_DIR/leanplan"
-    echo "linked $CODEX_SKILLS_DIR/leanplan -> $REPO_DIR/adapters/codex/leanplan"
+    for s in "${CODEX_SKILLS[@]}"; do
+        ln -sfn "$REPO_DIR/adapters/codex/$s" "$CODEX_SKILLS_DIR/$s"
+        echo "linked $CODEX_SKILLS_DIR/$s -> $REPO_DIR/adapters/codex/$s"
+    done
 }
 
 uninstall_symlinks() {
@@ -42,11 +45,13 @@ uninstall_symlinks() {
             echo "removed $link"
         fi
     done
-    link="$CODEX_SKILLS_DIR/leanplan"
-    if [ -L "$link" ]; then
-        rm "$link"
-        echo "removed $link"
-    fi
+    for s in "${CODEX_SKILLS[@]}"; do
+        link="$CODEX_SKILLS_DIR/$s"
+        if [ -L "$link" ]; then
+            rm "$link"
+            echo "removed $link"
+        fi
+    done
 }
 
 case "$action" in
