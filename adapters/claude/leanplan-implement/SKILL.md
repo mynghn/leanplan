@@ -8,12 +8,12 @@ allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(git *
 # leanplan implement
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the implementation stage (one task card → landed code).
 
-Resolve `<LEANPLAN_ROOT>` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/claude/<skill>/`. Substitute that absolute path wherever commands below use `<LEANPLAN_ROOT>`.
+Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/claude/<skill>/`. Later `references/...` and `scripts/...` paths are relative to `LP_ROOT`; when running a command, use the shell form `"$LP_ROOT/..."`.
 
-Load `<LEANPLAN_ROOT>/references/implement.md` — it is authoritative for the procedure (the 6 stop-the-line triggers, artifact update loop walk-up, distillation hierarchy types → tests → annotations → commit → PR body → inline, squash-safe PR-body promotion rule). Load these on demand, not up front (context-engineering: jit-loading):
+Load `references/implement.md` from `LP_ROOT` — it is authoritative for the procedure (the 6 stop-the-line triggers, artifact update loop walk-up, distillation hierarchy types → tests → annotations → commit → PR body → inline, squash-safe PR-body promotion rule). Load these on demand, not up front (context-engineering: jit-loading):
 
-- `<LEANPLAN_ROOT>/references/artifact-contract.md` — **before writing or editing an artifact's structure or anchors** (e.g. in the artifact update loop): anchor patterns, traceability rules.
-- `<LEANPLAN_ROOT>/references/philosophy.md` — **when a principle's intent or grounding is in question**: framework principles shaping what "good" looks like.
+- `references/artifact-contract.md` from `LP_ROOT` — **before writing or editing an artifact's structure or anchors** (e.g. in the artifact update loop): anchor patterns, traceability rules.
+- `references/philosophy.md` from `LP_ROOT` — **when a principle's intent or grounding is in question**: framework principles shaping what "good" looks like.
 
 Runtime glue:
 
