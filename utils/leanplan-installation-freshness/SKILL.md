@@ -1,6 +1,6 @@
 ---
 name: leanplan-installation-freshness
-description: LeanPlan — check and, after confirmation, update freshness of the installed LeanPlan checkout and its Claude/Codex skill symlinks. Use after a LeanPlan main-branch update, when installed `leanplan-*` skills may be stale, or to confirm the local installation is current. LeanPlan is install-bootstrapped, not a chezmoi external; update via git pull + re-run install.sh.
+description: LeanPlan — check and, after confirmation, update freshness of the installed LeanPlan checkout and its Claude/Codex skill symlinks. Use after a LeanPlan main-branch update, when installed `leanplan-*` skills may be stale, or to confirm the local installation is current. LeanPlan is install-bootstrapped; update via git pull + re-run install.sh.
 argument-hint: "[check | update]"
 ---
 
