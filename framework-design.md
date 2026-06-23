@@ -126,7 +126,7 @@ These in-artifact rules are the **structural contract**, owned by `artifact-cont
 | Declarative present tense; MUST / MUST NOT reserved for true invariants | `artifact-contract.md` → Drift Guards |
 | Conclusion-first prose; lists over dense paragraphs | `artifact-contract.md` → Prose Style (context-engineering: lost-in-the-middle, distractor-sensitivity) |
 | Surface budget (advisory prose caps; lossless archive) | `artifact-contract.md` → Surface Budget (context-engineering: context-rot, effective-vs-advertised-context, distractor-sensitivity) |
-| Mermaid for diagrams (no ASCII fallback) | `artifact-contract.md` → Drift Guards |
+| Design visuals use Mermaid or fenced ASCII art; Tasks DAGs stay Mermaid | `artifact-contract.md` → Drift Guards |
 | Bidirectional verification mapping (Spec B/C ↔ Tasks) | `artifact-contract.md` → Traceability |
 
 Native to this doc — design-level authoring guidance not in the contract:
@@ -264,7 +264,7 @@ Skills map to **edges** (transformations between stages), not to nodes — with 
 |---|---|---|---|
 | `requirements` | (standalone) → Requirements | Requirements | Author Requirements interactively — Problem, Outcome (desired future state + success signal folded), conditional Non-goals and Upstream. Problem-framed, no implementation choices. Currently a standalone skill; future: may become a Request → Requirements edge (`distill`) when naive problem writings are formalized as Request input (§14). |
 | `specify` | Requirements → Spec | Spec | Derive the observable contract (Behavior items + conditional Constraints, Non-goals). Generic-category abstraction only. Headers `## Behavior` / `## Constraint`; items `### B-<N>: <slug>` and `### C-<N>: <slug>`. Enforce "what a spec is NOT" drift guard. Split episode-verifiable (Behavior) from continuous (Constraints). Research activity on Requirements → Spec edge; archive notable findings as Research entries when depth is worth preserving. |
-| `design` | Spec → Design | Design (+ Rationale, Research as needed) | Architecture diagram (Mermaid) + Decisions (`## D-<N>: <slug>`). Anchor non-trivial decisions to Rationale. Every Spec B + C is realized by ≥ 1 Decision, Architecture element, or (for trivial realization) a directly-cited Tasks Completion criterion — not only Decisions. Write Rationale entries for non-trivial decisions and Research entries along the Spec → Design research activity. Drift guard: chosen realization only; no work ordering or ops process text. |
+| `design` | Spec → Design | Design (+ Rationale, Research as needed) | Architecture visual material (Mermaid or fenced ASCII art) + Decisions (`## D-<N>: <slug>`). Anchor non-trivial decisions to Rationale. Every Spec B + C is realized by ≥ 1 Decision, Architecture element, or (for trivial realization) a directly-cited Tasks Completion criterion — not only Decisions. Write Rationale entries for non-trivial decisions and Research entries along the Spec → Design research activity. Drift guard: chosen realization only; no work ordering or ops process text. |
 | `tasks` | Design → Tasks | Tasks | DAG with track subgraphs + prefixed IDs. Task cards with Goal (WHAT + HOW + inline anchors), Repo, Completion, Dependencies, conditional Guidelines. Verify bidirectional mapping: every Spec B + C maps to ≥ 1 completion criterion AND every Tasks cites ≥ 1 Spec B / C / Design Decision / doc Guideline reason. |
 | `implement` | Tasks → code | working software | Load task refs, inspect current code, re-reason against current reality, challenge prior Design when contradicted (stop-the-line *triggers* detect the drift and delegate the walk-up/edit to `/revise` per §9 / §12), verify completion criteria, distill WHYs to code per §10 (types > tests > annotations > commit messages > inline comments; change rationale → PR body for squash-safety). |
 
@@ -326,5 +326,5 @@ Genuinely open — not yet built or decided:
 
 Resolved / shipped — moved out of "open", kept for provenance:
 
-- **Phase 2 validator** — shipped (§13). `scripts/validate.py` covers anchor integrity, bidirectional coverage, drift regex, duplicate-anchor detection, broken-citation detection, frontmatter discouragement, MUST/MUST NOT misuse, ASCII diagram detection, checkbox detection, and design ↔ rationale consistency, plus the `**GAP**` ack for deliberately-uncovered Spec items.
+- **Phase 2 validator** — shipped (§13). `scripts/validate.py` covers anchor integrity, bidirectional coverage, drift regex, duplicate-anchor detection, broken-citation detection, frontmatter discouragement, MUST/MUST NOT misuse, design architecture visual validation, Tasks ASCII DAG detection, checkbox detection, and design ↔ rationale consistency, plus the `**GAP**` ack for deliberately-uncovered Spec items.
 - **Cross-session continuity** — decided: no plan-doc artifact. Multi-session implementation rests on harness task-state + git commits carrying distilled WHYs (principles 7–8); no artifact addition planned.

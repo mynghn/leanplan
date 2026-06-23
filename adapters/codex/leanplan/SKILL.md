@@ -1,6 +1,6 @@
 ---
 name: leanplan
-description: LeanPlan front door for Codex. Use for `$leanplan-<move>`; routes requirements, specify, design, tasks, implement, sharpen, revise, and validate to the matching leanplan-* skill.
+description: LeanPlan front door for Codex. Use for `$leanplan <move>`; routes requirements, specify, design, tasks, implement, sharpen, revise, and validate to the matching leanplan-* skill.
 ---
 
 # LeanPlan Front Door
@@ -19,7 +19,7 @@ Parse the first argument, then read and follow the matching move wrapper. The ta
 | `tasks <KEY>` | `~/.local/share/leanplan/adapters/codex/leanplan-tasks/SKILL.md` |
 | `implement <KEY> <task-id>` | `~/.local/share/leanplan/adapters/codex/leanplan-implement/SKILL.md` |
 | `sharpen <what-shifted>` | `~/.local/share/leanplan/adapters/codex/leanplan-sharpen/SKILL.md` |
-| `revise <KEY> [Delta-N | what drifted]` | `~/.local/share/leanplan/adapters/codex/leanplan-revise/SKILL.md` |
+| `revise <KEY> [Delta-N \| what drifted]` | `~/.local/share/leanplan/adapters/codex/leanplan-revise/SKILL.md` |
 | `validate <feature-path>` | `~/.local/share/leanplan/adapters/codex/leanplan-validate/SKILL.md` |
 
 If the requested move is missing or ambiguous, ask for one of the move names above. Do not infer a stage and proceed silently.

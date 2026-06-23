@@ -89,7 +89,7 @@ Episode-triggered behavior belongs in B. Continuous properties belong in C.
 
 ### Design
 
-- `## Architecture` with a Mermaid diagram
+- `## Architecture` with at least one visual block: Mermaid diagram or fenced ASCII art
 - One `D-<N>: <slug>` block per material choice
 - Non-trivial decisions link to a matching block in `design-rationale.md`
 
@@ -172,7 +172,7 @@ Why: this serves the small-surface and LLM-aware principles — buried ledes and
 The surface artifacts (Requirements, Spec, Design, Tasks) are designed for **review fidelity, not completeness** — a lean surface is reviewed carefully; a verbose one gets rubber-stamped, and its over-specific detail leaks into implementation. Keep each surface tight; push depth into the archives (Rationale, Research) or split an oversized feature.
 
 - **Direction, not a hard cap.** Tightness is the target; the caps below are an advisory backstop for *pathological* bloat, not a budget to fill. A well-formed one-deployment artifact normally sits far under them.
-- **Soft per-stage caps, in *prose* lines** (advisory — `validate.py` warns above them, `--strict` escalates to error, `--allow-large` suppresses, mirroring the DAG-size guardrail): Requirements ~90, Spec ~110, Design ~160, Tasks ~220. **Mermaid diagrams, fenced code/schemas, and blank lines are excluded** — they are legit reference detail, not attention-diluting prose, and a big architecture diagram must not read as bloat. This list is the source of truth; `validate.py`'s `SURFACE_SOFT_CAP` mirrors it — keep the two in sync. A breach is a prompt to ask *"what prose belongs in an archive, or should this feature split?"* — not an automatic failure.
+- **Soft per-stage caps, in *prose* lines** (advisory — `validate.py` warns above them, `--strict` escalates to error, `--allow-large` suppresses, mirroring the DAG-size guardrail): Requirements ~90, Spec ~110, Design ~160, Tasks ~220. **Visual blocks (Mermaid diagrams or ASCII art), fenced code/schemas, and blank lines are excluded** — they are legit reference detail, not attention-diluting prose, and a big architecture diagram must not read as bloat. This list is the source of truth; `validate.py`'s `SURFACE_SOFT_CAP` mirrors it — keep the two in sync. A breach is a prompt to ask *"what prose belongs in an archive, or should this feature split?"* — not an automatic failure.
 - **Archive is lossless.** Moving reasoning to Rationale or evidence to Research removes it from the *review surface*, not from existence — it stays JIT-loadable on challenge. **Lean ≠ information loss.** This is the contract that lets the surface stay small without the team fearing lost context.
 - **The framework's own references apply this reflexively.** This budget caps user surface artifacts; the stage references themselves (`requirements.md` … `implement.md`) follow the same surface/tier discipline — stance, procedure, guardrails, and author-time calibration (worked examples, templates) stay always-loaded, while step-scoped lookup detail defers to an on-demand companion loaded at its consuming step. Advisory, not a validator-enforced gate.
 
@@ -186,5 +186,5 @@ Grounded in the small-surface and LLM-aware principles (`philosophy.md` P3). The
 - Tasks has no line-by-line edit script. Implementation agents re-derive against current code at task entry.
 - **Tasks fields carry process specifics, not tech-realization specifics (the Product↔Process cut, `framework-design.md` §2).** Plan cards describe the *work* (Goal: what outcome / Completion: how to verify / Guidelines: work-stance). Tech-realization details — proto/response field mappings, controller orchestration sequences, method signatures, code paths, schemas — belong in a Design `D-<N>` block. The task card anchors via `Design#D-<N>-<slug>`; it does not restate the Decision's content. Symmetric guard with the Design row above. Detection cue: a Goal bullet that answers "after the work lands, the system looks like X" is drift — push X to Design; keep "this task achieves Y, verified by Z" in the card.
 - MUST and MUST NOT are reserved for true invariants.
-- Mermaid is used for diagrams; no ASCII fallback.
+- Design visuals may be Mermaid diagrams or fenced ASCII art. Prefer a visual companion when prose would otherwise blur relationships, boundaries, sequences, state, or mappings; use as many visuals as clarify distinct structures. Tasks DAGs stay Mermaid unless the Tasks contract changes.
 - Frontmatter is discouraged on plan artifacts; the artifact type is implied by filename.
