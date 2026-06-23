@@ -57,6 +57,7 @@ Each *downstream* stage's entry step ("Load …") — Spec, Design, Tasks — is
 - **What** load `deferrals.md`; surface the unresolved `Defer-N` addressed to this stage; re-examine each against the stage's *full current option space*; resolve in place (D-2).
 - **High freedom — the anti-pin guarantee.** The drain is open-field prose ("re-examine against current options"), never a low-freedom "apply the deferred option" script — a rigid drain *would be* the pinning. Rationale at [design-rationale.md#D-4-drain-by-re-derivation-at-stage-entry].
 - **Load-bearing** the consultation is observable and surfaced by the advisory check (D-5), per Feature M's load-bearing-consultation pattern — a skipped drain is catchable even though the decision it prompts is free.
+- **Enforced at the plan→implement boundary.** A skipped drain is caught where it matters: the Tasks self-check and an `implement` stop-the-line trigger flag any `Defer-N` left unresolved once planning is complete — Tasks being the last planning stage, nothing legitimately remains open. This is the "surfaced when the round closes" half of `Spec#B-3-undrained-deferral-flagged-at-close-out`.
 
 ## D-5: no-loss-via-advisory-check
 

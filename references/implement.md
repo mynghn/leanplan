@@ -47,6 +47,7 @@ If any of the following surfaces at task entry or mid-implementation, stop and r
 4. **Implementation would require changing externally-observable behavior.** Walk up to Spec; possibly Requirements.
 5. **A Constraint is unprovable by the current test/monitor strategy.** Add a probe mechanism (test harness, monitor, SLO) at Tasks level, or push to a continuous-verification mechanism via Design.
 6. **Task scope expands beyond the feature boundary.** One-deployment guardrail — pause and surface the split question.
+7. **A deferral was stranded by planning.** A `Defer-N` in `deferrals.md` addressed to a planning stage is still unresolved (no `(resolved -> …)` marker) though planning is complete — a parked decision was never drained. Check once, at first task entry (`validate.py` flags it). Drain it at its owning stage — re-examine against the now-current options and resolve in place, routing through `/revise` when the resolution edits a committed artifact — before building on the plan.
 
 ## Artifact Update Loop
 

@@ -70,10 +70,11 @@ Tracks: **F** registers the lane's structure; **B** weaves capture/drain into th
 ## T: B3
 
 - **Goal**: Extend each *downstream* stage's entry ("Load …") step — Spec, Design, Tasks — to drain the deferrals addressed to it: load `deferrals.md`, surface the unresolved `Defer-N` for this stage, re-examine each against the full current option space, and resolve in place (`Spec#B-2-deferrals-surfaced-at-owning-stage`, `Spec#C-3-surfaced-deferral-is-non-binding`, `Design#D-4-drain-by-re-derivation-at-stage-entry`). Requirements is first — nothing is addressed back to it. The consultation is load-bearing; the decision it prompts is free.
-- **Repo**: leanplan — `references/{specify,design,tasks}.md`.
+- **Repo**: leanplan — `references/{specify,design,tasks,implement}.md`.
 - **Completion**:
   - Each downstream stage's load step instructs the drain + re-examination as a load-bearing step.
   - The drain wording is re-derive-not-apply — no "apply the deferred option" phrasing anywhere (a low-freedom drain would re-introduce pinning).
+  - The drain's load-bearing-ness is enforced at the plan→implement boundary: the Tasks self-check and an `implement` stop-the-line trigger flag any deferral left unresolved once planning is complete (`Spec#B-3-undrained-deferral-flagged-at-close-out`).
 - **Dependencies**: B1 (companion defines the drain); shares files with B2.
 
 ## T: L1
