@@ -310,6 +310,37 @@ D
     rm -f "$1/tasks.md"
 }
 
+inject_defer_nl_owner() {
+    # L1 robustness: a natural-language owner phrasing ("the Design stage") must still
+    # resolve to the stage and warn — not silently skip on off-canonical wording.
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+**Owning stage**: the Design stage
+
+The open question: which cache strategy; surfaced while specifying behavior.
+D
+}
+
+inject_defer_inbody_heading() {
+    # L1 robustness: a stray markdown heading in the block body, before the owner
+    # line, must not truncate the owner search — the warning must still fire (blocks
+    # are bounded by the next anchor, not the next markdown heading).
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+# rough sketch of the option space
+
+**Owning stage**: Design
+
+The open question: which cache strategy; surfaced while specifying behavior.
+D
+}
+
 inject_retired_anchor() {
     # Retire-by-note on a heading must keep the anchor's ID resolvable: marking
     # B-1's heading (retired) must NOT break its inbound tasks.md citation or the
@@ -404,6 +435,8 @@ assert_case "broken defer citation"            1 "broken citation: Deferrals#Def
 assert_case "undrained defer warns"            0 "undrained deferral"                     inject_defer_undrained
 assert_case "undrained defer errors (--strict)" 1 "undrained deferral"                    inject_defer_undrained    "--strict"
 assert_case "defer for unauthored stage ok"    0 "validation passed"                     inject_defer_future_stage "--stage design"
+assert_case "defer natural-language owner warns" 0 "undrained deferral"                   inject_defer_nl_owner
+assert_case "defer in-body heading still warns"  0 "undrained deferral"                    inject_defer_inbody_heading
 assert_case "retired anchor still resolves"    0 "validation passed"                     inject_retired_anchor
 assert_case "retired task still resolves"      0 "validation passed"                     inject_retired_task
 assert_case "retired task grants no coverage"  1 "is not covered by any task: Spec#B-9-retired-sole-coverage" inject_retired_sole_coverage

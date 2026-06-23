@@ -73,8 +73,11 @@ CITATION_RE = re.compile(
 # The owning-stage field of a Defer-N block (artifact-contract.md -> Deferrals):
 # `**Owning stage**: <Requirements|Spec|Design|Tasks>`. The no-loss check reads it
 # to decide which stage a deferral is addressed to, then keys the advisory on
-# whether that stage's artifact already exists.
-DEFER_OWNER_RE = re.compile(r"\*\*Owning stage\*\*:\s*([A-Za-z]+)", re.IGNORECASE)
+# whether that stage's artifact already exists. Match the stage keyword ANYWHERE on
+# the field's line (not just the first word) so natural phrasing — "the Design
+# stage", "Design (a realization detail)" — still resolves to the stage rather than
+# silently skipping; a field with no known stage keyword stays unparsed (review-tier).
+DEFER_OWNER_RE = re.compile(r"\*\*Owning stage\*\*:[^\n]*?\b(requirements|spec|design|tasks)\b", re.IGNORECASE)
 # A Spec B/C item appearing on a line containing **GAP** is treated as
 # deliberately uncovered — see references/artifact-contract.md "**GAP**
 # acknowledgment". Validator skips it in forward-coverage checks.
@@ -203,15 +206,18 @@ class Validator:
         text = self.texts.get("deferrals", "")
         if not text:
             return
-        heads = sorted(m.start() for m in HEADING_RE.finditer(text))
+        # Block boundaries are the next ANCHOR heading, not the next markdown heading:
+        # a stray `#`-prefixed line inside a Defer block's free-prose body must not
+        # truncate the owner search (which would silently drop the no-loss warning).
+        anchor_starts = sorted(m.start() for m in ANCHOR_RE.finditer(text))
         for match in ANCHOR_RE.finditer(text):
             if match.group(3) != "Defer":
                 continue
             if match.group(6):  # trailing marker (resolved -> … or retired) = accounted for
                 continue
             defer_target = f"Defer-{match.group(4)}-{match.group(5)}"
-            # Owning stage is read from the block body (this heading -> next heading).
-            body_end = next((h for h in heads if h > match.start()), len(text))
+            # Owning stage is read from the block body (this heading -> next anchor).
+            body_end = next((h for h in anchor_starts if h > match.start()), len(text))
             owner_match = DEFER_OWNER_RE.search(text[match.end():body_end])
             if not owner_match:
                 continue  # no parseable owning stage — substance (review) tier catches it

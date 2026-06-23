@@ -9,25 +9,11 @@ A deferral is a deliberately-deferred cross-stage decision — a genuine decisio
 Each stage already has a disposal point where it sets off-altitude content aside: Requirements strips upstream solution suggestions; Spec pushes specifics to Design; Design pushes work-ordering to Tasks; Tasks pushes tech-realization back to Design. At that point, judge what you are setting aside:
 
 - **Noise** — discard it as before. Most set-aside content is noise; capture is the exception, not the rule.
-- **A genuine decision another stage owns** — append a `Defer-<N>` block addressed to that stage, instead of discarding it.
+- **A genuine decision another stage owns** — append a `Defer-<N>` block, in the shape `artifact-contract.md` → Deferrals defines, addressed to that stage, instead of discarding it.
 
 Capture is opt-in planner judgment — never auto-detected, never required, never a gate on proceeding. It is a lightweight aside during ordinary stage work, not a ceremony.
 
-The block records the *question*, never an answer — this is what keeps it non-binding:
-
-```markdown
-## Defer-1: <slug>
-
-**Owning stage**: <Requirements | Spec | Design | Tasks>
-
-<the open question + why it surfaced now — one or two lines>
-
-Forces: <what pulls on the decision — the tension glimpsed>.
-
-Option seen (not chosen): <at most one candidate noticed, explicitly marked not chosen — omit the line if none>.
-```
-
-There is deliberately **no decision field**. A recorded answer would arrive at the owning stage as a fait accompli and pin it — the exact harm the lane exists to prevent. Carry the question and the forces forward; withhold the conclusion.
+The capture stance is what matters here: record the *question* and the forces behind it, never an answer. The shape has no decision field by design — a recorded answer would reach the owning stage as a fait accompli and pin it, the exact harm the lane prevents — so carry the question forward and withhold the conclusion.
 
 ## Drain — re-examine, decide freshly
 
