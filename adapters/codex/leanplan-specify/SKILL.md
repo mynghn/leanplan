@@ -1,6 +1,6 @@
 ---
 name: leanplan-specify
-description: LeanPlan — derive a Spec from existing Requirements in Codex. Use for `leanplan-specify <KEY>` or when asked to run the LeanPlan Spec stage; also accepts routed `leanplan specify <KEY>`.
+description: LeanPlan — derive a Spec from existing Requirements in Codex. Use for `leanplan-specify <KEY>` or when asked to run the LeanPlan Spec stage.
 ---
 
 # leanplan-specify
@@ -16,4 +16,4 @@ Runtime glue:
 
 - **Input** — `<cwd>/docs/features/<KEY>/requirements.md`; if absent, stop and point the user to `leanplan-requirements`.
 - **Validate** — `python3 ~/.local/share/leanplan/scripts/validate.py <cwd>/docs/features/<KEY> --stage spec`.
-- **Hand off** — next move is `leanplan-design <KEY>`; compatibility router form is `leanplan design <KEY>`.
+- **Hand off** — next move is `leanplan-design <KEY>`.

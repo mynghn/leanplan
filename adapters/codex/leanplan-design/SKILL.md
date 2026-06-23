@@ -1,6 +1,6 @@
 ---
 name: leanplan-design
-description: LeanPlan — realize a Spec into a Design in Codex. Use for `leanplan-design <KEY>` or when asked to run the LeanPlan Design stage; also accepts routed `leanplan design <KEY>`.
+description: LeanPlan — realize a Spec into a Design in Codex. Use for `leanplan-design <KEY>` or when asked to run the LeanPlan Design stage.
 ---
 
 # leanplan-design
@@ -16,4 +16,4 @@ Runtime glue:
 
 - **Input** — `<cwd>/docs/features/<KEY>/spec.md`; if absent, stop and point the user to `leanplan-specify`.
 - **Validate** — `python3 ~/.local/share/leanplan/scripts/validate.py <cwd>/docs/features/<KEY> --stage design`.
-- **Hand off** — next move is `leanplan-tasks <KEY>`; compatibility router form is `leanplan tasks <KEY>`.
+- **Hand off** — next move is `leanplan-tasks <KEY>`.

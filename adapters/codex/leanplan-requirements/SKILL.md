@@ -1,6 +1,6 @@
 ---
 name: leanplan-requirements
-description: LeanPlan — author a Requirements artifact for a feature in Codex. Use for `leanplan-requirements <intent>` or when asked to run the LeanPlan Requirements stage; also accepts routed `leanplan requirements <intent>`.
+description: LeanPlan — author a Requirements artifact for a feature in Codex. Use for `leanplan-requirements <intent>` or when asked to run the LeanPlan Requirements stage.
 ---
 
 # leanplan-requirements
@@ -17,4 +17,4 @@ Runtime glue:
 - **Intent forms** — brief feature intent, tracker key, `--date` intent, or an existing feature id to revise.
 - **Allocator** — `~/.local/share/leanplan/scripts/leanplan-new` is the single directory allocator: capture stdout path, stop on non-zero, never `mkdir`.
 - **Validate** — `python3 ~/.local/share/leanplan/scripts/validate.py <captured-path> --stage requirements`.
-- **Hand off** — next move is `leanplan-specify <KEY>`; compatibility router form is `leanplan specify <KEY>`.
+- **Hand off** — next move is `leanplan-specify <KEY>`.

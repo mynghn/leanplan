@@ -1,6 +1,6 @@
 ---
 name: leanplan-revise
-description: LeanPlan — inject a justified drift into committed artifacts in Codex and propagate downstream only. Use for `leanplan-revise <KEY> [Delta-N | what drifted]`; also accepts routed `leanplan revise <KEY> [Delta-N | what drifted]`.
+description: LeanPlan — inject a justified drift into committed artifacts in Codex and propagate downstream only. Use for `leanplan-revise <KEY> [Delta-N | what drifted]`.
 ---
 
 # leanplan-revise

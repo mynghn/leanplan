@@ -18,7 +18,7 @@ leanplan/
 ├── fixtures/                   valid (incl. a GAP-ack) / invalid examples
 └── adapters/                   per-runtime skill implementations
     ├── claude/                 Claude Code (7-skill set)
-    ├── codex/                  Codex (move skills + leanplan front door)
+    ├── codex/                  Codex stage skills
     └── README.md               cross-vendor adapter map
 ```
 
@@ -56,8 +56,7 @@ dot_claude/skills/symlink_revise.tmpl        →  ... /adapters/claude/revise
 For Codex:
 
 ```
-dot_agents/skills/symlink_leanplan.tmpl               →  {{ .chezmoi.homeDir }}/.local/share/leanplan/adapters/codex/leanplan
-dot_agents/skills/symlink_leanplan-requirements.tmpl  →  ... /adapters/codex/leanplan-requirements
+dot_agents/skills/symlink_leanplan-requirements.tmpl  →  {{ .chezmoi.homeDir }}/.local/share/leanplan/adapters/codex/leanplan-requirements
 dot_agents/skills/symlink_leanplan-specify.tmpl       →  ... /adapters/codex/leanplan-specify
 dot_agents/skills/symlink_leanplan-design.tmpl        →  ... /adapters/codex/leanplan-design
 dot_agents/skills/symlink_leanplan-tasks.tmpl         →  ... /adapters/codex/leanplan-tasks
@@ -76,7 +75,7 @@ git clone https://github.com/mynghn/leanplan.git ~/.local/share/leanplan
 ~/.local/share/leanplan/install.sh
 ```
 
-`install.sh` creates the same per-runtime symlinks (Claude Code at `~/.claude/skills/<name>`, Codex at `~/.agents/skills/{leanplan,leanplan-*}`).
+`install.sh` creates the same per-runtime symlinks (Claude Code at `~/.claude/skills/<name>`, Codex at `~/.agents/skills/leanplan-*`).
 
 ## Quick start
 

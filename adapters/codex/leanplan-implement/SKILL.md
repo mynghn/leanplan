@@ -1,6 +1,6 @@
 ---
 name: leanplan-implement
-description: LeanPlan — implement one Tasks card against current code in Codex. Use for `leanplan-implement <KEY> <task-id>`; also accepts routed `leanplan implement <KEY> <task-id>`.
+description: LeanPlan — implement one Tasks card against current code in Codex. Use for `leanplan-implement <KEY> <task-id>`.
 ---
 
 # leanplan-implement
