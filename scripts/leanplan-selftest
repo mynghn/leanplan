@@ -277,6 +277,39 @@ inject_broken_defer_citation() {
     printf '\nSee `Deferrals#Defer-9-nonexistent`.\n' >> "$1/design.md"
 }
 
+inject_defer_undrained() {
+    # L1 no-loss: an unresolved Defer-N addressed to a stage whose artifact already
+    # exists (Design here) is an undrained deferral — the advisory warns by default
+    # and errors under --strict. No resolve-in-place marker on the heading.
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+**Owning stage**: Design
+
+The open question: which cache strategy; surfaced while specifying behavior.
+
+Forces: latency vs consistency.
+D
+}
+
+inject_defer_future_stage() {
+    # L1 no-loss: an unresolved Defer-N addressed to a stage NOT yet authored is
+    # legitimate — no warning. Addressed to Tasks, with tasks.md removed and
+    # validation run through --stage design, so tasks.md is genuinely absent.
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+**Owning stage**: Tasks
+
+The open question: which cache strategy; surfaced while specifying behavior.
+D
+    rm -f "$1/tasks.md"
+}
+
 inject_retired_anchor() {
     # Retire-by-note on a heading must keep the anchor's ID resolvable: marking
     # B-1's heading (retired) must NOT break its inbound tasks.md citation or the
@@ -368,6 +401,9 @@ assert_case "broken understanding citation"    1 "broken citation: Understanding
 assert_case "defer anchor + citation resolve"  0 "validation passed"                     inject_defer_anchor_and_citation_resolve
 assert_case "duplicate defer anchor"           1 "duplicate anchor: Defer-1"              inject_duplicate_defer
 assert_case "broken defer citation"            1 "broken citation: Deferrals#Defer-9-nonexistent" inject_broken_defer_citation
+assert_case "undrained defer warns"            0 "undrained deferral"                     inject_defer_undrained
+assert_case "undrained defer errors (--strict)" 1 "undrained deferral"                    inject_defer_undrained    "--strict"
+assert_case "defer for unauthored stage ok"    0 "validation passed"                     inject_defer_future_stage "--stage design"
 assert_case "retired anchor still resolves"    0 "validation passed"                     inject_retired_anchor
 assert_case "retired task still resolves"      0 "validation passed"                     inject_retired_task
 assert_case "retired task grants no coverage"  1 "is not covered by any task: Spec#B-9-retired-sole-coverage" inject_retired_sole_coverage

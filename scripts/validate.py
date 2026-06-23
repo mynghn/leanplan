@@ -70,6 +70,11 @@ CITATION_RE = re.compile(
     r"\b(?P<file>Spec|Design|Rationale|Research|Tasks|Understanding|Deferrals)#(?P<target>"
     r"(?:B|C|D)-\d+-[a-z0-9][a-z0-9-]*|Delta-\d+-[a-z0-9][a-z0-9-]*|Defer-\d+-[a-z0-9][a-z0-9-]*|T:[A-Za-z][A-Za-z0-9-]*)"
 )
+# The owning-stage field of a Defer-N block (artifact-contract.md -> Deferrals):
+# `**Owning stage**: <Requirements|Spec|Design|Tasks>`. The no-loss check reads it
+# to decide which stage a deferral is addressed to, then keys the advisory on
+# whether that stage's artifact already exists.
+DEFER_OWNER_RE = re.compile(r"\*\*Owning stage\*\*:\s*([A-Za-z]+)", re.IGNORECASE)
 # A Spec B/C item appearing on a line containing **GAP** is treated as
 # deliberately uncovered — see references/artifact-contract.md "**GAP**
 # acknowledgment". Validator skips it in forward-coverage checks.
@@ -105,6 +110,7 @@ class Validator:
         self._check_required_files()
         self._check_common()
         self._check_surface_size()
+        self._check_deferrals_no_loss()
 
         if self._includes("requirements"):
             self._check_requirement()
@@ -183,6 +189,45 @@ class Validator:
                 self._error(SURFACE_FILES[stage], msg)
             else:
                 self._warn(SURFACE_FILES[stage], msg)
+
+    def _check_deferrals_no_loss(self) -> None:
+        # Advisory no-loss check for the Deferrals lane. A Defer-N addressed to a
+        # stage whose <stage>.md already exists, but carrying no resolve-in-place
+        # marker on its heading, is an undrained deferral at or past its owning
+        # stage — surface it. Warn by default; --strict escalates, mirroring the
+        # surface-budget guardrail. NOT a hard gate: an unresolved deferral for a
+        # stage not yet authored is legitimate (that file does not exist -> skipped).
+        # STRUCTURAL half only — whether a marked-resolved deferral genuinely landed
+        # where it cites is the Close-Out Reconciliation tier the validator cannot
+        # see (it reads artifacts, not the decisions behind them).
+        text = self.texts.get("deferrals", "")
+        if not text:
+            return
+        heads = sorted(m.start() for m in HEADING_RE.finditer(text))
+        for match in ANCHOR_RE.finditer(text):
+            if match.group(3) != "Defer":
+                continue
+            if match.group(6):  # trailing marker (resolved -> … or retired) = accounted for
+                continue
+            defer_target = f"Defer-{match.group(4)}-{match.group(5)}"
+            # Owning stage is read from the block body (this heading -> next heading).
+            body_end = next((h for h in heads if h > match.start()), len(text))
+            owner_match = DEFER_OWNER_RE.search(text[match.end():body_end])
+            if not owner_match:
+                continue  # no parseable owning stage — substance (review) tier catches it
+            owner = owner_match.group(1).lower()
+            if owner not in SURFACE_FILES or owner not in self.texts:
+                continue  # unrecognized, or owning stage not yet authored — not a structural call
+            msg = (
+                f"undrained deferral {defer_target} addressed to {owner}, whose "
+                f"{SURFACE_FILES[owner]} already exists — drain it at the {owner} stage and "
+                "mark it resolved, or it is a silently-dropped omission"
+            )
+            line = self._line_for_offset(text, match.start())
+            if self.strict:
+                self._error("deferrals.md", msg, line)
+            else:
+                self._warn("deferrals.md", msg, line)
 
     def _check_requirement(self) -> None:
         text = self.texts.get("requirements", "")
