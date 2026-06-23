@@ -142,11 +142,12 @@ Each stage doc carries its seam's operational instance; the per-artifact Drift G
 
 Applies to every artifact, in any authoring language. Write-time guidance, not validator-enforced.
 
-- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support. The artifact should be graspable from headings and lead lines alone. The two prose-shaped fields most prone to collapsing into a blob — the Design `Decision` body and the Tasks `Goal` — get a worked good/bad example in `design.md` / `tasks.md`. Requirements and Spec are list-shaped by construction (user-story bullets; atomic `B` / `C` items) and already conform — the rule binds the free-prose fields, where the blob risk lives, not the lists.
+- **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support, so it is graspable from headings and lead lines alone. The blob-prone free-prose fields — the Design `Decision` body and the Tasks `Goal` — carry a worked good/bad example in `design.md` / `tasks.md`; Requirements and Spec are list-shaped by construction and already conform.
 - **Lists over dense paragraphs.** When content enumerates parallel points, conditions, or steps, use bullet or ordered lists. Reserve flowing prose for a single causal chain.
 - **Short, declarative sentences.** Break run-ons; promote a buried qualifier to its own clause or bullet rather than nesting it in parentheses.
+- **Concise, not compressed.** Brevity is short *explanatory* sentences and lists — not the same content packed into fewer tokens, which only makes the reviewer decompress each token: `detect · de-dup · publish → ack` ❌ vs. "when detected, de-duplicate, then publish, and await the ack" ✅. The defect is packing distinct concepts, not the separator — a stage-map `·` is fine, and a short sentence can still be compressed; judge by the reader's effort, not the length. Spend the words. (context-engineering: literal-vs-latent-matching)
 
-Why: this serves the small-surface and LLM-aware principles — buried ledes and dense blocks get rubber-stamped by reviewers and dilute agent attention. Stage-specific shapes (e.g. Requirements user-story bullets, `requirements.md`) are instances of this rule, not exceptions.
+Why: this serves the small-surface and LLM-aware principles — buried ledes and dense blocks get rubber-stamped and dilute agent attention. Stage-specific shapes (e.g. Requirements user-story bullets) are instances of this rule, not exceptions.
 
 ## Surface Budget
 
