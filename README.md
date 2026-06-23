@@ -17,7 +17,7 @@ leanplan/
 ├── scripts/                    leanplan-validate + scaffold + selftest + pre-commit hook
 ├── fixtures/                   valid (incl. a GAP-ack) / invalid examples
 └── adapters/                   per-runtime skill implementations
-    ├── claude/                 Claude Code (7-skill set)
+    ├── claude/                 Claude Code (8-skill set)
     ├── codex/                  Codex stage skills
     └── README.md               cross-vendor adapter map
 ```
