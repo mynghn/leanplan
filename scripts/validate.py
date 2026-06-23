@@ -27,6 +27,7 @@ OPTIONAL_FILES = {
     "rationale": "design-rationale.md",
     "research": "research.md",
     "understanding": "understanding.md",
+    "deferrals": "deferrals.md",
 }
 
 ARTIFACT_ORDER = ("requirements", "spec", "design", "tasks")
@@ -53,11 +54,21 @@ HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
 # place the retired state DOES matter: a retired Task grants no forward-coverage
 # credit (see _check_traceability), so a superseded card can't satisfy a live B.
 RETIRED_SUFFIX = r"(\s+\(retired\))?"
-ANCHOR_RE = re.compile(r"^(#{2,4})\s+((B|C|Delta|D)-(\d+):\s+([a-z0-9][a-z0-9-]*))" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
+# Deferral anchors additionally tolerate a `(resolved -> <citation>)` resolve-in-place
+# marker (artifact-contract.md -> Deferrals): a drained deferral is retired in place by
+# appending the marker to its heading, citing where the decision landed. Like `(retired)`,
+# the marker is captured into its own group and never folded into the id/slug, so the
+# Defer-<N> ID keeps resolving in its resolved state; the target cited inside the marker is
+# itself resolution-checked by CITATION_RE (a slug-deep marker still flags broken). ANCHOR_RE
+# tolerates either marker (harmless on B/C/D/Delta, load-bearing on Defer); TASK_RE stays
+# retired-only — a Task is not a deferral. `Defer` precedes `D` in the kind alternation (as
+# `Delta` does), so a `Defer-N` heading never first-matches the `D` (Design decision) branch.
+ANCHOR_TRAILING_MARKER = r"(\s+\((?:retired|resolved\s*->[^)]*)\))?"
+ANCHOR_RE = re.compile(r"^(#{2,4})\s+((B|C|Delta|Defer|D)-(\d+):\s+([a-z0-9][a-z0-9-]*))" + ANCHOR_TRAILING_MARKER + r"\s*$", re.MULTILINE)
 TASK_RE = re.compile(r"^(#{2,4})\s+T:\s+([A-Za-z][A-Za-z0-9-]*)" + RETIRED_SUFFIX + r"\s*$", re.MULTILINE)
 CITATION_RE = re.compile(
-    r"\b(?P<file>Spec|Design|Rationale|Research|Tasks|Understanding)#(?P<target>"
-    r"(?:B|C|D)-\d+-[a-z0-9][a-z0-9-]*|Delta-\d+-[a-z0-9][a-z0-9-]*|T:[A-Za-z][A-Za-z0-9-]*)"
+    r"\b(?P<file>Spec|Design|Rationale|Research|Tasks|Understanding|Deferrals)#(?P<target>"
+    r"(?:B|C|D)-\d+-[a-z0-9][a-z0-9-]*|Delta-\d+-[a-z0-9][a-z0-9-]*|Defer-\d+-[a-z0-9][a-z0-9-]*|T:[A-Za-z][A-Za-z0-9-]*)"
 )
 # A Spec B/C item appearing on a line containing **GAP** is treated as
 # deliberately uncovered — see references/artifact-contract.md "**GAP**
@@ -317,6 +328,9 @@ class Validator:
             # delta anchors — a revised artifact cites the Delta that justified it. Research
             # stays skipped below: it carries descriptive headings, not a resolvable anchor set.
             "Understanding": {a["target"] for a in self._anchors("understanding")},
+            # Inbound `Deferrals#` citations resolve against deferrals.md's `Defer` anchors —
+            # e.g. a Design decision noting it resolved a parked deferral.
+            "Deferrals": {a["target"] for a in self._anchors("deferrals")},
         }
         for match in CITATION_RE.finditer(text):
             file_key = match.group("file")

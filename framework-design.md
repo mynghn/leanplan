@@ -105,6 +105,8 @@ Each level loads only via explicit trigger (anchor link from the layer above). J
 
 The runtime-loadable form — which artifact loads when — is owned by `artifact-contract.md` → Surface / Archive layering; the table above is the design-level detail.
 
+Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The understanding-shift archive is written by `sharpen` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Structural shape and what-loads-when are owned by `artifact-contract.md`.
+
 ## 5. Artifact shapes
 
 The required sections, anchor patterns, and per-stage shapes for every artifact are the **structural contract**, owned by `artifact-contract.md` → Feature Layout / Required Shapes / Anchors (the runtime home — loaded before writing or editing artifact structure). This doc does not restate them; the *naming rationale* is §8 and the *design resolutions* that produced them are §9.

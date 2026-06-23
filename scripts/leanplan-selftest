@@ -231,6 +231,52 @@ inject_understanding_citation_broken() {
     printf '\nRevised per `Understanding#Delta-9-nonexistent`.\n' >> "$1/design.md"
 }
 
+inject_defer_anchor_and_citation_resolve() {
+    # F2: a deferrals.md Defer-N block + an inbound Deferrals#Defer-N citation must
+    # resolve — the anchor parses (Defer is ordered before D in ANCHOR_RE) and the
+    # Deferrals# citation form is recognized. Marked resolved so it stays clean once
+    # the L1 no-loss check lands (a drained deferral is the steady state); the
+    # resolve-in-place marker's Design# target resolves against the fixture's D-2.
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy (resolved -> Design#D-2-in-repo-path-hard-coded)
+
+**Owning stage**: Design
+
+The open question: which cache strategy; surfaced while specifying behavior.
+
+Forces: latency vs consistency.
+
+Option seen (not chosen): write-through cache.
+D
+    printf '\nResolved the parked `Deferrals#Defer-1-cache-strategy`.\n' >> "$1/design.md"
+}
+
+inject_duplicate_defer() {
+    # Append-only integrity for the new lane: re-emitting an existing Defer id must
+    # be caught (parity with the duplicate-Delta guard).
+    cat > "$1/deferrals.md" <<'D'
+# LP-EXAMPLE — Deferrals
+
+## Defer-1: cache-strategy
+
+**Owning stage**: Tasks
+
+The open question; surfaced mid-design.
+
+## Defer-1: cache-strategy
+
+A second block reusing the same id — must be flagged.
+D
+}
+
+inject_broken_defer_citation() {
+    # An inbound Deferrals# citation with no matching Defer anchor must ERROR
+    # (parity with the broken Spec#/Understanding# citation guards).
+    printf '\nSee `Deferrals#Defer-9-nonexistent`.\n' >> "$1/design.md"
+}
+
 inject_retired_anchor() {
     # Retire-by-note on a heading must keep the anchor's ID resolvable: marking
     # B-1's heading (retired) must NOT break its inbound tasks.md citation or the
@@ -319,6 +365,9 @@ assert_case "surface bloat (--strict)"        1 "soft cap"                      
 assert_case "behavior-only task reason"       0 "validation passed"                     inject_outcome_only_task  "--strict"
 assert_case "understanding citation resolves"  0 "validation passed"                     inject_understanding_citation_ok
 assert_case "broken understanding citation"    1 "broken citation: Understanding#Delta-9-nonexistent" inject_understanding_citation_broken
+assert_case "defer anchor + citation resolve"  0 "validation passed"                     inject_defer_anchor_and_citation_resolve
+assert_case "duplicate defer anchor"           1 "duplicate anchor: Defer-1"              inject_duplicate_defer
+assert_case "broken defer citation"            1 "broken citation: Deferrals#Defer-9-nonexistent" inject_broken_defer_citation
 assert_case "retired anchor still resolves"    0 "validation passed"                     inject_retired_anchor
 assert_case "retired task still resolves"      0 "validation passed"                     inject_retired_task
 assert_case "retired task grants no coverage"  1 "is not covered by any task: Spec#B-9-retired-sole-coverage" inject_retired_sole_coverage
@@ -344,7 +393,9 @@ scan_case "scan: inline directive suppresses"       'satisfies C-1  # leanplan-a
 scan_case "scan: bare anchor B-1 leak (strict)"        'see the B-1 baseline here'               1 "B-1"               "--strict"
 scan_case "scan: bare anchor D-2 leak (strict)"        'following D-2 we chose X'                1 "D-2"               "--strict"
 scan_case "scan: bare anchor Delta-3 leak (strict)"    'per Delta-3 the assumption changed'       1 "Delta-3"           "--strict"
+scan_case "scan: bare anchor Defer-2 leak (strict)"    'parked as Defer-2 earlier'               1 "Defer-2"           "--strict"
 scan_case "scan: citation Design# leak (strict)"       'see Design#D-2-narrow here'              1 "Design#D-2"        "--strict"
+scan_case "scan: citation Deferrals# leak (strict)"    'see Deferrals#Defer-1-cache here'        1 "Deferrals#Defer-1" "--strict"
 
 # --text is the commit-msg hook's only input path; exercise it, the exit-2 input
 # error contract, and the anchor-inside-citation dedup directly.
