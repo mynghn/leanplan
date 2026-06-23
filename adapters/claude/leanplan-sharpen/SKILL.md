@@ -1,11 +1,11 @@
 ---
-name: sharpen
+name: leanplan-sharpen
 description: LeanPlan — sharpen a disturbed understanding mid-round via reflect → verify → re-derive → decide → emit, logging a durable delta. Off-pipeline and opt-in; reads committed artifacts, never edits them.
 argument-hint: "[what shifted | a claim to check]"
 allowed-tools: Read, AskUserQuestion, WebSearch, WebFetch, Write, Bash(python3 ~/.local/share/leanplan/scripts/validate.py *)
 ---
 
-# sharpen
+# leanplan sharpen
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the sharpen move — a mid-round, off-pipeline re-derivation of a disturbed understanding (not a stage edge).
 

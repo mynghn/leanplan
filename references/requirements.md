@@ -6,7 +6,7 @@ This doc carries the procedure for the Requirements stage — capturing the desi
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
-Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
+Mid-stage, if a disturbance shifts the understanding, `/leanplan-sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
 
 ## Inputs
 
@@ -35,7 +35,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
      - **Surface** — raise the gaps and ambiguities bearing on the problem and resolve them with the planner.
    - **Opt-in, never a gate.** The step offers; it never blocks. The planner can decline it or cut it short and move to distillation at any point.
    - **Forms understanding, writes nothing.** The draw-out forms the planner's understanding in the conversation — no file. Distillation (steps 4–5) is the sole writer of `requirements.md` and works from that understanding.
-   - **Cold start only.** This draws an understanding out of a blank-slate arrival; a disturbance to an *already-formed* understanding is `/sharpen` (Claude) / `sharpen` (Codex), not this step.
+   - **Cold start only.** This draws an understanding out of a blank-slate arrival; a disturbance to an *already-formed* understanding is `/leanplan-sharpen` (Claude) / `sharpen` (Codex), not this step.
 4. **Draft interactively**. Misframed Problem is the single largest source of downstream rework. Confirm framing with the user before writing:
    - **Problem** — what pain or opportunity drives this? Who feels it? What is currently broken, missing, or constrained?
    - **Outcome** — desired future state + observable success signal. Prefer **user-story bullets** for user-visible behaviors using the form `**short title** — one-line summary. follow-up detail when needed.` not every outcome is a user story. Fold the success signal into the same section (don't split into a separate "Success metric" section).
@@ -96,4 +96,4 @@ The Outcome user-stories / Guarantee system-policies split is a default shape, n
 
 ## Hand-off
 
-Tell the user: next edge is `/specify <KEY>` (Claude) or `specify <KEY>` (Codex), where `<KEY>` is the id `leanplan-new` allocated (e.g. `0007-anomaly-publisher`, `NEWCS-3595`, or `260616-anomaly-publisher`). Iterating on Requirements first is fine — `specify` re-derives from Requirements each invocation.
+Tell the user: next edge is `/leanplan-specify <KEY>` (Claude) or `specify <KEY>` (Codex), where `<KEY>` is the id `leanplan-new` allocated (e.g. `0007-anomaly-publisher`, `NEWCS-3595`, or `260616-anomaly-publisher`). Iterating on Requirements first is fine — `specify` re-derives from Requirements each invocation.

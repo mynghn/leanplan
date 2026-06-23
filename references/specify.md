@@ -6,11 +6,11 @@ This doc carries the procedure for the Spec stage — turning a Requirements int
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
-Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
+Mid-stage, if a disturbance shifts the understanding, `/leanplan-sharpen` (Claude) or `sharpen` (Codex) is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
 
 ## Inputs
 
-- `<cwd>/docs/features/<KEY>/requirements.md` (required). If absent, stop and tell the user to run `/requirements <feature-title>` (or `requirements <feature-title>` for Codex) first — it allocates the `<KEY>` (`NNNN-slug`) dir and prints its path.
+- `<cwd>/docs/features/<KEY>/requirements.md` (required). If absent, stop and tell the user to run `/leanplan-requirements <feature-title>` (or `requirements <feature-title>` for Codex) first — it allocates the `<KEY>` (`NNNN-slug`) dir and prints its path.
 - `<cwd>/docs/features/<KEY>/research.md` (optional, for context reuse).
 
 ## Outputs
@@ -78,4 +78,4 @@ Heading levels are flexible (H2 / H3 / H4) per the artifact contract — items c
 
 ## Hand-off
 
-Next edge: `/design <KEY>` (Claude) or `design <KEY>` (Codex).
+Next edge: `/leanplan-design <KEY>` (Claude) or `design <KEY>` (Codex).

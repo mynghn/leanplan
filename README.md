@@ -44,13 +44,13 @@ Add this to your chezmoi source's `.chezmoiexternal.toml`:
 Then add `symlink_*.tmpl` source files for each adapter target so chezmoi creates the runtime-registry symlinks. For Claude Code skills:
 
 ```
-dot_claude/skills/symlink_requirements.tmpl  →  {{ .chezmoi.homeDir }}/.local/share/leanplan/adapters/claude/requirements
-dot_claude/skills/symlink_specify.tmpl       →  ... /adapters/claude/specify
-dot_claude/skills/symlink_design.tmpl        →  ... /adapters/claude/design
-dot_claude/skills/symlink_tasks.tmpl         →  ... /adapters/claude/tasks
-dot_claude/skills/symlink_implement.tmpl     →  ... /adapters/claude/implement
-dot_claude/skills/symlink_sharpen.tmpl       →  ... /adapters/claude/sharpen
-dot_claude/skills/symlink_revise.tmpl        →  ... /adapters/claude/revise
+dot_claude/skills/symlink_leanplan-requirements.tmpl  →  {{ .chezmoi.homeDir }}/.local/share/leanplan/adapters/claude/leanplan-requirements
+dot_claude/skills/symlink_leanplan-specify.tmpl       →  ... /adapters/claude/leanplan-specify
+dot_claude/skills/symlink_leanplan-design.tmpl        →  ... /adapters/claude/leanplan-design
+dot_claude/skills/symlink_leanplan-tasks.tmpl         →  ... /adapters/claude/leanplan-tasks
+dot_claude/skills/symlink_leanplan-implement.tmpl     →  ... /adapters/claude/leanplan-implement
+dot_claude/skills/symlink_leanplan-sharpen.tmpl       →  ... /adapters/claude/leanplan-sharpen
+dot_claude/skills/symlink_leanplan-revise.tmpl        →  ... /adapters/claude/leanplan-revise
 ```
 
 For Codex:

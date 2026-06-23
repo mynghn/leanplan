@@ -1,11 +1,11 @@
 ---
-name: design
+name: leanplan-design
 description: LeanPlan — realize a Spec into a Design (chosen components, stack, decisions). Architecture diagram + per-decision blocks; archive rationale for non-trivial decisions.
 argument-hint: "<feature-key>"
 allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion, Agent, Bash(ls *), Bash(mkdir *), Bash(git *), Bash(python3 ~/.local/share/leanplan/scripts/validate.py *), WebFetch, WebSearch, mcp__atlassian__getJiraIssue, mcp__atlassian__searchJiraIssuesUsingJql
 ---
 
-# design
+# leanplan design
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the Design stage (Spec → Design edge).
 
@@ -16,6 +16,6 @@ Load `~/.local/share/leanplan/references/design.md` — it is authoritative for 
 
 Runtime glue:
 
-- **Missing input** — if `<cwd>/docs/features/<KEY>/spec.md` is absent, stop and point the user to `/specify` (see `design.md` Inputs).
+- **Missing input** — if `<cwd>/docs/features/<KEY>/spec.md` is absent, stop and point the user to `/leanplan-specify` (see `design.md` Inputs).
 - **Validate** — `python3 ~/.local/share/leanplan/scripts/validate.py <cwd>/docs/features/<KEY> --stage design`.
-- **Hand off** — next edge is `/tasks <KEY>`.
+- **Hand off** — next edge is `/leanplan-tasks <KEY>`.

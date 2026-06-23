@@ -1,15 +1,15 @@
 ---
-name: revise
-description: LeanPlan — inject a justified change into already-committed artifacts at any in-flight stage and propagate it only to downstream stages, editing in place against a recorded justification. The repair counterpart to /sharpen (which only diagnoses); never edits without a recorded reason.
+name: leanplan-revise
+description: LeanPlan — inject a justified change into already-committed artifacts at any in-flight stage and propagate it only to downstream stages, editing in place against a recorded justification. The repair counterpart to /leanplan-sharpen (which only diagnoses); never edits without a recorded reason.
 argument-hint: "<KEY> [what drifted | a recorded delta]"
 allowed-tools: Read, Edit, Write, AskUserQuestion, Bash(python3 ~/.local/share/leanplan/scripts/validate.py *), Bash(~/.local/share/leanplan/scripts/leanplan-new *)
 ---
 
-# revise
+# leanplan revise
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the revise move — the single sanctioned, any-stage entry for editing committed artifacts: it injects a justified drift and propagates it downstream-only.
 
-Load `~/.local/share/leanplan/references/revise.md` — it is authoritative for the procedure (intake-Delta → identify corrected artifact → edit in place / re-derive on structural change → propagate downstream-only → re-validate), the justified-or-nothing and downstream-only boundaries, and the repair-vs-cognitive split with `/sharpen`. Load these on demand, not up front (context-engineering: jit-loading):
+Load `~/.local/share/leanplan/references/revise.md` — it is authoritative for the procedure (intake-Delta → identify corrected artifact → edit in place / re-derive on structural change → propagate downstream-only → re-validate), the justified-or-nothing and downstream-only boundaries, and the repair-vs-cognitive split with `/leanplan-sharpen`. Load these on demand, not up front (context-engineering: jit-loading):
 
 - `~/.local/share/leanplan/references/artifact-contract.md` — **before editing an artifact's structure or anchors**: anchor patterns, the `(retired)` retire-by-note form, traceability, and the `understanding-shifts.md` / `Delta-<N>: <slug>` shape.
 - `~/.local/share/leanplan/references/philosophy.md` — **when a principle's intent or grounding is in question**: the framework principles shaping what "good" looks like.
