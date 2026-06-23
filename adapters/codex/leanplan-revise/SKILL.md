@@ -17,6 +17,6 @@ Load `<LEANPLAN_ROOT>/references/revise.md` — it is authoritative for intake, 
 Runtime glue:
 
 - **Target** — the argument names `<KEY>` and optionally a recorded `Delta-<N>` or drift text.
-- **Justification** — mutate only against a `Delta-<N>` block in `docs/features/<KEY>/understanding.md`; record one from the planner's asserted drift before any edit when needed.
+- **Justification** — mutate only against a `Delta-<N>` block in `docs/features/<KEY>/understanding-shifts.md`; record one from the planner's asserted drift before any edit when needed.
 - **Edit scope** — edit the corrected artifact and implicated downstream artifacts only; upstream artifacts stay unchanged.
 - **Validate** — after propagation, run `<LEANPLAN_ROOT>/scripts/leanplan-validate docs/features/<KEY>` or stage-scope if downstream artifacts are not authored yet.
