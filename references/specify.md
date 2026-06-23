@@ -10,7 +10,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 ## Inputs
 
-- `<cwd>/docs/features/<KEY>/requirements.md` (required). If absent, stop and tell the user to run `/requirements <feature-title>` (or `requirements <feature-title>` for Codex) first — it allocates the `<KEY>` (`NNNN-slug`) dir and prints its path.
+- `<cwd>/docs/features/<KEY>/requirements.md` (required). If absent, stop and tell the user to run `/requirements <feature-title>` (or `leanplan-requirements <feature-title>` for Codex) first — it allocates the `<KEY>` (`NNNN-slug`) dir and prints its path.
 - `<cwd>/docs/features/<KEY>/research.md` (optional, for context reuse).
 
 ## Outputs
@@ -78,4 +78,4 @@ Heading levels are flexible (H2 / H3 / H4) per the artifact contract — items c
 
 ## Hand-off
 
-Next edge: `/design <KEY>` (Claude) or `design <KEY>` (Codex).
+Next edge: `/design <KEY>` (Claude) or `leanplan-design <KEY>` (Codex).

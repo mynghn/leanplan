@@ -1,11 +1,11 @@
 ---
 name: leanplan
-description: LeanPlan front door for Codex. Use for `$leanplan <move>`; routes requirements, specify, design, tasks, implement, sharpen, revise, and validate to the matching leanplan-* skill.
+description: LeanPlan compatibility front door for Codex. Use for `leanplan <move> ...` invocations; canonical stage usage is the direct `leanplan-<move> ...` skill.
 ---
 
-# LeanPlan Front Door
+# LeanPlan Compatibility Front Door
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This Codex skill is a compatibility front door for `$leanplan <move>` invocations.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This Codex skill is a compatibility front door for `leanplan <move>` invocations. Prefer the direct stage skills (`leanplan-requirements`, `leanplan-specify`, `leanplan-design`, `leanplan-tasks`, `leanplan-implement`, `leanplan-sharpen`, `leanplan-revise`, `leanplan-validate`) in user-facing handoffs.
 
 ## Dispatch
 

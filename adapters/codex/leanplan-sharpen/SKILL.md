@@ -1,9 +1,9 @@
 ---
 name: leanplan-sharpen
-description: LeanPlan — sharpen a disturbed understanding mid-round in Codex. Use for `leanplan sharpen <what shifted>`; reads artifacts and emits a delta, never edits surface artifacts.
+description: LeanPlan — sharpen a disturbed understanding mid-round in Codex. Use for `leanplan-sharpen <what shifted>`; also accepts routed `leanplan sharpen <what shifted>`. Reads artifacts and emits a delta, never edits surface artifacts.
 ---
 
-# leanplan sharpen
+# leanplan-sharpen
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the off-pipeline sharpen move.
 

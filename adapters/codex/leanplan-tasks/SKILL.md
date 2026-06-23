@@ -1,9 +1,9 @@
 ---
 name: leanplan-tasks
-description: LeanPlan — produce a Tasks artifact from a Design in Codex. Use for `leanplan tasks <KEY>` or when asked to run the LeanPlan Tasks stage.
+description: LeanPlan — produce a Tasks artifact from a Design in Codex. Use for `leanplan-tasks <KEY>` or when asked to run the LeanPlan Tasks stage; also accepts routed `leanplan tasks <KEY>`.
 ---
 
-# leanplan tasks
+# leanplan-tasks
 
 LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill drives the Tasks stage (Design -> tasks.md edge).
 
@@ -14,7 +14,7 @@ Load `~/.local/share/leanplan/references/tasks.md` — it is authoritative for t
 
 Runtime glue:
 
-- **Input** — `<cwd>/docs/features/<KEY>/design.md`; if absent, stop and point the user to `leanplan-design` or `$leanplan design`.
+- **Input** — `<cwd>/docs/features/<KEY>/design.md`; if absent, stop and point the user to `leanplan-design`.
 - **Output** — `<cwd>/docs/features/<KEY>/tasks.md`.
 - **Validate** — `python3 ~/.local/share/leanplan/scripts/validate.py <cwd>/docs/features/<KEY> --stage tasks`.
-- **Hand off** — for each independently startable task: `leanplan-implement <KEY> <task-id>` or `$leanplan implement <KEY> <task-id>`.
+- **Hand off** — for each independently startable task: `leanplan-implement <KEY> <task-id>`; compatibility router form is `leanplan implement <KEY> <task-id>`.

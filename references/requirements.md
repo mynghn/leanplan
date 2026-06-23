@@ -96,4 +96,4 @@ The Outcome user-stories / Guarantee system-policies split is a default shape, n
 
 ## Hand-off
 
-Tell the user: next edge is `/specify <KEY>` (Claude) or `specify <KEY>` (Codex), where `<KEY>` is the id `leanplan-new` allocated (e.g. `0007-anomaly-publisher`, `NEWCS-3595`, or `260616-anomaly-publisher`). Iterating on Requirements first is fine — `specify` re-derives from Requirements each invocation.
+Tell the user: next edge is `/specify <KEY>` (Claude) or `leanplan-specify <KEY>` (Codex), where `<KEY>` is the id `leanplan-new` allocated (e.g. `0007-anomaly-publisher`, `NEWCS-3595`, or `260616-anomaly-publisher`). Iterating on Requirements first is fine — `specify` re-derives from Requirements each invocation.
