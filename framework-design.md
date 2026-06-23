@@ -1,6 +1,6 @@
 # LeanPlan — Framework Design
 
-> Source of truth: this repo. The runtime install described in `README.md` places a working checkout at `~/.local/share/leanplan/`.
+> Source of truth: this repo. The runtime install described in `README.md` uses the LeanPlan checkout location chosen by the user.
 
 **LeanPlan** is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. It is shaped around how LLM agents actually consume and act on planning artifacts — limited useful context, weak long-range attention over verbose instructions, stronger performance with JIT-loaded intent plus current code. Each artifact keeps only the durable state native to its stage. Not adopted from pre-existing SDD frameworks (spec-kit, Kiro, IEEE 830).
 

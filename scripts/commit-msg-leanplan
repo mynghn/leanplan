@@ -2,7 +2,7 @@
 # LeanPlan commit-msg hook — flag round-scoped keys leaked into the commit message.
 #
 # Installation (per repo):
-#   ln -s ~/.local/share/leanplan/scripts/commit-msg-leanplan  <repo>/.git/hooks/commit-msg
+#   ln -s <leanplan-root>/scripts/commit-msg-leanplan  <repo>/.git/hooks/commit-msg
 #
 # Warn-by-default (diagnostics on stderr, commit proceeds); LEANPLAN_STRICT=1
 # blocks. A commit message is a durable artifact read without the planning docs,
@@ -11,7 +11,23 @@
 set -uo pipefail
 
 MSG_FILE="${1:-}"
-SCAN="${LEANPLAN_SCAN:-$HOME/.local/share/leanplan/scripts/scan-leaks}"
+
+resolve_script_dir() {
+    local src dir target
+    src="${BASH_SOURCE[0]:-$0}"
+    while [ -L "$src" ]; do
+        dir="$(cd -P "$(dirname "$src")" && pwd)"
+        target="$(readlink "$src")"
+        case "$target" in
+            /*) src="$target" ;;
+            *) src="$dir/$target" ;;
+        esac
+    done
+    cd -P "$(dirname "$src")" && pwd
+}
+
+SHARE="$(resolve_script_dir)"
+SCAN="${LEANPLAN_SCAN:-$SHARE/scan-leaks}"
 
 [ -f "$SCAN" ] || exit 0                       # detector not installed; don't obstruct
 command -v python3 >/dev/null 2>&1 || exit 0   # python3 unavailable; don't obstruct
