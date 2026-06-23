@@ -101,7 +101,7 @@ LeanPlan keeps the visible plan small because small review surfaces actually get
 
 Canonical references: [`artifact-contract.md` → Surface / Archive layering](../../references/artifact-contract.md#surface--archive-layering), [`artifact-contract.md` → Surface Budget](../../references/artifact-contract.md#surface-budget), [`framework-design.md` → Surface/archive layering](../../framework-design.md#4-surfacearchive-layering), [`philosophy.md` → Archive verbose reasoning](../../references/philosophy.md#behavior-shaping-principles).
 
-What you see: Requirements, Spec, Design, and Tasks stay compact; deeper rationale lives in supporting archive material (design rationale, research, understanding). The agent or validator pushes back when a surface artifact grows past its soft prose budget, or when the task DAG looks too large for one deployment-sized change.
+What you see: Requirements, Spec, Design, and Tasks stay compact; deeper rationale lives in supporting archive material (design rationale, research, understanding-shifts, deferrals). The agent or validator pushes back when a surface artifact grows past its soft prose budget, or when the task DAG looks too large for one deployment-sized change.
 
 Why it exists: reviewers and agents need the current decision path fast, but must still recover deeper reasoning on challenge — layering keeps both. The budget is a tripwire for "this is getting hard to review, or hiding more than one feature," not a target. And brevity is not information loss: the archive path, citations, and implementation close-out exist so cut prose is recoverable, not forgotten.
 
@@ -111,7 +111,7 @@ How to work with it:
 - When a budget warning fires, decide where the material belongs — archive it, cite it, or split the feature — rather than blindly deleting. Use `--allow-large` only when the larger surface is intentional and still reviewable; use strict validation when the team wants warnings to block CI.
 - Before closing a task, ask where each important WHY will live afterward (tests, types, annotations, commit/PR text).
 
-When to challenge it: if the surface is so short that reviewers cannot tell what was decided, promote the missing decision back onto it. If a warning is caused by legitimate reference material — a Mermaid diagram, a fenced schema — check it is counted correctly before shrinking.
+When to challenge it: if the surface is so short that reviewers cannot tell what was decided, promote the missing decision back onto it. If a warning is caused by legitimate reference material — a Mermaid diagram, a fenced schema — check it is counted correctly before shrinking. And brevity means *concise, not compressed*: if a line reads terse but you cannot tell what it means without unpacking a coined term or a `·`-joined pile, that is compression — ask for it in plainer words. Cut redundancy, never a distinction the reader needs.
 
 ### Traceability over restatement
 
@@ -130,9 +130,9 @@ When to challenge it: if a citation is decorative and the task would mean the sa
 
 ### Validation as a guardrail
 
-Canonical references: [`validate.py`](../../scripts/validate.py), [`artifact-contract.md` → Required Shapes](../../references/artifact-contract.md#required-shapes), [`artifact-contract.md` → Anchors](../../references/artifact-contract.md#anchors).
+Canonical references: [`leanplan-validate`](../../scripts/leanplan-validate), [`artifact-contract.md` → Required Shapes](../../references/artifact-contract.md#required-shapes), [`artifact-contract.md` → Anchors](../../references/artifact-contract.md#anchors).
 
-What you see: `validate.py` checks feature artifacts and reports missing sections, broken references, coverage gaps, and size guardrail warnings (see `reference.md` for the flags).
+What you see: `leanplan-validate` checks feature artifacts and reports missing sections, broken references, coverage gaps, and size guardrail warnings (see `reference.md` for the flags).
 
 Why it exists: LeanPlan's review surface depends on structure. Lightweight validation catches shape drift before an agent or reviewer relies on a plan that no longer has the required anchors, coverage, or dependency shape.
 

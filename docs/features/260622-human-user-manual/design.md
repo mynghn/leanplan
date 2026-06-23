@@ -24,7 +24,7 @@ The public documentation path starts in `README.md`, then sends human readers to
 ## Decisions
 
 ### D-1: top-level-user-guide
-Make `USER_GUIDE.md` the single top-level human-facing front door — entry orientation, the Quickstart first-use path, and a depth-routed table of contents — and place the deeper material in focused, independently-loadable pages under `docs/user-guide/`. This satisfies Spec#B-1-first-run-path, Spec#B-2-end-to-end-workflow-guide, Spec#B-5-lookup-reference, and Spec#C-1-progressive-disclosure. Revised from a single-file guide per Understanding#Delta-1-multi-file-guide-suite.
+Make `USER_GUIDE.md` the single top-level human-facing front door — entry orientation, the Quickstart first-use path, and a depth-routed table of contents — and place the deeper material in focused, independently-loadable pages under `docs/user-guide/`. This satisfies Spec#B-1-first-run-path, Spec#B-2-end-to-end-workflow-guide, Spec#B-5-lookup-reference, and Spec#C-1-progressive-disclosure. Revised from a single-file guide per UnderstandingShifts#Delta-1-multi-file-guide-suite.
 
 - `USER_GUIDE.md` carries entry orientation, the Quickstart shortest complete first-use path, and a "read only as deep as you need" TOC linking onward.
 - `docs/user-guide/using-leanplan.md` explains the full workflow, user decisions, artifact responsibilities, off-pipeline moves, and review posture.
@@ -58,14 +58,14 @@ Explain LeanPlan-specific mechanisms through a repeated reader-facing pattern: w
 - Rationale: DesignRationale#D-4-mechanism-explanation-pattern.
 
 ### D-5: adoption-section
-Provide adoption guidance on its own page (`docs/user-guide/adoption.md`) that frames when LeanPlan fits, how to choose a first project, and how teams can introduce it gradually. This satisfies Spec#B-4-adoption-guidance. Page placement revised per Understanding#Delta-1-multi-file-guide-suite.
+Provide adoption guidance on its own page (`docs/user-guide/adoption.md`) that frames when LeanPlan fits, how to choose a first project, and how teams can introduce it gradually. This satisfies Spec#B-4-adoption-guidance. Page placement revised per UnderstandingShifts#Delta-1-multi-file-guide-suite.
 
 - The fit guidance presents LeanPlan as one-deployment-sized feature planning.
 - The first-project guidance favors bounded features with visible review value.
 - The gradual-adoption guidance covers using the framework for planning only before adopting implementation-stage discipline.
 
 ### D-6: reference-appendix
-Provide a compact reference page (`docs/user-guide/reference.md`) for commands, artifacts, transitions, review checks, validation flags, and common failure signals. This satisfies Spec#B-5-lookup-reference and Spec#B-6-existing-concept-alignment. Moved from an in-`USER_GUIDE.md` appendix per Understanding#Delta-1-multi-file-guide-suite.
+Provide a compact reference page (`docs/user-guide/reference.md`) for commands, artifacts, transitions, review checks, validation flags, and common failure signals. This satisfies Spec#B-5-lookup-reference and Spec#B-6-existing-concept-alignment. Moved from an in-`USER_GUIDE.md` appendix per UnderstandingShifts#Delta-1-multi-file-guide-suite.
 
 - Commands list the Codex and Claude forms where both matter.
 - Artifact tables preserve LeanPlan vocabulary and ownership boundaries.

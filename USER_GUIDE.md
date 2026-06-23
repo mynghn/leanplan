@@ -20,9 +20,9 @@ If this is your first LeanPlan run, start with Quickstart and continue until the
 
 ### What you need before starting
 
-- LeanPlan installed in `~/.local/share/leanplan/`.
+- LeanPlan cloned to a checkout of your choice — call it `$LEANPLAN_ROOT` — with `install.sh` run so the skills are registered (see [`README.md`](./README.md) for install; a dotfile manager like chezmoi is optional, not required).
 - A repository where feature plans live under `docs/features/`.
-- A supported agent runtime with the LeanPlan skill or commands installed.
+- A supported agent runtime (Claude Code or Codex) with the LeanPlan skills installed.
 - A feature small enough to fit one deployment-sized change.
 
 LeanPlan works best when the feature has real implementation value, visible review value, and clear boundaries. If the work is really a product area, split out the first deployment-sized slice.
@@ -34,7 +34,7 @@ LeanPlan works best when the feature has real implementation value, visible revi
 From the repository where you will plan the feature:
 
 ```bash
-~/.local/share/leanplan/scripts/leanplan-new "short feature title"
+"$LEANPLAN_ROOT/scripts/leanplan-new" "short feature title"
 ```
 
 The script prints the new feature path, usually under `docs/features/<KEY>`. Keep that path visible; later commands use the `<KEY>`.
@@ -50,13 +50,13 @@ How you know this step is complete: the feature directory exists and you know it
 Ask your agent to run the LeanPlan Requirements stage for the allocated feature:
 
 ```text
-$leanplan requirements <KEY>
+$leanplan-requirements <KEY>
 ```
 
-In Claude Code, use the installed LeanPlan slash command for the same stage, for example:
+In Claude Code, use the installed LeanPlan slash command for the same stage:
 
 ```text
-/requirements <KEY>
+/leanplan-requirements <KEY>
 ```
 
 Use the `<KEY>` printed by `leanplan-new`. Passing the title again asks the Requirements stage to allocate a new feature, which is useful only when you skipped Step 1 and want the agent to create the directory for you.
@@ -74,8 +74,10 @@ How you know this step is complete: the Requirements artifact states the problem
 Ask the agent to run the Spec stage for the same `<KEY>`:
 
 ```text
-$leanplan specify <KEY>
+$leanplan-specify <KEY>
 ```
+
+In Claude Code: `/leanplan-specify <KEY>`. The later stages follow the same `$leanplan-<stage>` (Codex) / `/leanplan-<stage>` (Claude) pattern.
 
 What you do: answer product-behavior questions and correct anything that does not match the intended user-visible behavior.
 
@@ -90,7 +92,7 @@ How you know this step is complete: the Spec names the observable behavior and c
 Ask the agent to run the Design stage:
 
 ```text
-$leanplan design <KEY>
+$leanplan-design <KEY>
 ```
 
 What you do: choose between important implementation approaches when the agent surfaces tradeoffs.
@@ -106,7 +108,7 @@ How you know this step is complete: the Design explains the chosen approach, rej
 Ask the agent to run the Tasks stage:
 
 ```text
-$leanplan tasks <KEY>
+$leanplan-tasks <KEY>
 ```
 
 What you do: review the dependency order and confirm the task split still represents one deployment-sized feature.
@@ -122,7 +124,7 @@ How you know this step is complete: the task DAG is reviewable, every task has o
 Run the validator on the feature directory:
 
 ```bash
-python3 ~/.local/share/leanplan/scripts/validate.py docs/features/<KEY>
+"$LEANPLAN_ROOT/scripts/leanplan-validate" docs/features/<KEY>
 ```
 
 What you do: treat validation failures as plan defects, not formatting annoyances.
@@ -138,7 +140,7 @@ How you know this step is complete: validation exits successfully, or you have a
 Ask the agent to implement the first unblocked task from `tasks.md`:
 
 ```text
-$leanplan implement <KEY> <task-id>
+$leanplan-implement <KEY> <task-id>
 ```
 
 What you do: stay available for decision points, especially ambiguous behavior, scope expansion, or changes that would affect users.

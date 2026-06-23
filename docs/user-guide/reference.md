@@ -7,38 +7,41 @@ This page is for quick lookup. It is intentionally compact; use the guide pages 
 Codex form:
 
 ```text
-$leanplan requirements "short feature title"
-$leanplan specify <KEY>
-$leanplan design <KEY>
-$leanplan tasks <KEY>
-$leanplan implement <KEY> <task-id>
-$leanplan sharpen <what-shifted>
-$leanplan revise <KEY> [Delta-N | what drifted]
-$leanplan validate docs/features/<KEY>
+$leanplan-requirements "short feature title"
+$leanplan-specify <KEY>
+$leanplan-design <KEY>
+$leanplan-tasks <KEY>
+$leanplan-implement <KEY> <task-id>
+$leanplan-sharpen <what-shifted>
+$leanplan-revise <KEY> [Delta-N | what drifted]
+$leanplan-validate docs/features/<KEY>
 ```
 
 Claude Code slash-command form:
 
 ```text
-/requirements "short feature title"
-/specify <KEY>
-/design <KEY>
-/tasks <KEY>
-/implement <KEY> <task-id>
-/sharpen <what-shifted>
-/revise <KEY> [Delta-N | what drifted]
+/leanplan-requirements "short feature title"
+/leanplan-specify <KEY>
+/leanplan-design <KEY>
+/leanplan-tasks <KEY>
+/leanplan-implement <KEY> <task-id>
+/leanplan-sharpen <what-shifted>
+/leanplan-revise <KEY> [Delta-N | what drifted]
+/leanplan-validate docs/features/<KEY>
 ```
+
+Each move is a directly-invoked skill named `leanplan-<move>`; Claude prefixes `/`, Codex prefixes `$`. There is no front-door router skill.
 
 Utility scripts:
 
 ```bash
-~/.local/share/leanplan/scripts/leanplan-new "short feature title"
-python3 ~/.local/share/leanplan/scripts/validate.py docs/features/<KEY>
-python3 ~/.local/share/leanplan/scripts/validate.py --stage tasks docs/features/<KEY>
-python3 ~/.local/share/leanplan/scripts/validate.py --strict docs/features/<KEY>
+"$LEANPLAN_ROOT/scripts/leanplan-new" "short feature title"
+"$LEANPLAN_ROOT/scripts/leanplan-validate" docs/features/<KEY>
+"$LEANPLAN_ROOT/scripts/leanplan-validate" --stage tasks docs/features/<KEY>
+"$LEANPLAN_ROOT/scripts/leanplan-validate" --strict docs/features/<KEY>
 ```
 
-`leanplan-new` accepts three feature-id forms: a title → `NNNN-slug` sequence id (default); a bare tracker key like `NEWCS-3595` → used verbatim (e.g. a Jira issue); or `--date "title"` → `YYMMDD-slug`.
+`$LEANPLAN_ROOT` is your LeanPlan checkout (the skills resolve it automatically; only the scripts need the path). `leanplan-new` accepts three feature-id forms: a title → `NNNN-slug` sequence id (default); a bare tracker key like `NEWCS-3595` → used verbatim (e.g. a Jira issue); or `--date "title"` → `YYMMDD-slug`.
 
 ## Artifact responsibilities
 
@@ -48,7 +51,9 @@ python3 ~/.local/share/leanplan/scripts/validate.py --strict docs/features/<KEY>
 | `spec.md` | Observable behavior and constraints | Code structure or task order |
 | `design.md` | Chosen approach, tradeoffs, boundaries | Product intent or task execution |
 | `tasks.md` | DAG, task cards, completion criteria, dependencies | Canonical product rationale |
-| Archive material | Deeper rationale and exploration | Facts every downstream stage must always load |
+| `understanding-shifts.md` | Recorded understanding shifts (`Delta-N`) that justify a revise | Surface decisions or open questions |
+| `deferrals.md` | Deferred cross-stage decisions (`Defer-N`), addressed forward to the owning stage | Decisions an earlier stage already owns (that is drift → revise) |
+| Archive material (rationale, research) | Deeper rationale and exploration | Facts every downstream stage must always load |
 | Code, tests, PR text | Durable delivered rationale | Round-local planning handles |
 
 ## Stage transition cues
@@ -73,7 +78,7 @@ python3 ~/.local/share/leanplan/scripts/validate.py --strict docs/features/<KEY>
 
 | Mode | Use when |
 |---|---|
-| `validate.py docs/features/<KEY>` | Checking the full feature artifact set before implementation or review |
+| `leanplan-validate docs/features/<KEY>` | Checking the full feature artifact set before implementation or review |
 | `--stage requirements` | Iterating on Requirements only |
 | `--stage spec` | Iterating on Spec and its coverage shape |
 | `--stage design` | Iterating on Design after Spec is stable |

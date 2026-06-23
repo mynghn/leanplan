@@ -86,6 +86,14 @@ Hand-off: continue to the next unblocked task, revise the plan if implementation
 
 When the plan and reality disagree, LeanPlan has two off-pipeline moves — **sharpen** (record a shift in understanding without editing artifacts yet) and **revise** (update the highest affected artifact, then re-evaluate downstream). Reach for them instead of silently patching around upstream wrongness in the current task. See [`mechanisms.md` → Sharpen and revise](./mechanisms.md#sharpen-and-revise) for how each works and when to challenge their use.
 
+## Deferred decisions
+
+Sometimes a real decision surfaces at a stage that does not own it — Requirements hits a solution idea, Spec hits an implementation specific. Rather than deciding early (which pins the owning stage) or discarding it (which loses the spark), the planner can park it as a **forward deferral**: a `Defer-N` entry in `deferrals.md`, addressed to the later stage that owns it. That stage drains the entries addressed to it at its entry and decides freshly.
+
+- Capture is opt-in judgment, not a gate — record the *question* and the forces behind it, never a pre-baked answer.
+- It only ever points forward. A decision an *earlier*, already-run stage owns is drift, not a deferral — that is sharpen/revise.
+- `leanplan-validate` surfaces an unresolved deferral once its owning stage's artifact exists, so a parked decision is never silently dropped.
+
 ## Next
 
 - Read [`mechanisms.md`](./mechanisms.md) for the framework behavior behind the workflow.
