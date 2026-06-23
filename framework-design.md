@@ -78,7 +78,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 | Design | **internal realization** — shape of the finished system; components, chosen stack, schemas, boundaries | (Machine, Realization) |
 | Design Rationale | **decision WHY** — reasoning behind Design decisions (alternatives, forces, invalidation hints) | archive L1 |
 | Research | **evidence** — raw investigation underpinning WHY (codebase grep, SOTA articles, industry patterns, org history) | archive L2 |
-| Understanding | **understanding deltas** — append-only mid-round re-derivation log; written by `sharpen`, consumed by `revise` | off-pipeline archive |
+| Understanding Shifts | **understanding deltas** — append-only mid-round re-derivation log; written by `sharpen`, consumed by `revise` | off-pipeline archive |
 | Tasks | **execution plan** — *process-framed* sequence of land-able work items that realize Design. Describes the **work** (what to do, in what order, how to verify); never restates the *finished system* (which is Design's job — anchor in, don't paraphrase) | (Machine, Realization · Process) |
 
 **How the model derives each seam.** The three axes (§2) each adjudicate exactly one high-traffic boundary, so an author places a fact — or catches a misplacement — by reasoning from the axis, no memorized per-seam rule:
@@ -105,13 +105,13 @@ Each level loads only via explicit trigger (anchor link from the layer above). J
 
 The runtime-loadable form — which artifact loads when — is owned by `artifact-contract.md` → Surface / Archive layering; the table above is the design-level detail.
 
-Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The understanding-shift archive is written by `sharpen` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Structural shape and what-loads-when are owned by `artifact-contract.md`.
+Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The `understanding-shift.md` archive is written by `sharpen` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Structural shape and what-loads-when are owned by `artifact-contract.md`.
 
 ## 5. Artifact shapes
 
 The required sections, anchor patterns, and per-stage shapes for every artifact are the **structural contract**, owned by `artifact-contract.md` → Feature Layout / Required Shapes / Anchors (the runtime home — loaded before writing or editing artifact structure). This doc does not restate them; the *naming rationale* is §8 and the *design resolutions* that produced them are §9.
 
-The seven per-artifact shapes — 5.1 Requirements, 5.2 Spec, 5.3 Design, 5.4 Design Rationale, 5.5 Research, 5.6 Tasks, 5.7 Understanding — all resolve to `artifact-contract.md` → Required Shapes. The three feature-id forms (sequence / tracker-key / date) and the `## Upstream` rule live in `artifact-contract.md` → Feature Layout; their rationale is §9 ("Three feature-key forms").
+The seven per-artifact shapes — 5.1 Requirements, 5.2 Spec, 5.3 Design, 5.4 Design Rationale, 5.5 Research, 5.6 Tasks, 5.7 Understanding Shifts — all resolve to `artifact-contract.md` → Required Shapes. The three feature-id forms (sequence / tracker-key / date) and the `## Upstream` rule live in `artifact-contract.md` → Feature Layout; their rationale is §9 ("Three feature-key forms").
 
 ## 6. Cross-cutting structural rules
 
@@ -154,7 +154,7 @@ The per-artifact drift guards are part of the **structural contract**, owned by 
 
 ## 8. Naming decisions
 
-**This section is the naming authority.** Every name the redesign settles follows from the coordinate model (§2) — given the axes it is predictable and resolves to exactly one element; a few established names (Decision, the Rationale / Research / Understanding archives, Guidelines, the `<KEY>` id) are retained by deliberate fiat, not re-derived (flagged below). The scheme below is the framework's vocabulary; the dedicated framework-wide rename that rolled it out across all ~1,000 sites (artifacts, edges, items, anchors, `leanplan-validate`, fixtures, adapters, every shipped feature) landed via backlog **#34**. The framework now runs in this vocabulary throughout; the **prior vocab** (last column) is retained as the migration record.
+**This section is the naming authority.** Every name the redesign settles follows from the coordinate model (§2) — given the axes it is predictable and resolves to exactly one element; a few established names (Decision, the Rationale / Research / Understanding Shifts archives, Guidelines, the `<KEY>` id) are retained by deliberate fiat, not re-derived (flagged below). The scheme below is the framework's vocabulary; the dedicated framework-wide rename that rolled it out across all ~1,000 sites (artifacts, edges, items, anchors, `leanplan-validate`, fixtures, adapters, every shipped feature) landed via backlog **#34**. The framework now runs in this vocabulary throughout; the **prior vocab** (last column) is retained as the migration record.
 
 | Stage (edge · verb) | Artifact (node · noun) | File | Items (anchor) | Prior vocab |
 |---|---|---|---|---|
@@ -164,7 +164,7 @@ The per-artifact drift guards are part of the **structural contract**, owned by 
 | `tasks` | Tasks | `tasks.md` | Task `T:` | `plan` · TASK · `plan.md` |
 | `implement` | (code) | — | — | `impl` |
 
-Archives **Rationale · Research · Understanding** (`Delta-`) keep their names; so do **Guidelines** and the `<KEY>` directory id (below). Axes are named in §2.
+Archives **Rationale · Research · Understanding Shifts** (`Delta-`) keep their names; so do **Guidelines** and the `<KEY>` directory id (below). Axes are named in §2.
 
 **How each name derives:**
 
