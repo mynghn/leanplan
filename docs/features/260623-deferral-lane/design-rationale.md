@@ -24,9 +24,11 @@ The drain's *degree of freedom* is the whole ballgame. A low-freedom drain — "
 
 The tension to hold: high freedom risks the drain being skipped or done shallowly. So the *consultation* is made load-bearing and reconciled (D-5, the Feature M pattern), even though the *decision* it prompts stays free. Freedom in the reasoning; rigor in the fact that the reasoning happened.
 
-## D-5: no-loss-via-reconciliation-plus-advisory-check
+## D-5: no-loss-via-advisory-check
 
-No-loss needs surfacing, but surfacing splits along what is mechanically checkable. The *resolution marker* — whether a `(resolved -> …)` note is present on a `Defer-N` whose owning stage's artifact already exists — is structural, so `validate.py` can and does check it, as an advisory warning (escalating under `--strict`, mirroring the surface-budget guardrail; not a hard gate, because an unresolved deferral for a not-yet-run stage is legitimate). The *substance* — did the "resolved" deferral genuinely land where it cites, or is the marker slug-deep? — is precisely what the validator cannot judge, since it reads artifacts, not the decisions behind them (the Feature M boundary). So substance rides Close-Out Reconciliation, reviewer-judged. Validator-only would rubber-stamp slug-deep resolutions; review-only would forfeit the cheap structural catch. Both, each at its tier.
+No-loss needs surfacing, but only the mechanically-checkable half earns a dedicated mechanism. The *resolution marker* — whether a `(resolved -> …)` note is present on a `Defer-N` whose owning stage's artifact already exists — is structural, so `validate.py` checks it as an advisory warning (escalating under `--strict`, mirroring the surface-budget guardrail; not a hard gate, because an unresolved deferral for a not-yet-run stage is legitimate).
+
+An earlier design added a second, review-tier *substance* check — Close-Out Reconciliation judging whether a "resolved" deferral genuinely landed where it cites. Dropped as redundant: a drained deferral resolves *into* a `Spec#` / `Design#` / `Tasks#` anchor, and that landing is already both (a) resolution-checked — the marker's cited target must exist — and (b) tracked by the target stage's normal coverage. Once a deferral becomes a decision its role ends there; the framework should hunt the unrealized *decision*, not the spent deferral. The only gap the substance tier uniquely caught — a marker pointing at a real-but-irrelevant anchor — is too narrow to justify a standing review obligation on every close-out. Invalidation trigger: if slug-deep resolutions prove common in practice, reinstate the review-tier check.
 
 ## D-6: rename-understanding-archive
 

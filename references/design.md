@@ -24,7 +24,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 *Default flow, not a rigid script — re-derive it against the actual Spec and current code. Load-bearing (don't skip or reorder): inspect current code before choosing (step 2), the coverage check (step 7), the self-check (step 9).*
 
-1. **Load Spec** + artifact contract + any existing `research.md`. Then **drain deferrals** (load-bearing): if `deferrals.md` exists, surface each unresolved `Defer-<N>` addressed to Design and re-examine it against the current option space — non-binding, re-derive not replay; resolve in place (`references/deferral.md`).
+1. **Load Spec** + artifact contract + any existing `research.md`. Then **drain deferrals** (load-bearing): if `deferrals.md` exists, surface each unresolved `Defer-<N>` addressed to this stage, `Design`, and re-examine it against the current option space — non-binding, re-derive not replay; resolve in place (refer to `references/deferral.md` for detailed procedure guide).
 2. **Inspect current code** before choosing architecture. Reality is authoritative — don't pick components without seeing what already exists.
 3. **Draft Architecture**: Mermaid diagram + brief caption showing chosen components, boundaries, and data / control flow. External systems appear as labeled nodes / edges.
 4. **Enumerate Decisions**: for each realization choice that emerged, open a `D-<N>: <slug>` block.

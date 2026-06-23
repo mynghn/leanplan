@@ -2,11 +2,11 @@
 
 This doc carries the capture and drain procedures for the forward-deferral lane — the on-demand companion behind the one-line hooks in the stage docs. It loads JIT at two moments: when a stage *captures* a deferred decision, and when a stage *drains* the deferrals addressed to it. The structural shape (anchor, citation, layering) is owned by `artifact-contract.md` → Deferrals; this doc is the procedure.
 
-A deferral is a deliberately-deferred cross-stage decision — a genuine decision that surfaces at the wrong stage. Park it off the review surface so the spark is not lost, the review surface is not bloated, and the later stage is not pinned. The lane lives in `deferrals.md` as append-only `Defer-<N>` blocks, each addressed to the stage that owns the decision.
+A deferral is a deliberately-deferred cross-stage decision — a genuine decision that surfaces too early, at a stage that doesn't own it. Park it off the review surface so the spark is not lost, the review surface is not bloated, and the owning stage is not pinned. The lane lives in `deferrals.md` as append-only `Defer-<N>` blocks, each addressed **forward** to the later stage that owns the decision (a decision owned by an *earlier*, already-run stage is a drift — that is `revise`/stop-the-line, not a deferral).
 
 ## Capture — park it, don't discard it
 
-Each stage already has a disposal point where it sets off-altitude content aside: Requirements strips upstream solution suggestions; Spec pushes specifics to Design; Design pushes work-ordering to Tasks; Tasks pushes tech-realization back to Design. At that point, judge what you are setting aside:
+Each stage that has a *later* stage already has a disposal point where it sets off-altitude content aside for it: Requirements strips upstream solution suggestions; Spec pushes specifics to Design; Design pushes work-ordering to Tasks. (Tasks, the last planning stage, has no forward target — what it would "push back to Design" is a drift for `revise`, not a deferral.) At that point, judge what you are setting aside:
 
 - **Noise** — discard it as before. Most set-aside content is noise; capture is the exception, not the rule.
 - **A genuine decision another stage owns** — append a `Defer-<N>` block, in the shape `artifact-contract.md` → Deferrals defines, addressed to that stage, instead of discarding it.
@@ -33,7 +33,4 @@ When you have drained a deferral, retire it in place: append `(resolved -> <Spec
 
 ## No deferral is lost
 
-A captured deferral is accounted for — drained at its owning stage, or surfaced as an omission — never silently dropped:
-
-- **Structural** — `validate.py` raises an advisory warning for an unresolved `Defer-<N>` whose owning stage's artifact already exists (escalating under `--strict`). An unresolved deferral for a stage not yet authored is legitimate and unflagged.
-- **Substance** — Close-Out Reconciliation (`implement-closeout.md`) carries deferrals as an obligation set: a reviewer judges whether a "resolved" deferral genuinely landed where it cites, the half the validator cannot see.
+A captured deferral is accounted for — drained at its owning stage, or surfaced as an omission — never silently dropped. `validate.py` raises an advisory warning for an unresolved `Defer-<N>` whose owning stage's artifact already exists (escalating under `--strict`); an unresolved deferral for a stage not yet authored is legitimate and unflagged. Once drained, the `(resolved -> …)` marker cites where the decision landed — a `Spec#` / `Design#` / `Tasks#` anchor that is itself resolution-checked and tracked by that stage's normal coverage, so a resolved deferral needs no separate hunt: follow the decision it became, not the deferral.

@@ -56,7 +56,7 @@ Anchor headings live at any of H2 / H3 / H4 to fit document structure — the ma
 - `D-<N>: <slug>` — Design decision
 - `T: <id>` — Tasks card
 - `Delta-<N>: <slug>` — understanding delta (Understanding archive)
-- `Defer-<N>: <slug>` — deferred cross-stage decision (Deferrals archive); a trailing `(resolved -> <…>)` resolve-in-place marker is tolerated alongside ` (retired)` and keeps the ID resolving
+- `Defer-<N>: <slug>` — deferred cross-stage decision (Deferrals archive); a trailing `(resolved -> <…>)` resolve-in-place marker is tolerated alongside the retired marker ` (retired)`, and keeps the anchor resolving
 
 Use kebab-case slugs. IDs are stable: never renumber an existing anchor after edits, and never delete a superseded `B` / `C` / `D` / `T:` — retire it in place by appending ` (retired)` to its anchor heading and recording the supersession reason in the body. The marker is not part of the slug, so the ID still resolves and prior review and traceability stay reconstructable — e.g. `### B-2: stale-behavior (retired)` keeps resolving as `B-2-stale-behavior`. (`validate.py` tolerates the heading marker; do not instead decorate the slug itself.)
 
@@ -101,11 +101,11 @@ Use matching `D-<N>: <slug>` anchors. Body is **free-form prose** — typically 
 
 Use descriptive topic headings. Store evidence only. Interpretation belongs in rationale.
 
-### Understanding
+### Understanding Shifts
 
 Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `Spec#…` / `Design#…` / `Tasks#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `Spec#` / `Design#` / `Tasks#` citations are resolution-checked, and *inbound* `Understanding#Delta-N-slug` citations now resolve against these `Delta-<N>` anchors too — a revised artifact cites the Delta that justified it. Research# citations stay recorded-for-retrieval only: Research carries descriptive headings, not a resolvable anchor set.
 
-### Deferrals (`deferrals.md`)
+### Deferrals
 
 Off-review-surface archive of deliberately-deferred cross-stage decisions, created when useful. One `Defer-<N>: <slug>` block per deferral, each addressed forward to the later stage that owns the decision. A sibling to the understanding-shift archive — never a blend: an understanding delta is a *committed* change to propagate; a deferral is an *open* question to re-decide. Not loaded at default review/implement time; JIT-loaded only by its owning stage's drain.
 
@@ -116,7 +116,7 @@ Each block is shaped so it cannot read as a settled decision (conclusion-first):
 - **forces** glimpsed
 - at most an **option seen** — explicitly marked *not chosen*. There is no "decision" field.
 
-Resolution is retire-in-place: when the owning stage drains it, append `(resolved -> <Spec#… | Design#… | Tasks#…>)` to the block heading, citing where the decision landed — the same convention as ` (retired)`, so the `Defer-<N>` ID keeps resolving. Append-only; IDs stable; duplicate `Defer-<N>` anchors are validator-caught. An unresolved deferral whose owning stage's artifact already exists is surfaced by `validate.py` (advisory) and at Close-Out Reconciliation — never silently dropped. The capture and drain procedures live in `references/deferral.md`.
+Resolution is retire-in-place: when the owning stage drains it, append `(resolved -> <Spec#… | Design#… | Tasks#…>)` to the block heading, citing where the decision landed — the same convention as ` (retired)`, so the `Defer-<N>` ID keeps resolving. Append-only; IDs stable; duplicate `Defer-<N>` anchors are validator-caught. An unresolved deferral whose owning stage's artifact already exists is surfaced by `validate.py` (advisory) — never silently dropped; once drained, the resolve-in-place marker cites where the decision landed and that anchor's normal coverage tracks it. The capture and drain procedures live in `references/deferral.md`.
 
 ### Tasks (`tasks.md`)
 

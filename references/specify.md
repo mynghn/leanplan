@@ -22,7 +22,7 @@ Mid-stage, if a disturbance shifts the understanding, `/sharpen` (Claude) or `sh
 
 *Default flow, not a rigid script — re-derive it against the actual Requirements. Load-bearing (don't skip or reorder): the Spec test (step 4) and the self-check (step 8).*
 
-1. **Load Requirements** + the artifact contract (`artifact-contract.md`). Then **drain deferrals** (load-bearing): if `deferrals.md` exists, surface each unresolved `Defer-<N>` addressed to Spec and re-examine it against the current option space — non-binding, re-derive not replay; resolve in place (`references/deferral.md`).
+1. **Load Requirements** + the artifact contract (`artifact-contract.md`). Then **drain deferrals** (load-bearing): if `deferrals.md` exists, surface each unresolved `Defer-<N>` addressed to this stage, `Spec`, and re-examine it against the current option space — non-binding, re-derive not replay; resolve in place (refer to `references/deferral.md` for detailed procedure guide).
 2. **Derive Behavior items**: for each desired outcome in Requirements, ask what externally-observable behavior signals it. Write as `B-<N>: <slug>` under `## Behavior`. One item per behavior; don't fold two into one.
 3. **Lift Constraints**: collect continuous constraints — SLAs, non-blocking guarantees, idempotency, integrity rules, environmental bindings (existing backbone compatibility, compliance boundary, deployment envelope). Write as `C-<N>: <slug>` under `## Constraint`. If a constraint has no realization alternative, it's a Constraint — not a Design choice.
 4. **Apply the Spec test** on every line: can the implementation change without changing this externally-observable behavior? If yes, cut the line or push to Design.

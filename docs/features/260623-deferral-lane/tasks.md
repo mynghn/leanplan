@@ -20,13 +20,11 @@ flowchart LR
     end
     subgraph L [No-loss]
       L1[L1 validate.py advisory check]
-      L2[L2 close-out reconciliation]
     end
     subgraph R [Rename: understanding-shifts]
       R1[R1 filename sweep] --> R2[R2 validate.py + selftest]
     end
     F1 --> B1
-    F1 --> L2
     F2 --> L1
     F2 -. coordinate validate.py edits .-> R2
 ```
@@ -62,37 +60,29 @@ Tracks: **F** registers the lane's structure; **B** weaves capture/drain into th
 
 ## T: B2
 
-- **Goal**: Add the capture hook at each stage's existing disposal point (Requirements "strip them", Spec "push to Design", Design "belongs in Tasks", Tasks "push to Design") — an affirmative redirect to park a genuine cross-stage decision as a `Defer-N` addressed to its owning stage instead of discarding it (`Spec#B-1-deferral-captured-on-set-aside`, `Spec#C-6-capture-is-opt-in-judgment`, `Design#D-3-capture-as-affirmative-stage-hook`). Keep it a one-line hook into `references/deferral.md` so the always-loaded surface stays lean (`Spec#C-2-capture-off-the-review-surface`).
-- **Repo**: leanplan — `references/{requirements,specify,design,tasks}.md`.
+- **Goal**: Add the capture hook at each *forward* disposal point — where a stage discards content bound for a later stage (Requirements "strip them", Spec "push to Design", Design "belongs in Tasks"; Tasks is the last stage, no forward target) — an affirmative redirect to park a genuine cross-stage decision as a `Defer-N` addressed forward to the later stage that owns it instead of discarding it (`Spec#B-1-deferral-captured-on-set-aside`, `Spec#C-6-capture-is-opt-in-judgment`, `Design#D-3-capture-as-affirmative-stage-hook`). Keep it a one-line hook into `references/deferral.md` so the always-loaded surface stays lean (`Spec#C-2-capture-off-the-review-surface`).
+- **Repo**: leanplan — `references/{requirements,specify,design}.md`.
 - **Completion**:
-  - Each of the 4 stage docs carries a one-line capture hook pointing to the companion; the hook reads as opt-in (no gate, no auto-detect).
+  - Each of the 3 capture-source stage docs carries a one-line capture hook pointing to the companion; the hook reads as opt-in (no gate, no auto-detect).
   - Each stage doc's prose-line count stays within its reflexive surface budget.
 - **Dependencies**: B1.
 
 ## T: B3
 
-- **Goal**: Extend each stage's entry ("Load …") step to drain the deferrals addressed to it — load `deferrals.md`, surface the unresolved `Defer-N` for this stage, re-examine each against the full current option space, and resolve in place (`Spec#B-2-deferrals-surfaced-at-owning-stage`, `Spec#C-3-surfaced-deferral-is-non-binding`, `Design#D-4-drain-by-re-derivation-at-stage-entry`). The consultation is load-bearing; the decision it prompts is free.
-- **Repo**: leanplan — `references/{requirements,specify,design,tasks}.md`.
+- **Goal**: Extend each *downstream* stage's entry ("Load …") step — Spec, Design, Tasks — to drain the deferrals addressed to it: load `deferrals.md`, surface the unresolved `Defer-N` for this stage, re-examine each against the full current option space, and resolve in place (`Spec#B-2-deferrals-surfaced-at-owning-stage`, `Spec#C-3-surfaced-deferral-is-non-binding`, `Design#D-4-drain-by-re-derivation-at-stage-entry`). Requirements is first — nothing is addressed back to it. The consultation is load-bearing; the decision it prompts is free.
+- **Repo**: leanplan — `references/{specify,design,tasks}.md`.
 - **Completion**:
-  - Each stage's load step instructs the drain + re-examination as a load-bearing step.
+  - Each downstream stage's load step instructs the drain + re-examination as a load-bearing step.
   - The drain wording is re-derive-not-apply — no "apply the deferred option" phrasing anywhere (a low-freedom drain would re-introduce pinning).
 - **Dependencies**: B1 (companion defines the drain); shares files with B2.
 
 ## T: L1
 
-- **Goal**: Add the advisory `validate.py` no-loss check — a `Defer-N` addressed to a stage whose `<stage>.md` exists but lacking a `(resolved -> …)` marker is surfaced as a warning (escalating under `--strict`, mirroring the surface-budget guardrail), realizing the structural half of `Spec#B-3-undrained-deferral-flagged-at-close-out` / `Spec#C-1-no-deferral-silently-lost` (`Design#D-5-no-loss-via-reconciliation-plus-advisory-check`).
+- **Goal**: Add the advisory `validate.py` no-loss check — a `Defer-N` addressed to a stage whose `<stage>.md` exists but lacking a `(resolved -> …)` marker is surfaced as a warning (escalating under `--strict`, mirroring the surface-budget guardrail), realizing `Spec#B-3-undrained-deferral-flagged-at-close-out` / `Spec#C-1-no-deferral-silently-lost` (`Design#D-5-no-loss-via-advisory-check`).
 - **Repo**: leanplan — `scripts/validate.py`, `scripts/leanplan-selftest`.
 - **Completion**:
   - selftest cases: an unresolved `Defer-N` whose owning stage's file exists → warning; a `(resolved -> …)`-marked one → no warning; a deferral for a not-yet-authored stage → no warning; `--strict` escalates the warning to an error.
 - **Dependencies**: F2 (validator already parses `Defer`).
-
-## T: L2
-
-- **Goal**: Extend Close-Out Reconciliation to carry deferrals as an obligation set — a reviewer treats an unresolved deferral as a surfaced omission and judges whether a "resolved" one genuinely landed where it cites, the substance half the validator cannot see (`Spec#C-1-no-deferral-silently-lost`, `Spec#B-3-undrained-deferral-flagged-at-close-out`, `Design#D-5-no-loss-via-reconciliation-plus-advisory-check`).
-- **Repo**: leanplan — `references/implement-closeout.md`.
-- **Completion**:
-  - The reconciliation step lists deferrals among load-bearing obligations and directs the reviewer to flag an unresolved or slug-deep-resolved deferral on the review path.
-- **Dependencies**: F1.
 
 ## T: R1
 
