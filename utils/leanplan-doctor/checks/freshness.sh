@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# leanplan-installation-freshness — read-only freshness + validity of a LeanPlan
+# leanplan-doctor / freshness — read-only freshness + validity of a LeanPlan
 # checkout and its installed skill symlinks.
 set -uo pipefail
 
 if [ -n "${LEANPLAN_ROOT:-}" ]; then
   ROOT="$LEANPLAN_ROOT"
 else
-  UTIL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  ROOT="$(cd "$UTIL_DIR/../.." && pwd)"
+  CHECK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  ROOT="$(cd "$CHECK_DIR/../../.." && pwd)"
 fi
 
 sync_state() {
@@ -48,7 +48,7 @@ is_git_repo() {
   git -C "$1" rev-parse --is-inside-work-tree >/dev/null 2>&1
 }
 
-echo "== leanplan-installation-freshness ====================================="
+echo "== leanplan-doctor / installation freshness ============================"
 if is_git_repo "$ROOT"; then
   state="$(sync_state "$ROOT")"
   printf '[repo   ]%s %s  (%s)\n' "$(flag "$state")" "$state" "$ROOT"

@@ -46,8 +46,8 @@ git -C "$LEANPLAN_ROOT" pull --ff-only
 ```
 
 Re-running `install.sh` is safe and refreshes adapter symlinks after the adapter list changes.
-Use `leanplan-installation-freshness` from your agent to check the installed checkout and adapter
-symlinks before updating.
+Use `leanplan-doctor` from your agent to check the installed checkout and adapter symlinks (and CE
+grounding-link health) before updating.
 
 ### Optional dotfile-manager use
 

@@ -18,5 +18,5 @@ Both vendors name the eight shared moves `leanplan-<move>` — Claude installs l
 Vendor-specific invocation glue must not restate stage procedure. Edit `references/*.md` or `scripts/leanplan-validate` when LeanPlan behavior changes.
 
 Installation utilities are not LeanPlan moves and do not live in this adapter map. They are authored
-under `utils/`; for example, `utils/leanplan-installation-freshness/` checks the checkout and runtime
-symlinks that `install.sh` manages.
+under `utils/`; for example, `utils/leanplan-doctor/` checks the checkout and runtime symlinks that
+`install.sh` manages, plus CE grounding-link health.
