@@ -29,7 +29,7 @@ What loads when — each tier loads only via an explicit trigger from the layer 
 - **Surface** (`requirements.md`, `spec.md`, `design.md`, `tasks.md`) — loaded by default at review + implement time.
 - **`design-rationale.md`** — loaded on challenge to a Design decision (anchor link from Design).
 - **`research.md`** — loaded behind rationale, when raw evidence is needed.
-- **`understanding-shifts.md`** — off-pipeline delta log, not a challenge-loading tier; written by `sharpen`, consumed by `revise`.
+- **`understanding-shifts.md`** — off-pipeline delta log, not a challenge-loading tier; written by `rethink`, consumed by `revise`.
 - **`deferrals.md`** — off-pipeline deferral lane, not a challenge-loading tier; written by any stage's capture hook, drained (JIT-loaded) at its owning stage's entry.
 
 The full tier model (L0/L1/L2 labels, design reasoning) lives in `framework-design.md` §4.
@@ -174,7 +174,7 @@ The surface artifacts (Requirements, Spec, Design, Tasks) are designed for **rev
 - **Direction, not a hard cap.** Tightness is the target; the caps below are an advisory backstop for *pathological* bloat, not a budget to fill. A well-formed one-deployment artifact normally sits far under them.
 - **Soft per-stage caps, in *prose* lines** (advisory — `leanplan-validate` warns above them, `--strict` escalates to error, `--allow-large` suppresses, mirroring the DAG-size guardrail): Requirements ~90, Spec ~110, Design ~160, Tasks ~220. **Visual blocks (Mermaid diagrams or ASCII art), fenced code/schemas, and blank lines are excluded** — they are legit reference detail, not attention-diluting prose, and a big architecture diagram must not read as bloat. This list is the source of truth; `leanplan-validate`'s `SURFACE_SOFT_CAP` mirrors it — keep the two in sync. A breach is a prompt to ask *"what prose belongs in an archive, or should this feature split?"* — not an automatic failure.
 - **Archive is lossless.** Moving reasoning to Rationale or evidence to Research removes it from the *review surface*, not from existence — it stays JIT-loadable on challenge. **Lean ≠ information loss.** This is the contract that lets the surface stay small without the team fearing lost context.
-- **The framework's own references apply this reflexively.** This budget caps user surface artifacts; the stage references themselves (`requirements.md` … `implement.md`) follow the same surface/tier discipline — stance, procedure, guardrails, and author-time calibration (worked examples, templates) stay always-loaded, while step-scoped lookup detail defers to an on-demand companion loaded at its consuming step. Advisory, not a validator-enforced gate.
+- **The framework's own references apply this reflexively.** This budget caps user surface artifacts; the stage references themselves (`frame.md` … `implement.md`) follow the same surface/tier discipline — stance, procedure, guardrails, and author-time calibration (worked examples, templates) stay always-loaded, while step-scoped lookup detail defers to an on-demand companion loaded at its consuming step. Advisory, not a validator-enforced gate.
 
 Grounded in the small-surface and LLM-aware principles (`philosophy.md` P3). The "lean surface is reviewed better" claim rests on the well-established code-review finding that defect detection drops sharply past a few hundred lines; that lean LeanPlan surfaces specifically review better is a deliberate, not-yet-measured bet. (context-engineering: context-rot, effective-vs-advertised-context, distractor-sensitivity)
 

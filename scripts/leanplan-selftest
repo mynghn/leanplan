@@ -156,7 +156,7 @@ inject_broken_anchor() {
 
 inject_duplicate_delta() {
     # Append-only integrity: re-emitting an existing Delta id (the easy mistake
-    # when /leanplan-sharpen is re-invoked across stateless sessions) must be caught.
+    # when /leanplan-rethink is re-invoked across stateless sessions) must be caught.
     cat > "$1/understanding-shifts.md" <<'U'
 # LP-EXAMPLE — Understanding
 

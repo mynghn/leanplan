@@ -50,13 +50,13 @@ How you know this step is complete: the feature directory exists and you know it
 Ask your agent to run the LeanPlan Requirements stage for the allocated feature:
 
 ```text
-$leanplan-requirements <KEY>
+$leanplan-frame <KEY>
 ```
 
 In Claude Code, use the installed LeanPlan slash command for the same stage:
 
 ```text
-/leanplan-requirements <KEY>
+/leanplan-frame <KEY>
 ```
 
 Use the `<KEY>` printed by `leanplan-new`. Passing the title again asks the Requirements stage to allocate a new feature, which is useful only when you skipped Step 1 and want the agent to create the directory for you.

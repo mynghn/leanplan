@@ -17,7 +17,7 @@
 # Forms 1 and 3 normalize the title arg to a kebab slug; form 2 uses the key as-is.
 # Creates <cwd>/docs/features/<id>/{requirements,spec,design,design-rationale,tasks}.md.
 # Stubs contain section headers + guidance comments — no pseudo-items — so a fresh
-# scaffold passes all validators cleanly. The corresponding /leanplan-requirements, /leanplan-specify,
+# scaffold passes all validators cleanly. The corresponding /leanplan-frame, /leanplan-specify,
 # /leanplan-design, /leanplan-tasks skills fill in real content.
 #
 # Prints the allocated relative dir path (docs/features/<id>) to STDOUT as the only

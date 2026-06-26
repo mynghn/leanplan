@@ -6,11 +6,11 @@ This doc carries the procedure for the Spec stage — turning a Requirements int
 
 Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules).
 
-Mid-stage, if a disturbance shifts the understanding, `leanplan-sharpen` is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
+Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the sanctioned, opt-in response — an off-pipeline reflect-and-re-derive move that reads your artifacts but never edits them — instead of ignoring it or hand-rolling a fix.
 
 ## Inputs
 
-- `<cwd>/docs/features/<KEY>/requirements.md` (required). If absent, stop and tell the user to run `leanplan-requirements <feature-title>` first — it allocates the `<KEY>` (`NNNN-slug`) dir and prints its path.
+- `<cwd>/docs/features/<KEY>/requirements.md` (required). If absent, stop and tell the user to run `leanplan-frame <feature-title>` first — it allocates the `<KEY>` (`NNNN-slug`) dir and prints its path.
 - `<cwd>/docs/features/<KEY>/research.md` (optional, for context reuse).
 
 ## Outputs

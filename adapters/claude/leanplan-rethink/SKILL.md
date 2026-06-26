@@ -1,17 +1,17 @@
 ---
-name: leanplan-sharpen
-description: LeanPlan — sharpen a disturbed understanding mid-round via reflect → verify → re-derive → decide → emit, logging a durable delta. Off-pipeline and opt-in; reads committed artifacts, never edits them.
+name: leanplan-rethink
+description: LeanPlan — rethink a disturbed understanding mid-round via reflect → verify → re-derive → decide → emit, logging a durable delta. Off-pipeline and opt-in; reads committed artifacts, never edits them.
 argument-hint: "[what shifted | a claim to check]"
 allowed-tools: Read, AskUserQuestion, WebSearch, WebFetch, Write, Bash(*/scripts/leanplan-validate *)
 ---
 
-# leanplan sharpen
+# leanplan rethink
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the sharpen move — a mid-round, off-pipeline re-derivation of a disturbed understanding (not a stage edge).
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the rethink move — a mid-round, off-pipeline re-derivation of a disturbed understanding (not a stage edge).
 
 Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/claude/<skill>/`. Later `references/...` and `scripts/...` paths are relative to `LP_ROOT`; when running a command, use the shell form `"$LP_ROOT/..."`.
 
-Load `references/sharpen.md` from `LP_ROOT` — it is authoritative for the procedure (reflect → verify → re-derive → decide → emit), the two honest stances (adversarial claim-verification, legitimate no-op), and the read-never-edit boundary. Load these on demand, not up front (context-engineering: jit-loading):
+Load `references/rethink.md` from `LP_ROOT` — it is authoritative for the procedure (reflect → verify → re-derive → decide → emit), the two honest stances (adversarial claim-verification, legitimate no-op), and the read-never-edit boundary. Load these on demand, not up front (context-engineering: jit-loading):
 
 - `references/artifact-contract.md` from `LP_ROOT` — **before writing the understanding delta**: the `understanding-shifts.md` archive shape and `Delta-<N>: <slug>` anchor.
 - `references/philosophy.md` from `LP_ROOT` — **when a principle's intent or grounding is in question**: the framework principles shaping what "good" looks like.
