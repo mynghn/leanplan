@@ -35,7 +35,7 @@ git clone https://github.com/mynghn/leanplan.git "$LEANPLAN_ROOT"
 "$LEANPLAN_ROOT/install.sh"
 ```
 
-`install.sh` creates the per-runtime symlinks from that checkout: Claude Code at `~/.claude/skills/<name>`, Codex at `~/.agents/skills/leanplan-*`, and shared utility skills from `utils/`.
+`install.sh` creates the per-runtime symlinks from that checkout: Claude Code at `~/.claude/skills/leanplan-*`, Codex at `~/.agents/skills/leanplan-*`, and shared utility skills from `utils/`.
 
 To update an installed copy:
 
