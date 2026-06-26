@@ -23,11 +23,14 @@ done
 
 # --- LeanPlan root ------------------------------------------------------------
 # This script lives at utils/leanplan-doctor/checks/grounding.sh — walk up three.
+# `pwd -P` is load-bearing: the script is installed as a symlink, so a logical
+# pwd would walk up the symlink's location (e.g. ~/.claude/skills) instead of the
+# real checkout. Resolve the physical path first, then walk up.
 if [ -n "${LEANPLAN_ROOT:-}" ]; then
   ROOT="$LEANPLAN_ROOT"
 else
-  CHECK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  ROOT="$(cd "$CHECK_DIR/../../.." && pwd)"
+  CHECK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+  ROOT="$(cd "$CHECK_DIR/../../.." && pwd -P)"
 fi
 
 MAP="$ROOT/references/context-engineering.md"
@@ -99,6 +102,18 @@ echo "== leanplan-doctor / CE grounding links ================================"
 
 grounded="$(grounded_slugs)"
 n_grounded="$(printf '%s\n' "$grounded" | grep -c . || true)"
+
+# A real LeanPlan checkout always carries grounding hooks. Enumerating zero means
+# the root is wrong or the checkout is broken — a misconfiguration, never a clean
+# result. Fail loudly (exit 2) rather than silently report "all 0 slugs resolve".
+if [ "$n_grounded" -eq 0 ]; then
+  printf '[grounded] **  no grounding hooks found under %s\n' "$ROOT"
+  echo "               0 grounded slugs enumerated — wrong LeanPlan root or a broken"
+  echo "               checkout, not a clean result. Set \$LEANPLAN_ROOT, or run via the"
+  echo "               resolved skill path."
+  echo "========================================================================"
+  exit 2
+fi
 
 if [ ! -f "$INDEX" ]; then
   printf '[source ]  n/a  source absent — expected gloss fallback (looked for %s)\n' "$INDEX"

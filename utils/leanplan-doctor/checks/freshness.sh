@@ -3,11 +3,14 @@
 # checkout and its installed skill symlinks.
 set -uo pipefail
 
+# `pwd -P` is load-bearing: the script is installed as a symlink, so a logical pwd
+# would walk up the symlink's location (e.g. ~/.claude/skills) instead of the real
+# checkout. Resolve the physical path first, then walk up.
 if [ -n "${LEANPLAN_ROOT:-}" ]; then
   ROOT="$LEANPLAN_ROOT"
 else
-  CHECK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  ROOT="$(cd "$CHECK_DIR/../../.." && pwd)"
+  CHECK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+  ROOT="$(cd "$CHECK_DIR/../../.." && pwd -P)"
 fi
 
 sync_state() {
