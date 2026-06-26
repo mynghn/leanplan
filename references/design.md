@@ -37,7 +37,12 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
    - an Architecture element,
    - **or** (for trivial realization not worth a Decision block) a directly-cited Tasks Completion criterion that the downstream `plan` skill will add.
    Surface any uncovered items that *no* path realizes. Do not force-create a Decision for a trivial realization that the Tasks layer handles directly.
-8. **Stop** if a design choice changes the Spec contract — Spec is wrong, not just this Design. Record the drift as a `Delta` in `understanding-shifts.md`, then run `leanplan-revise <KEY>` — it injects the fix at Spec and propagates downstream-only (`revise.md`). Don't hand-edit Spec inline.
+8. **Fold a surfaced contract fact back into the Spec — inline, while warm.** Choosing realization can surface a contract fact the Spec didn't name. The Spec is still in this session's working set (not yet handed off to implementation), so updating it is continued authoring, not a cross-artifact move — fold it in place, **no `Delta`, no `leanplan-revise`**:
+   - **Additive** (a new observable behavior / constraint that contradicts no existing item) → author it into the Spec as a new `B`/`C` (next free number) — the expected completion of a provisional contract; the anchor + its body *is* the record.
+   - **Contradictory** (it invalidates an existing item) → retire the superseded item in place (append `(retired)`, don't delete — `artifact-contract.md` → Anchors) and author the correction; keep this distinct from additive — a real contract change, not a silently-absorbed completion.
+   - **State it agnostically** — the fact was surfaced *by* exploring a realization, so record it by its observable property, not the realization that revealed it; the Spec line must stay invariant under a realization swap. E.g. a chosen broker reorders → fold "consumers must tolerate reordering" (agnostic), not "tolerate the broker's partition reordering" (coupled to what surfaced it).
+   - Then re-derive the downstream you've already authored (Architecture, Decisions, coverage) against the changed Spec and re-validate; don't patch downstream to mask the change.
+   `leanplan-revise` is reserved for the **committed** path — a fact surfaced once the Spec is committed / handed off (e.g. during implementation) routes through it, where its `Delta` gate belongs (a warm edit has no baseline for a `Delta` to be relative to). `framework-design.md` §9 reconciles the two.
 9. **Self-check** before exit:
    - No work ordering, cross-team request filing, or rollout text (those belong in Tasks).
    - No top-level `## Schemas` or `## Interfaces` section — schemas live inside their Decisions.
