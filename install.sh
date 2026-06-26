@@ -17,7 +17,9 @@ CODEX_SKILLS_DIR="$HOME/.agents/skills"
 
 CLAUDE_SKILLS=(leanplan-frame leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-rethink leanplan-revise leanplan-validate)
 CODEX_SKILLS=(leanplan-frame leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-rethink leanplan-revise leanplan-validate)
-UTILITY_SKILLS=(leanplan-installation-freshness)
+UTILITY_SKILLS=(leanplan-doctor)
+# Utility skills removed in a prior version; clean up their stale symlinks on install/uninstall.
+RETIRED_UTILITY_SKILLS=(leanplan-installation-freshness)
 
 action="${1:-install}"
 
@@ -33,9 +35,21 @@ remove_legacy_codex_front_door() {
     fi
 }
 
+remove_retired_utility_skills() {
+    for s in "${RETIRED_UTILITY_SKILLS[@]}"; do
+        for link in "$CLAUDE_SKILLS_DIR/$s" "$CODEX_SKILLS_DIR/$s"; do
+            if [ -L "$link" ] && [ "$(readlink "$link")" = "$REPO_DIR/utils/$s" ]; then
+                rm "$link"
+                echo "removed retired $link"
+            fi
+        done
+    done
+}
+
 install_symlinks() {
     ensure_parent_dirs
     remove_legacy_codex_front_door
+    remove_retired_utility_skills
     for s in "${CLAUDE_SKILLS[@]}"; do
         ln -sfn "$REPO_DIR/adapters/claude/$s" "$CLAUDE_SKILLS_DIR/$s"
         echo "linked $CLAUDE_SKILLS_DIR/$s -> $REPO_DIR/adapters/claude/$s"
@@ -54,6 +68,7 @@ install_symlinks() {
 
 uninstall_symlinks() {
     remove_legacy_codex_front_door
+    remove_retired_utility_skills
     for s in "${CLAUDE_SKILLS[@]}"; do
         link="$CLAUDE_SKILLS_DIR/$s"
         if [ -L "$link" ]; then
