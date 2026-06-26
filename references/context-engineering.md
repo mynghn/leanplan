@@ -1,6 +1,6 @@
-# Context-Engineering Grounding — name → node map
+# Context-Engineering Grounding — name → concept map
 
-LeanPlan's load-bearing rules each name the context-engineering concept they implement, as a `(context-engineering: <slug>)` hook. This file resolves every such name to its vendored node and records which rule rests on it; the node carries the definition, sources, and `Related` edges. Load it only when a hook is challenged — it sits off the default hot path. Links: `[[<slug>]]` resolves to `context-engineering/<slug>.md`.
+LeanPlan's load-bearing rules each name the context-engineering concept they implement, as a `(context-engineering: <slug>)` hook. This file resolves every such name to a concept and records which rule rests on it. To read a concept's full definition and sources, consult Metacognition's context-engineering knowledge base (its `INDEX.md`, then `knowledge/<slug>.md` — each entry carries the current definition, sources, and `Related` edges) via the `context-engineering-knowledge-base` skill where present; when that source is absent or unreachable, the one-line gloss on the rule below is the local floor. Load it only when a hook is challenged — it sits off the default hot path. Links: `[[<slug>]]` is a concept name; it resolves live to the knowledge-base entry (above), or to the rule's gloss below when no source is present.
 
 Everything here defends one thing — a lean, high-signal working set against the three axes of context degradation ([[three-axes-of-context-degradation]]). The axes are the *why*; the rules below are the *how*.
 

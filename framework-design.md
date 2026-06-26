@@ -10,7 +10,7 @@
 - **`artifact-contract.md`** — the structural contract: feature layout, required shapes, anchors, drift guards, surface/archive layering, surface budget. Loaded before writing or editing artifact structure.
 - **`README.md`** — the front door: what LeanPlan is, install, quick start, contributing.
 
-This doc's `(context-engineering: <slug>)` grounding hooks resolve via `context-engineering.md` (the name→node map; load only when a hook is challenged).
+This doc's `(context-engineering: <slug>)` grounding hooks resolve via `context-engineering.md` (the name→concept map; load only when a hook is challenged) — the concept's full node lives in the live context-engineering knowledge base, with the map's one-line gloss as the local floor.
 
 ## 1. Philosophy
 
@@ -306,6 +306,8 @@ Claude Code / Codex already provide: cross-session memory, parallel sub-agents, 
 - **CLI wrapper** (thin shell over the above) — Phase 3+
 
 **Session management** is the worked example of this split. The **session-boundary discipline** (§1.9, `philosophy.md` P8) names the *behavior* — keep the planning spine warm, hard-cut to a fresh frame at plan→implementation, isolate noisy sub-tasks, light-compact at pivots — portably, naming no command. Where a harness supplies grounded session-management *mechanisms*, they realize it: on Claude Code, `/handoff <goal>` at the plan→implementation cut (a goal-scoped fresh-session brief) and `/compact-focus` at in-session pivots, both grounded in the same context-engineering concepts (`explore-execute-boundary`, `compaction-vs-eviction`, `explore-then-compact-handoff`, `prefix-cache-economics`). A bare install — no such commands, no external KB — performs the boundary by hand; the principle never depends on them.
+
+**Context-engineering deep-grounding** is the second instance of the same split. Load-bearing rules carry `(context-engineering: <slug>)` hooks naming the concept they rest on; the hooks, the name→concept map (`context-engineering.md`), and each rule's one-line gloss are self-contained and local — they need nothing external to *operate*, and they stay off the default surface (loaded only when a hook is challenged). Only the *deep definition* layer is harness-supplied: where Metacognition's context-engineering knowledge base is present, a challenged hook resolves to the live concept definition and sources via the `context-engineering-knowledge-base` skill; a bare install reads the gloss as the by-hand floor. Portability here is narrowed by design — operation and named grounding stay self-contained and local, only the deep definition is a live dependency — so no distilled copy ships to drift from its source.
 
 ### Beyond safety nets — long-term harness ambitions (Phase 4+)
 
