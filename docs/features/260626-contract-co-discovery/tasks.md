@@ -37,7 +37,7 @@ Tracks: **F** the forward probe in Specify; **B** the backward in-session fold; 
 ## T: B1
 
 - **Goal**: Make Design's backward discovery an **in-session fold** — additive facts authored into the Spec as new `B`/`C`, contradictory ones re-authored, both inline while the spine is warm, with `/revise` left to the committed path only (`Spec#B-2-design-found-fact-folds-back-as-completion`, `Spec#C-4-contradictory-change-not-silently-folded`), per `Design#D-2-backward-discovery-folds-in-session`.
-- **Repo**: leanplan — `references/design.md` (step 8), `references/framework-design.md` (§194 reconciliation)
+- **Repo**: leanplan — `references/design.md` (step 8), `framework-design.md` (§194 reconciliation)
 - **Completion**:
   - design.md step 8 replaces the blanket "Spec is wrong, run revise" with a warm working-set branch: (a) an additive fact is authored into the Spec as a new anchor, no `Delta`, no `/revise` (`Spec#B-2-design-found-fact-folds-back-as-completion`); (b) a contradictory fact is retire-by-noted + corrected in-session and stays distinct from additive (`Spec#C-4-contradictory-change-not-silently-folded`); both re-derive downstream and re-validate;
   - the branch states `/revise` is reserved for the committed/handed-off path;

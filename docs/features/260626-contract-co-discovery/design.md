@@ -40,7 +40,7 @@ During Design, a contract fact that surfaces folds into the Spec **in-session** 
   - **contradictory** (invalidates an existing item) → retire-by-note the item and author the correction in-session;
   - then re-derive the downstream already authored and re-validate — the editing-loop core (`framework-design.md` §194) applied **inline, without** the `Delta` gate while warm. Don't patch downstream to mask the change.
 - `/revise` is **not** invoked while warm. It remains the entry for the **committed** path — a contract fact surfaced once the Spec is committed/handed-off (e.g. during implementation) still routes through `/revise`, where its `Delta` gate belongs.
-- `references/framework-design.md` §194 — reconcile: the editing-loop core is carried **inline for warm working-set edits**, and by `/revise` once committed (today's text folds every in-flight stage into `/revise`).
+- `framework-design.md` §194 — reconcile: the editing-loop core is carried **inline for warm working-set edits**, and by `/revise` once committed (today's text folds every in-flight stage into `/revise`).
 - No new concept: additive discovery is ordinary anchor authoring — no completion-`Delta`, no `artifact-contract.md` change, no new type.
 - WHY: non-trivial — see `design-rationale.md#D-2-backward-discovery-folds-in-session`.
 
