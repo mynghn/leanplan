@@ -15,8 +15,8 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CLAUDE_SKILLS_DIR="$HOME/.claude/skills"
 CODEX_SKILLS_DIR="$HOME/.agents/skills"
 
-CLAUDE_SKILLS=(leanplan-requirements leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-sharpen leanplan-revise leanplan-validate)
-CODEX_SKILLS=(leanplan-requirements leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-sharpen leanplan-revise leanplan-validate)
+CLAUDE_SKILLS=(leanplan-frame leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-rethink leanplan-revise leanplan-validate)
+CODEX_SKILLS=(leanplan-frame leanplan-specify leanplan-design leanplan-tasks leanplan-implement leanplan-rethink leanplan-revise leanplan-validate)
 UTILITY_SKILLS=(leanplan-installation-freshness)
 
 action="${1:-install}"

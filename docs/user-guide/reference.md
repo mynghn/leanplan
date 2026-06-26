@@ -7,12 +7,12 @@ This page is for quick lookup. It is intentionally compact; use the guide pages 
 Codex form:
 
 ```text
-$leanplan-requirements "short feature title"
+$leanplan-frame "short feature title"
 $leanplan-specify <KEY>
 $leanplan-design <KEY>
 $leanplan-tasks <KEY>
 $leanplan-implement <KEY> <task-id>
-$leanplan-sharpen <what-shifted>
+$leanplan-rethink <what-shifted>
 $leanplan-revise <KEY> [Delta-N | what drifted]
 $leanplan-validate docs/features/<KEY>
 ```
@@ -20,12 +20,12 @@ $leanplan-validate docs/features/<KEY>
 Claude Code slash-command form:
 
 ```text
-/leanplan-requirements "short feature title"
+/leanplan-frame "short feature title"
 /leanplan-specify <KEY>
 /leanplan-design <KEY>
 /leanplan-tasks <KEY>
 /leanplan-implement <KEY> <task-id>
-/leanplan-sharpen <what-shifted>
+/leanplan-rethink <what-shifted>
 /leanplan-revise <KEY> [Delta-N | what drifted]
 /leanplan-validate docs/features/<KEY>
 ```

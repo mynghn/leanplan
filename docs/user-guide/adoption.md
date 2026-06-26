@@ -20,7 +20,7 @@ You do not need to adopt every discipline at once.
 1. Start by using LeanPlan for Requirements through Tasks, then implement normally.
 2. Add validation once the team is comfortable with the artifact shapes.
 3. Use implementation-stage discipline when task cards and citations are proving useful.
-4. Add sharpen and revise when the team starts catching drift mid-feature.
+4. Add rethink and revise when the team starts catching drift mid-feature.
 
 The goal is better decisions and handoffs, not ceremony. If a step does not improve implementation or review, inspect whether the feature is too small, too broad, or being forced into the wrong artifact.
 

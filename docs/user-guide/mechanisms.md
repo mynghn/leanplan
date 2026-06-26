@@ -77,17 +77,17 @@ How to work with it:
 
 When to challenge it: if the pause is caused by uncertainty rather than real drift, answer the decision directly and continue. Stop-the-line is meant to prevent known wrongness, not to turn every ambiguity into a planning ceremony.
 
-### Sharpen and revise
+### Rethink and revise
 
-Canonical references: [`sharpen.md`](../../references/sharpen.md), [`revise.md`](../../references/revise.md), [`framework-design.md` → Skill responsibilities](../../framework-design.md#12-skill-responsibilities).
+Canonical references: [`rethink.md`](../../references/rethink.md), [`revise.md`](../../references/revise.md), [`framework-design.md` → Skill responsibilities](../../framework-design.md#12-skill-responsibilities).
 
 What you see: LeanPlan gives two off-pipeline moves for moments when understanding shifts.
 
-Why it exists: not every shift should immediately rewrite artifacts, but real drift also should not stay in conversation memory. `sharpen` and `revise` split those cases so the agent can preserve changed understanding without corrupting the artifact history.
+Why it exists: not every shift should immediately rewrite artifacts, but real drift also should not stay in conversation memory. `rethink` and `revise` split those cases so the agent can preserve changed understanding without corrupting the artifact history.
 
 How to work with it:
 
-- Use **sharpen** when understanding moved but the committed artifacts do not need edits yet. It records the delta and returns to the current stage.
+- Use **rethink** when understanding moved but the committed artifacts do not need edits yet. It records the delta and returns to the current stage.
 - Use **revise** when an artifact is wrong or stale. It updates the highest affected layer, then re-evaluates downstream artifacts instead of fully restarting the plan by default.
 - Prefer these moves over hand-editing downstream artifacts to make the current task easier.
 

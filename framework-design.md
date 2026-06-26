@@ -63,7 +63,7 @@ flowchart LR
 
 **Reading the model.** An **artifact is a node** — a coordinate, a noun; a **stage is an edge** — one axis-flip, the skill/activity, a verb. Each pipeline step flips exactly one axis: `specify` flips World→Machine, `design` flips Contract→Realization, `tasks` flips Product→Process. So the "distance" between two artifacts is the number of axes between them — adjacent pairs differ by one axis (the blurrable, high-traffic seams above) and non-adjacent pairs by two or three (robustly distinct, never blurred). The empty (World, Realization) cell — **World Design**, the non-software means to change the world ("offer a discount") — is a deliberate scope marker: LeanPlan does Machine design, not World design. Progression runs from the (World, Contract) origin (Requirements) to running software past the (Machine, Realization · Process) corner.
 
-Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations. Not shown: the off-pipeline `sharpen` / `revise` moves and their `understanding-shifts.md` delta archive (§5.7, §12), which sit beside the pipeline rather than on it.
+Edge labels are skill names (§12). Dotted edges are archive relationships and the challenge path; solid edges are skill-driven stage transformations. Not shown: the off-pipeline `rethink` / `revise` moves and their `understanding-shifts.md` delta archive (§5.7, §12), which sit beside the pipeline rather than on it.
 
 Request (pre-Requirements immature problem request) is acknowledged but deferred. Framework currently assumes Requirements is well-formed via human-agent interaction.
 
@@ -78,7 +78,7 @@ Each stage owns one clearly-scoped concern. No overlap; no cross-stage duplicati
 | Design | **internal realization** — shape of the finished system; components, chosen stack, schemas, boundaries | (Machine, Realization) |
 | Design Rationale | **decision WHY** — reasoning behind Design decisions (alternatives, forces, invalidation hints) | archive L1 |
 | Research | **evidence** — raw investigation underpinning WHY (codebase grep, SOTA articles, industry patterns, org history) | archive L2 |
-| Understanding Shifts | **understanding deltas** — append-only mid-round re-derivation log; written by `sharpen`, consumed by `revise` | off-pipeline archive |
+| Understanding Shifts | **understanding deltas** — append-only mid-round re-derivation log; written by `rethink`, consumed by `revise` | off-pipeline archive |
 | Tasks | **execution plan** — *process-framed* sequence of land-able work items that realize Design. Describes the **work** (what to do, in what order, how to verify); never restates the *finished system* (which is Design's job — anchor in, don't paraphrase) | (Machine, Realization · Process) |
 
 **How the model derives each seam.** The three axes (§2) each adjudicate exactly one high-traffic boundary, so an author places a fact — or catches a misplacement — by reasoning from the axis, no memorized per-seam rule:
@@ -105,7 +105,7 @@ Each level loads only via explicit trigger (anchor link from the layer above). J
 
 The runtime-loadable form — which artifact loads when — is owned by `artifact-contract.md` → Surface / Archive layering; the table above is the design-level detail.
 
-Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The `understanding-shift.md` archive is written by `sharpen` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Structural shape and what-loads-when are owned by `artifact-contract.md`.
+Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The `understanding-shift.md` archive is written by `rethink` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Structural shape and what-loads-when are owned by `artifact-contract.md`.
 
 ## 5. Artifact shapes
 
@@ -158,7 +158,7 @@ The per-artifact drift guards are part of the **structural contract**, owned by 
 
 | Stage (edge · verb) | Artifact (node · noun) | File | Items (anchor) | Prior vocab |
 |---|---|---|---|---|
-| `requirements` | Requirements | `requirements.md` | Outcome · Guarantee | `requirement` · REQUIREMENT · `requirement.md` |
+| `frame` | Requirements | `requirements.md` | Outcome · Guarantee | `requirement` · REQUIREMENT · `requirement.md` |
 | `specify` | Spec | `spec.md` | Behavior `B-` · Constraint `C-` | Outcome `O-` · Invariant `INV-` |
 | `design` | Design | `design.md` | Decision `D-` | `Decision-` |
 | `tasks` | Tasks | `tasks.md` | Task `T:` | `plan` · TASK · `plan.md` |
@@ -168,7 +168,7 @@ Archives **Rationale · Research · Understanding Shifts** (`Delta-`) keep their
 
 **How each name derives:**
 
-- **A skill shares its artifact's root** — a verb where English has one (`specify`→Spec, `design`→Design), the bare noun where it doesn't (`requirements`, `tasks`). Every skill name is then predictable from its artifact, retiring the old `plan`-edge / `TASK`-artifact / `plan.md`-file triple — three names for one element. The runtime *invocation* prefixes this derived root with a `leanplan-` vendor namespace (`/leanplan-design`, `leanplan-specify`) so the loose-installed skills don't collide; the stage/artifact vocabulary in this section stays unprefixed (the stage is `design`, the artifact Design). See §12 for the namespace rationale.
+- **A skill is named for its act — defaulting to its artifact's root, with two deliberate departures.** Where the act is cleanly an artifact-rooted verb, the skill takes it (`specify`→Spec, `design`→Design); where English has no such verb, the bare noun (`tasks`). The departures are chosen, not derived: the entry skill is **`frame`**, not the artifact root `requirements` — its act is drawing the boundary around a still-fuzzy problem, which the passive noun (read as mere transcription) obscured; the artifact stays Requirements, only the command is the act. And the two off-pipeline moves are named for what they do — **`rethink`** (re-derive a disturbed understanding) and **`revise`** (apply the justified correction) — their shared `re-` marking them the correction layer, set apart from the forward pass. Every other name stays predictable from its artifact, retiring the old `plan`-edge / `TASK`-artifact / `plan.md`-file triple — three names for one element. The runtime *invocation* prefixes the name with a `leanplan-` vendor namespace (`/leanplan-design`, `leanplan-specify`) so the loose-installed skills don't collide; the stage/artifact vocabulary in this section stays unprefixed (the stage is `design`, the artifact Design). See §12 for the namespace rationale.
 - **Section names derive from the 2×2.** Requirements and Spec are both the **Contract** row (§2), so each splits into an episodic and a continuous half by World/Machine altitude: **Outcome / Guarantee** (World) and **Behavior / Constraint** (Machine). "Behavior" is the framework's own definition of a Spec item — *externally-observable behavior* — which kills the old same-name "Outcome on both artifacts" confusion; **Guarantee** gives Requirements' continuous domain properties (today's loose "system policies") a real home.
 - **Anchors are the shortest unambiguous initial** — `B-`, `C-`, `D-`, `T:` (colon, since Task IDs are track-keyed `A1` / `P1`, not sequence numbers). `Delta-` stays spelled (`D-` is taken by Decision; it is the rarely-cited archive item). The artifact namespace in each citation already implies the item type, so short prefixes cost no legibility; the structural detail (heading levels, fragment resolution, track prefixes) stays in `artifact-contract.md` → Anchors.
 - **`plan` is rejected as an artifact name** despite being the obvious word: it is the *activity*, not a node — the whole Requirements→Spec→Design→Tasks spine *is* "the plan", so naming one node "Plan" puts an edge concept on a node (the conflation §2 cleans up) and collides with agent **plan-mode** (an unfixable external clash). **Tasks** names stage 4 by its content; its plural also fixes the prior stage(`TASK`)/item(`Task:`) clash.
@@ -244,7 +244,7 @@ At task close-out, implementation agent:
 3. Migrates each to the strongest persistence form available.
 4. Verifies plan artifact contributions are no longer load-bearing (can be discarded).
 
-This belongs in the implementation-side skill (`implement`), not the plan-side skills (`requirements`, `specify`, `design`, `tasks`). It is a post-implementation distillation step, distinct from code writing itself.
+This belongs in the implementation-side skill (`implement`), not the plan-side skills (`frame`, `specify`, `design`, `tasks`). It is a post-implementation distillation step, distinct from code writing itself.
 
 Aligned with CLAUDE.md's existing comment discipline — principle 8 does not relax "default no comments", it clarifies *where the rare WHYs come from*: distilled from plan artifacts, not invented freshly.
 
@@ -258,13 +258,13 @@ Framework choices informed by parallel research:
 
 ## 12. Skill responsibilities
 
-Skills map to **edges** (transformations between stages), not to nodes — with two off-pipeline exceptions, the `sharpen` and `revise` moves (noted below). Each edge skill produces the next stage's artifact from the prior one.
+Skills map to **edges** (transformations between stages), not to nodes — with two off-pipeline exceptions, the `rethink` and `revise` moves (noted below). Each edge skill produces the next stage's artifact from the prior one.
 
-Every skill name carries a `leanplan-` vendor-namespace prefix — `leanplan-requirements`, `leanplan-specify`, `leanplan-design`, `leanplan-tasks`, `leanplan-implement`, `leanplan-sharpen`, `leanplan-revise` (plus the `leanplan-validate` utility move) — across **both** the Claude and Codex adapters. LeanPlan installs as loose symlinked skills under a flat registry (`~/.claude/skills/`, `~/.agents/skills/`) with no plugin namespace, so a bare `/design` or `/implement` would collide with anything else installed; the prefix namespaces the invocation. It is *additive* over the §8-derived root and leaves the stage/artifact vocabulary untouched — the stage is still `design`, the artifact still Design; only the invoked skill is `leanplan-design`. (§8 rejected a redundant `feature-` prefix on the artifact; `leanplan-` is a different concern — vendor namespacing of the invocation, not artifact re-labelling — so this is a new decision, not a reversal.)
+Every skill name carries a `leanplan-` vendor-namespace prefix — `leanplan-frame`, `leanplan-specify`, `leanplan-design`, `leanplan-tasks`, `leanplan-implement`, `leanplan-rethink`, `leanplan-revise` (plus the `leanplan-validate` utility move) — across **both** the Claude and Codex adapters. LeanPlan installs as loose symlinked skills under a flat registry (`~/.claude/skills/`, `~/.agents/skills/`) with no plugin namespace, so a bare `/design` or `/implement` would collide with anything else installed; the prefix namespaces the invocation. It is *additive* over the §8-derived root and leaves the stage/artifact vocabulary untouched — the stage is still `design`, the artifact still Design; only the invoked skill is `leanplan-design`. (§8 rejected a redundant `feature-` prefix on the artifact; `leanplan-` is a different concern — vendor namespacing of the invocation, not artifact re-labelling — so this is a new decision, not a reversal.)
 
 | Skill | Edge | Produces | Scope |
 |---|---|---|---|
-| `leanplan-requirements` | (standalone) → Requirements | Requirements | Author Requirements interactively — Problem, Outcome (desired future state + success signal folded), conditional Non-goals and Upstream. Problem-framed, no implementation choices. Currently a standalone skill; future: may become a Request → Requirements edge (`distill`) when naive problem writings are formalized as Request input (§14). |
+| `leanplan-frame` | (standalone) → Requirements | Requirements | Author Requirements interactively — Problem, Outcome (desired future state + success signal folded), conditional Non-goals and Upstream. Problem-framed, no implementation choices. Currently a standalone skill; future: may become a Request → Requirements edge (`distill`) when naive problem writings are formalized as Request input (§14). |
 | `leanplan-specify` | Requirements → Spec | Spec | Derive the observable contract (Behavior items + conditional Constraints, Non-goals). Generic-category abstraction only. Headers `## Behavior` / `## Constraint`; items `### B-<N>: <slug>` and `### C-<N>: <slug>`. Enforce "what a spec is NOT" drift guard. Split episode-verifiable (Behavior) from continuous (Constraints). Research activity on Requirements → Spec edge; archive notable findings as Research entries when depth is worth preserving. |
 | `leanplan-design` | Spec → Design | Design (+ Rationale, Research as needed) | Architecture visual material (Mermaid or fenced ASCII art) + Decisions (`## D-<N>: <slug>`). Anchor non-trivial decisions to Rationale. Every Spec B + C is realized by ≥ 1 Decision, Architecture element, or (for trivial realization) a directly-cited Tasks Completion criterion — not only Decisions. Write Rationale entries for non-trivial decisions and Research entries along the Spec → Design research activity. Drift guard: chosen realization only; no work ordering or ops process text. |
 | `leanplan-tasks` | Design → Tasks | Tasks | DAG with track subgraphs + prefixed IDs. Task cards with Goal (WHAT + HOW + inline anchors), Repo, Completion, Dependencies, conditional Guidelines. Verify bidirectional mapping: every Spec B + C maps to ≥ 1 completion criterion AND every Tasks cites ≥ 1 Spec B / C / Design Decision / doc Guideline reason. |
@@ -274,9 +274,9 @@ Each skill enforces the relevant drift guards from §7 and naming conventions fr
 
 **Research** is not a standalone skill. The research activity spans the `specify` and `design` edges; entries worth archiving are written into the Research artifact during those skills' execution.
 
-**`leanplan-sharpen`** is not a stage edge. It is the off-pipeline move — a thin adapter over `references/sharpen.md`, invocable mid-round from inside any stage to re-derive a disturbed understanding and emit a durable delta; it reads committed artifacts but never edits them, and produces no next-stage artifact.
+**`leanplan-rethink`** is not a stage edge. It is the off-pipeline move — a thin adapter over `references/rethink.md`, invocable mid-round from inside any stage to re-derive a disturbed understanding and emit a durable delta; it reads committed artifacts but never edits them, and produces no next-stage artifact.
 
-**`leanplan-revise`** is the second off-pipeline move and `leanplan-sharpen`'s repair-half complement — a thin adapter over `references/revise.md`, invocable at any in-flight occasion (a stage boundary, between tasks, or mid-task during implementation) to inject a justified drift into committed artifacts and propagate it downstream-only: intake a `Delta` justification, identify the corrected artifact, edit in place (re-derive only on an anchor-set change) preserving anchor IDs, then re-validate. It edits committed artifacts — but only against a recorded justification, and never upstream of the artifact it corrects. It is the single home for the in-cycle artifact-update editing core (§9): implementation's stop-the-line *triggers* detect drift and delegate the edit-and-propagate here, so a mid-implementation correction flows through the same entry as every other occasion. It produces no next-stage artifact.
+**`leanplan-revise`** is the second off-pipeline move and `leanplan-rethink`'s repair-half complement — a thin adapter over `references/revise.md`, invocable at any in-flight occasion (a stage boundary, between tasks, or mid-task during implementation) to inject a justified drift into committed artifacts and propagate it downstream-only: intake a `Delta` justification, identify the corrected artifact, edit in place (re-derive only on an anchor-set change) preserving anchor IDs, then re-validate. It edits committed artifacts — but only against a recorded justification, and never upstream of the artifact it corrects. It is the single home for the in-cycle artifact-update editing core (§9): implementation's stop-the-line *triggers* detect drift and delegate the edit-and-propagate here, so a mid-implementation correction flows through the same entry as every other occasion. It produces no next-stage artifact.
 
 **`leanplan-validate`** is a utility move, not a stage edge — a thin adapter over `scripts/leanplan-validate` that reads a feature path and reports structural validation, authoring no artifact. Validation is also embedded as stage-local glue in every stage skill (each runs the validator at write time); the standalone move is the on-demand entry point for checking artifacts between or after stages. Symmetric across both vendor adapters.
 
@@ -286,7 +286,7 @@ Framework ships incrementally; not every phase is required to start.
 
 | Phase | Addition | Status |
 |---|---|---|
-| 1 | 7 skill prompts (§12) — 1 standalone (`requirements`) + 4 edge + 2 off-pipeline (`sharpen`, `revise`) | ✅ shipped |
+| 1 | 7 skill prompts (§12) — 1 standalone (`frame`) + 4 edge + 2 off-pipeline (`rethink`, `revise`) | ✅ shipped |
 | 2 | Bash validators + scaffolds + git hooks (structural safety nets) | ✅ shipped — `leanplan-validate`, `leanplan-new`, `pre-commit` / `commit-msg` hooks |
 | 3 | CLI wrapper + per-feature progress state files | ◐ partial — `leanplan-new` shipped; progress-state files dropped as informational-only (§14; principle 7) |
 | 4 | Harness-flavored capabilities (see below) | ○ future (post-v1) |
@@ -323,7 +323,7 @@ Most require accumulated data across many shipped cycles; post-v1. Harness-like 
 
 Genuinely open — not yet built or decided:
 
-- **Request → Requirements edge (`distill`)**: `requirements` currently authors Requirements standalone (interactive with user). Future: when naive problem writings become an explicit Request input artifact, add a `distill` skill for the Request → Requirements sharpening edge.
+- **Request → Requirements edge (`distill`)**: `frame` currently authors Requirements standalone (interactive with user). Future: when naive problem writings become an explicit Request input artifact, add a `distill` skill for the Request → Requirements sharpening edge.
 - **Divide-and-conquer for oversized work**: how to split inputs that exceed one-deployment scope. Framework assumes proper sizing for now.
 - **Earlier-stage one-deployment heuristics**: scope-sizing checks at Spec time (B count) and Design time (component count) remain deferred. The Tasks-time DAG-size guardrail is active in advisory mode (warn at >12 / >16 tasks; `--strict` escalates to error; `--allow-large` overrides). Hard-block heuristics earlier would catch oversized work sooner but are unproven; revisit if it recurs in practice.
 - **Real product-domain dogfood**: the framework now self-hosts its own evolution — `docs/features/*` holds several shipped cycles (ce-grounding, artifact-later-update, lean-review-surfaces, understanding-sharpening, reflexive-surface-budget, …). A dogfood on a non-meta *product* feature is still desirable to stress it against domain complexity.

@@ -1,15 +1,15 @@
 ---
-name: leanplan-sharpen
-description: LeanPlan — sharpen a disturbed understanding mid-round in Codex. Use for `leanplan-sharpen <what shifted>`; reads artifacts and emits a delta, never edits surface artifacts.
+name: leanplan-rethink
+description: LeanPlan — rethink a disturbed understanding mid-round in Codex. Use for `leanplan-rethink <what shifted>`; reads artifacts and emits a delta, never edits surface artifacts.
 ---
 
-# leanplan-sharpen
+# leanplan-rethink
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the off-pipeline sharpen move.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This skill runs the off-pipeline rethink move.
 
 Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/codex/<skill>/`. Later `references/...` and `scripts/...` paths are relative to `LP_ROOT`; when running a command, use the shell form `"$LP_ROOT/..."`.
 
-Load `references/sharpen.md` from `LP_ROOT` — it is authoritative for the reflect -> verify -> re-derive -> decide -> emit procedure and the read-never-edit boundary. Load these on demand, not up front (context-engineering: jit-loading):
+Load `references/rethink.md` from `LP_ROOT` — it is authoritative for the reflect -> verify -> re-derive -> decide -> emit procedure and the read-never-edit boundary. Load these on demand, not up front (context-engineering: jit-loading):
 
 - `references/artifact-contract.md` from `LP_ROOT` — before writing the understanding delta: `understanding-shifts.md` shape and `Delta-<N>` anchors.
 - `references/philosophy.md` from `LP_ROOT` — when a principle's intent or grounding is in question.

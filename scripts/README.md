@@ -1,6 +1,6 @@
 # LeanPlan canonical scripts
 
-All LeanPlan tooling lives in the installed checkout under `<leanplan-root>/scripts/`. Claude Code (`~/.claude/skills/{requirements,specify,design,tasks,implement,sharpen,revise}`) and Codex (`~/.agents/skills/leanplan-*`) adapters resolve runtime references and scripts from the checkout that supplied their installed adapter symlink.
+All LeanPlan tooling lives in the installed checkout under `<leanplan-root>/scripts/`. Claude Code (`~/.claude/skills/{frame,specify,design,tasks,implement,rethink,revise}`) and Codex (`~/.agents/skills/leanplan-*`) adapters resolve runtime references and scripts from the checkout that supplied their installed adapter symlink.
 
 ## Tools
 

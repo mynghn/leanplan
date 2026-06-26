@@ -18,6 +18,6 @@ Load `references/specify.md` from `LP_ROOT` — it is authoritative for the proc
 
 Runtime glue:
 
-- **Missing input** — if `<cwd>/docs/features/<KEY>/requirements.md` is absent, stop and point the user to `/leanplan-requirements` (see `specify.md` Inputs).
+- **Missing input** — if `<cwd>/docs/features/<KEY>/requirements.md` is absent, stop and point the user to `/leanplan-frame` (see `specify.md` Inputs).
 - **Validate** — `"$LP_ROOT/scripts/leanplan-validate" <cwd>/docs/features/<KEY> --stage spec`.
 - **Hand off** — next edge is `/leanplan-design <KEY>`.
