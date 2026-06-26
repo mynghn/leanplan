@@ -1,4 +1,4 @@
-# 260626-live-ce-grounding — Design
+ㄱ# 260626-live-ce-grounding — Design
 
 ## Architecture
 
@@ -35,3 +35,4 @@ Record CE deep-grounding as an instance of the framework's "name the behavior po
 - **`framework-design.md` line 13** — reconcile "resolve via `context-engineering.md` (the name→node map)" → name→concept map; the full node lives in the live CE knowledge base, the gloss is the local floor.
 - **`philosophy.md` line 28** — reconcile "to their context-engineering concept node (definition, sources, related edges)" → to the concept's gloss locally and its full node in the live CE knowledge base on challenge.
 - The map's resolution note is the single prose home for the mechanism; adapters and stage docs are unchanged (they carry only hooks, which resolve via the map).
+- **Residual coupling — named, not built here** (`UnderstandingShifts#Delta-1-referential-coupling-survives-unvendoring`). Unvendoring removes *content* drift but not the *reference* coupling: the slugs the hooks and map name must still resolve upstream. Validating that — one-way (Metacognition→LeanPlan), advisory, reference-link only; a concept's semantic correctness stays Metacognition's — is a **fast-follow** reference-link soft-gate skill, sibling to `leanplan-installation-freshness`. This feature names it (Requirements `## Guarantee`); the fast-follow builds it. Today's state is consistent (grounded slugs == the 15 live INDEX slugs), so nothing here is broken — only unguarded.

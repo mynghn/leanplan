@@ -15,7 +15,7 @@ LeanPlan's context-engineering grounding becomes fresh by construction: there is
 User stories:
 
 - **Challenge reaches a current definition** — challenging a grounded rule resolves to a live, sourced context-engineering definition when Metacognition is present, never a copy that may have drifted.
-- **Grounding cannot silently rot** — with no vendored copy, there is nothing to drift and nothing to reconcile; the drift the earlier sync/drift-check would have chased no longer exists.
+- **Content cannot silently rot** — with no vendored copy, a concept's *definition* can never drift: the live read always returns the current text, so the content-drift the earlier sync/drift-check chased no longer exists. (A thinner *reference* coupling survives — see Guarantee.)
 - **A bare install still resolves** — without Metacognition present, every grounded rule still resolves to LeanPlan's own one-line gloss, and all planning and authoring stages run unchanged with nothing external.
 
 The change is confirmed when no distilled context-engineering card remains in LeanPlan, a challenged hook fetches the live definition where Metacognition is installed and falls back to the gloss where it is not, and the `context-isolation`-class drift that issue #27 names can no longer occur — because there is no copy left to fall behind.
@@ -26,10 +26,11 @@ The change is confirmed when no distilled context-engineering card remains in Le
 - **Never a hard failure when the source is absent** — when Metacognition is missing or unreachable, grounding degrades to LeanPlan's own gloss rather than erroring, the way existing hooks skip when a tool is absent.
 - **No divergent copy** — LeanPlan retains no distilled fork of the source's content; the deep layer *is* the source, so it cannot be stale relative to it.
 - **Grounding stays off the hot path** — resolving a hook to its definition stays a challenge-time act, never carried in the default review surface.
+- **Referential integrity is LeanPlan's only standing obligation to upstream evolution** — the hooks and map name concepts by slug, so the one coupling that survives unvendoring is that those names must still resolve in the live source. Keeping them valid is a one-way (Metacognition→LeanPlan), advisory concern — LeanPlan never pushes changes upstream. A concept's *semantic* correctness or health is Metacognition's repair responsibility, never LeanPlan's: LeanPlan validates that the reference link operates, not what it points to.
 
 ## Non-goals
 
-- **Not a sync / drift-check tool.** Issue #27's original lever — a checker that keeps the copy honest — is superseded, not built; removing the copy removes the thing it would check.
+- **Not a content re-distillation tool, and not the reference-link checker itself.** Issue #27's original lever — re-distilling a copy to keep it honest — is superseded: there is no copy to re-distill. The surviving, redirected need — an advisory check that LeanPlan's grounded slugs still resolve upstream — is named here as a one-way reference-link **soft-gate**, but built as a **fast-follow feature**, not in this one. Semantic review of concepts stays out of scope (Metacognition's responsibility).
 - **Not removing the hooks or the rule→concept map.** Those are LeanPlan-authored and stay; only the copied definition cards are dropped.
 - **Not expanding grounding to the other sibling knowledge bases.** Only context-engineering is grounded; the other Metacognition disciplines stay un-grounded, per the prior drift verdict.
 - **Not a stage-model, validator, or artifact-contract change.** The five stages, their contracts, and the validator are untouched.
