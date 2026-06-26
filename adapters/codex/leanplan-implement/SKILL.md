@@ -19,4 +19,4 @@ Runtime glue:
 - **Inputs** — `<cwd>/docs/features/<KEY>/tasks.md` and the selected `T: <task-id>` card.
 - **Load-bearing citations** — JIT-load the card's cited Spec B/C and Design D blocks before coding; archive citations remain load-on-challenge.
 - **Stop-the-line** — if current code contradicts the plan, record the drift and invoke `leanplan-revise <KEY>` before coding.
-- **Close out** — load `references/implement-closeout.md` from `LP_ROOT`, verify completion criteria explicitly, distill WHYs into durable code/test/commit/PR forms, and run `scan-leaks`.
+- **Close out** — load `references/implement-closeout.md` from `LP_ROOT`, verify completion criteria explicitly, distill WHYs into durable code/test/commit/PR forms, and run the key-leak self-check (`scan-leaks`, invoked per `references/implement.md` item 9).
