@@ -34,8 +34,8 @@ The pipeline traverses **three faithful axes**, each the sole discriminator of o
 
 | Axis | What it splits | Seam it derives |
 |---|---|---|
-| **World ↔ Machine** (Jackson, *The World and the Machine*, ICSE 1995) | the referent — the problem-world vs. our system (*not* biz vs. techy) | Requirements ↔ Spec |
-| **Contract ↔ Realization** | observable-outside vs. internal-inside (*not* a relative WHAT/HOW abstraction ladder) | Spec ↔ Design |
+| **World ↔ Machine** (Jackson, *The World and the Machine*, ICSE '95, DOI 10.1145/225014.225041) | the referent — the problem-world vs. our system (*not* biz vs. techy) | Requirements ↔ Spec |
+| **Contract ↔ Realization** (Zave & Jackson, *Four Dark Corners* — implementation bias, DOI 10.1145/237432.237434; Gunter et al., WRSPM reference model, DOI 10.1109/52.896248) | observable-outside vs. internal-inside (*not* a relative WHAT/HOW abstraction ladder) | Spec ↔ Design |
 | **Product ↔ Process** (Osterweil, *Software Processes Are Software Too*) | the finished system vs. the work that builds it | Design ↔ Tasks |
 
 World↔Machine and Contract↔Realization form a 2×2 over the **Product** side; Product/Process then peels Tasks off it:
@@ -255,6 +255,7 @@ Framework choices informed by parallel research:
 - **Traditional SDLC** (IEEE 830, arc42, ADR, RFC formats, WBS, INVEST, Gherkin) → convergent `{context / the thing / alternatives / completion}` pattern survived; preambles, glossaries, traceability matrices dropped.
 - **Modern LLM-first SDD** (spec-kit, Kiro, Cursor rules, Aider, Boris Tane, OpenSpec) → absorbed standing constraints + EARS-style AC + research-as-JIT + "enablers not gates" framing + "what a spec is NOT" test; rejected numbered checkbox DAGs, real-time completion UI, frozen upfront sequence diagrams, and delta-spec / living-canonical-spec accumulation (surface artifacts stay transient per principle 7).
 - **Agent-communication patterns** (Anthropic prompt engineering, context engineering, Skills authoring) → grounded Grep-friendly headings, sibling layout, constraints-framing-over-step-framing.
+- **Spec↔Design contract co-discovery** → the contract and the realization **co-evolve** (Nuseibeh, *Weaving Together Requirements and Architectures* — the Twin Peaks model, *IEEE Computer* 34(3):115–119, 2001, DOI 10.1109/2.910904; Dorst & Cross, *Design Studies* 22(5):425–437, 2001, DOI 10.1016/S0142-694X(01)00009-6), so contract facts surface from **both** directions across the Spec↔Design seam — a forward boundary-probe in `specify` and an in-session backward fold in `design`. The **problem-given vs. solution-induced** split drawn over those facts is LeanPlan's **own synthesis**, credited to the "derived requirements" lineage (INCOSE / SEBoK) and Jackson's "designed domain" (*Problem Frames*, Addison-Wesley 2001) — **not** asserted as established RE canon. Stating either kind solution-agnostically rests on the implementation-bias / WRSPM grounds cited in the §2 axis table.
 
 ## 12. Skill responsibilities
 
