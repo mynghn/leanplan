@@ -21,7 +21,7 @@ Invalidation trigger: if dogfooding shows the probe routinely fires empty becaus
 
 Forces: a contract fact surfacing during Design must reach the Spec, but Design is a *planning* stage that runs in the warm spine session (P8) — the Spec is still in the planner's working set, malleable, uncommitted. The framework's bug was treating this as an after-commit event: `design.md` step 8 said "Spec is wrong, run `revise`," importing `revise`'s committed-artifact + `Delta` machinery into a warm edit. `revise` is by definition the committed-artifact move (`revise.md`: "committed artifacts"; "no Delta → zero mutation"); using it here re-introduces the exact ceremony this round removes.
 
-Deciding principle: a *move* (`/revise`, `/sharpen`) is for touching an artifact *outside* the current working set; inline editing is for what's in it. The warm Spec is in Design's working set, so updating it is continued authoring — not a cross-artifact move.
+Deciding principle: a *move* (`/revise`, `/rethink`) is for touching an artifact *outside* the current working set; inline editing is for what's in it. The warm Spec is in Design's working set, so updating it is continued authoring — not a cross-artifact move.
 
 Alternatives weighed:
 - **Invoke `/revise` from the design skill** — rejected: drags `revise`'s committed/`Delta` framing onto a warm edit (or forces a no-`Delta` "warm mode" that blurs `revise`'s identity), and adds a context-switch to a two-line in-session edit.
