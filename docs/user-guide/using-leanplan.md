@@ -48,7 +48,7 @@ User decision points:
 
 - Choose among meaningful implementation alternatives.
 - Confirm tradeoffs, boundaries, and non-goals.
-- Push back if the design changes observable behavior rather than implementing the agreed behavior.
+- A genuine contract fact that surfaces during Design is folded back into the Spec (legitimate co-discovery). Push back only when the design changes observable behavior in a way that bypasses or masks the Spec, rather than implementing the agreed behavior.
 
 Artifact responsibility: `design.md` owns the selected approach and the rationale needed for review. It should connect decisions to behavior and constraints without restating the full Spec.
 

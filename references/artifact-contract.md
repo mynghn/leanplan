@@ -45,7 +45,7 @@ The full tier model (L0/L1/L2 labels, design reasoning) lives in `framework-desi
 | Research | Evidence |
 | Understanding Shifts | Understanding deltas — mid-round re-derivation log |
 | Deferrals | Deferred cross-stage decisions — open items addressed forward to their owning stage |
-| Tasks | Time-ordered work navigation |
+| Tasks | Work sequencing / navigation |
 
 ## Anchors
 
@@ -66,7 +66,7 @@ Citation forms:
 - `Spec#C-1-mission-fail-safe`
 - `Design#D-2-direct-kafka-publisher`
 - `Tasks#T:A1`
-- `UnderstandingShifts#Delta-1-premise-falsified`
+- `Understanding#Delta-1-premise-falsified`
 - `Deferrals#Defer-1-cache-strategy`
 
 ## Required Shapes
@@ -103,7 +103,7 @@ Use descriptive topic headings. Store evidence only. Interpretation belongs in r
 
 ### Understanding Shifts
 
-Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `Spec#…` / `Design#…` / `Tasks#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `Spec#` / `Design#` / `Tasks#` citations are resolution-checked, and *inbound* `UnderstandingShifts#Delta-N-slug` citations now resolve against these `Delta-<N>` anchors too — a revised artifact cites the Delta that justified it. Research# citations stay recorded-for-retrieval only: Research carries descriptive headings, not a resolvable anchor set.
+Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `Spec#…` / `Design#…` / `Tasks#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `Spec#` / `Design#` / `Tasks#` citations are resolution-checked, and *inbound* `Understanding#Delta-N-slug` citations now resolve against these `Delta-<N>` anchors too — a revised artifact cites the Delta that justified it. Research# citations stay recorded-for-retrieval only: Research carries descriptive headings, not a resolvable anchor set.
 
 ### Deferrals
 
@@ -111,7 +111,7 @@ Off-review-surface archive of deliberately-deferred cross-stage decisions, creat
 
 Each block is shaped so it cannot read as a settled decision (conclusion-first):
 
-- **Owning stage** — one of Requirements / Spec / Design / Tasks; the stage the deferral is addressed to.
+- **Owning stage** — one of Spec / Design / Tasks; the stage the deferral is addressed to.
 - the open **question** + why it surfaced now
 - **forces** glimpsed
 - at most an **option seen** — explicitly marked *not chosen*. There is no "decision" field.
@@ -124,7 +124,7 @@ Resolution is retire-in-place: when the owning stage drains it, append `(resolve
 - `## Dependency DAG` (or `## DAG`) with Mermaid; track subgraphs and prefixed task IDs (e.g. `P1`, `A1`, `D1`, `I1`) when coordination matters
 - One `T: <id>` block per land-able work item
 
-Each task card must include:
+A well-formed task card carries:
 
 - **Goal** — *process-framed* statement of WHAT outcome this task achieves + HOW (when the work approach is non-obvious), with inline `Spec#…` and `Design#…` anchors colocated with the supported sentence. **Anchor — don't restate.** Tech-realization specifics (field mappings, response shapes, signatures, call sequences) belong in the cited Design Decision; the Goal points to them.
 - **Repo** — where the work lives
@@ -180,11 +180,11 @@ Grounded in the small-surface and LLM-aware principles (`philosophy.md` P3). The
 
 ## Drift Guards
 
-- Requirements has no implementation choices.
-- Spec has no chosen stack or internal realization. Generic categories (message queue, event stream, HTTP API) only.
-- Design has no work ordering, no infrastructure / database request procedure, no PR stacking — those belong in Tasks. Design **does** carry tech-realization specifics (field mappings, response shapes, signatures, call sequences, schemas) so plan tasks can anchor in.
+- Requirements has no implementation choices — no tech at all, generic or named. (`leanplan-validate` warns on named-product terms; generic-category leakage is a review catch.)
+- Spec has no chosen stack or internal realization. Generic categories (message queue, event stream, HTTP API) are *expected* here; only a named stack is drift — a different policy from Requirements. (`leanplan-validate` warns on named-product terms in the Spec, leaving the generic categories it legitimately uses untouched.)
+- Design has no work ordering, no infrastructure / database request procedure, no PR stacking — those belong in Tasks. Design **does** carry tech-realization specifics (field mappings, response shapes, signatures, call sequences, schemas) so tasks can anchor in.
 - Tasks has no line-by-line edit script. Implementation agents re-derive against current code at task entry.
-- **Tasks fields carry process specifics, not tech-realization specifics (the Product↔Process cut, `framework-design.md` §2).** Plan cards describe the *work* (Goal: what outcome / Completion: how to verify / Guidelines: work-stance). Tech-realization details — proto/response field mappings, controller orchestration sequences, method signatures, code paths, schemas — belong in a Design `D-<N>` block. The task card anchors via `Design#D-<N>-<slug>`; it does not restate the Decision's content. Symmetric guard with the Design row above. Detection cue: a Goal bullet that answers "after the work lands, the system looks like X" is drift — push X to Design; keep "this task achieves Y, verified by Z" in the card.
+- **Tasks fields carry process specifics, not tech-realization specifics (the Product↔Process cut, `framework-design.md` §2).** Task cards describe the *work* (Goal: what outcome / Completion: how to verify / Guidelines: work-stance). Tech-realization details — proto/response field mappings, controller orchestration sequences, method signatures, code paths, schemas — belong in a Design `D-<N>` block. The task card anchors via `Design#D-<N>-<slug>`; it does not restate the Decision's content. Symmetric guard with the Design row above. Detection cue: a Goal bullet that answers "after the work lands, the system looks like X" is drift — push X to Design; keep "this task achieves Y, verified by Z" in the card.
 - MUST and MUST NOT are reserved for true invariants.
 - Design visuals may be Mermaid diagrams or fenced ASCII art. Prefer a visual companion when prose would otherwise blur relationships, boundaries, sequences, state, or mappings; use as many visuals as clarify distinct structures. Tasks DAGs stay Mermaid unless the Tasks contract changes.
 - Frontmatter is discouraged on plan artifacts; the artifact type is implied by filename.

@@ -27,6 +27,7 @@ Index only — numbering is kept stable so in-doc `principle N` / `§1.N` citati
 7. **Surface artifacts are in-feature only** → `philosophy.md` P6.
 8. **Persist by migration to code** → `philosophy.md` P7. (context-engineering: structured-note-taking)
 9. **Session-boundary discipline** → `philosophy.md` P8. (context-engineering: explore-execute-boundary, compaction-vs-eviction, explore-then-compact-handoff, context-isolation, prefix-cache-economics)
+10. **Explore at altitude; defer forward** → `philosophy.md` P9. (context-engineering: structured-note-taking, jit-loading)
 
 ## 2. Stages & coordinate model
 
@@ -105,7 +106,7 @@ Each level loads only via explicit trigger (anchor link from the layer above). J
 
 The runtime-loadable form — which artifact loads when — is owned by `artifact-contract.md` → Surface / Archive layering; the table above is the design-level detail.
 
-Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The `understanding-shift.md` archive is written by `rethink` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Structural shape and what-loads-when are owned by `artifact-contract.md`.
+Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The `understanding-shifts.md` archive is written by `rethink` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Structural shape and what-loads-when are owned by `artifact-contract.md`.
 
 ## 5. Artifact shapes
 
@@ -326,7 +327,7 @@ Most require accumulated data across many shipped cycles; post-v1. Harness-like 
 
 Genuinely open — not yet built or decided:
 
-- **Request → Requirements edge (`distill`)**: `frame` currently authors Requirements standalone (interactive with user). Future: when naive problem writings become an explicit Request input artifact, add a `distill` skill for the Request → Requirements sharpening edge.
+- **Request → Requirements edge (`distill`)**: `frame` currently authors Requirements standalone (interactive with user). Future: when naive problem writings become an explicit Request input artifact, add a `distill` skill for the Request → Requirements distillation edge.
 - **Divide-and-conquer for oversized work**: how to split inputs that exceed one-deployment scope. Framework assumes proper sizing for now.
 - **Earlier-stage one-deployment heuristics**: scope-sizing checks at Spec time (B count) and Design time (component count) remain deferred. The Tasks-time DAG-size guardrail is active in advisory mode (warn at >12 / >16 tasks; `--strict` escalates to error; `--allow-large` overrides). Hard-block heuristics earlier would catch oversized work sooner but are unproven; revisit if it recurs in practice.
 - **Real product-domain dogfood**: the framework now self-hosts its own evolution — `docs/features/*` holds several shipped cycles (ce-grounding, artifact-later-update, lean-review-surfaces, understanding-sharpening, reflexive-surface-budget, …). A dogfood on a non-meta *product* feature is still desirable to stress it against domain complexity.

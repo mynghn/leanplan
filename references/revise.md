@@ -15,7 +15,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules —
 ## Output
 
 - The corrected artifact and every downstream artifact the drift implicates, revised in place — surviving anchor IDs preserved, superseded items retired-by-note, the committed set re-validated and carrying no reference to superseded content.
-- A durable `Delta-<N>` in `understanding-shifts.md` justifying the change (recorded at intake when not already present), which the revised artifacts may cite as `UnderstandingShifts#Delta-N-slug`.
+- A durable `Delta-<N>` in `understanding-shifts.md` justifying the change (recorded at intake when not already present), which the revised artifacts may cite as `Understanding#Delta-N-slug`.
 - Zero edits to any artifact upstream of the corrected one.
 
 ## Procedure
@@ -26,7 +26,7 @@ Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules —
 2. **Identify the corrected artifact, and stay downstream of it.** From the Delta's scope-of-impact, find the *highest* artifact the drift actually corrects — Requirements for problem scope, Spec for the contract, Design for realization, Tasks for sequencing. Inject the correction there and leave every upstream artifact byte-unchanged. A drift detected late but rooted earlier is injected at its root, never rippled upward.
 3. **Edit, preserving identity.** Re-evaluate the corrected artifact **in place** by default — a local edit that keeps stable anchor IDs. Escalate to **re-derivation** (re-run the stage skill from the corrected upstream) only when the change is *structural*: the anchor set itself must change, not just prose inside stable anchors. Either way, surviving IDs are never renumbered, and superseded items are retired-by-note `(retired)`, not deleted (`artifact-contract.md` → Anchors).
 4. **Propagate downstream-only.** Walk each downstream artifact whose content depends on the change, in stage order, applying the same in-place-default / re-derive-on-structural rule. Leave no downstream artifact citing or restating the superseded content.
-5. **Re-validate.** Run `leanplan-validate` on the feature; the committed set must pass and carry no surviving reference to superseded content. A revised artifact's `UnderstandingShifts#Delta-N-slug` citation of its justifying Delta is resolution-checked.
+5. **Re-validate.** Run `leanplan-validate` on the feature; the committed set must pass and carry no surviving reference to superseded content. A revised artifact's `Understanding#Delta-N-slug` citation of its justifying Delta is resolution-checked.
 6. **Scope-gate.** If the correction would push Requirements past one-deployment size, stop and split rather than grow — the structural path, not an inline edit (see **Structural operations**).
 
 ## Structural operations

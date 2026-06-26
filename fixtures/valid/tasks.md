@@ -21,7 +21,7 @@ Single track (`S` = script). Tiny feature.
 
 **Repo**: `mynghn/dotfiles` (chezmoi source).
 
-**Completion criteria**:
+**Completion**:
 
 - Runtime `~/.local/share/leanplan/scripts/sync-leanplan.sh` exists and is executable after `chezmoi apply`.
 - After making a whitespace edit in the in-repo source, running the script causes `shasum -a 256 ~/.local/share/leanplan/framework-design.md` to change to match the new in-repo body — verifies `Spec#B-1-single-invocation-sync` and `Spec#C-1-directional`.
@@ -37,7 +37,7 @@ Single track (`S` = script). Tiny feature.
 
 **Repo**: local (no commit).
 
-**Completion criteria**:
+**Completion**:
 
 - One successful happy-path run + one error-path run observed and noted.
 

@@ -44,6 +44,15 @@ ARTIFACT_ORDER = ("requirements", "spec", "design", "tasks")
 # list; keep the two in sync.
 SURFACE_SOFT_CAP = {"requirements": 90, "spec": 110, "design": 160, "tasks": 220}
 
+# Named stack/product terms that signal a chosen implementation. Requirements and
+# Spec apply this list under *different* policies (references/artifact-contract.md ->
+# Drift Guards): Requirements carries no implementation choice at all, so a named
+# product is one; Spec may name generic categories (message queue, event stream, HTTP
+# API) but not a chosen stack, so the same named product is drift there too. Generic
+# categories are deliberately absent from this list, so the Spec scan never flags the
+# categories a Spec legitimately uses. Both checks are advisory (--strict escalates).
+BANNED_STACK = ("Kafka", "Redis", "Spring", "Kotlin", "Postgres", "MySQL", "gRPC", "Flink")
+
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
 # A trailing ` (retired)` marker is tolerated on any anchor/Task heading: a
 # superseded item is retired by marking its heading (artifact-contract.md ->
@@ -77,7 +86,7 @@ CITATION_RE = re.compile(
 # the field's line (not just the first word) so natural phrasing — "the Design
 # stage", "Design (a realization detail)" — still resolves to the stage rather than
 # silently skipping; a field with no known stage keyword stays unparsed (review-tier).
-DEFER_OWNER_RE = re.compile(r"\*\*Owning stage\*\*:[^\n]*?\b(requirements|spec|design|tasks)\b", re.IGNORECASE)
+DEFER_OWNER_RE = re.compile(r"\*\*Owning stage\*\*:[^\n]*?\b(spec|design|tasks)\b", re.IGNORECASE)
 # A Spec B/C item appearing on a line containing **GAP** is treated as
 # deliberately uncovered — see references/artifact-contract.md "**GAP**
 # acknowledgment". Validator skips it in forward-coverage checks.
@@ -243,8 +252,7 @@ class Validator:
             return
         self._require_sections("requirements.md", text, ("Problem", "Outcome"))
         self._warn_empty_conditional("requirements.md", text, ("Guarantee", "Non-goals", "Upstream"))
-        banned = ("Kafka", "Redis", "Spring", "Kotlin", "Postgres", "MySQL", "gRPC", "Flink")
-        for term in banned:
+        for term in BANNED_STACK:
             if re.search(rf"\b{re.escape(term)}\b", text):
                 self._warn("requirements.md", f"possible implementation choice in Requirements: {term}")
 
@@ -261,6 +269,9 @@ class Validator:
         self._warn_empty_conditional("spec.md", text, ("Constraint", "Non-goals"))
         if re.search(r"^\s*-\s+\[[ xX]\]", text, re.MULTILINE):
             self._warn("spec.md", "checkbox acceptance criteria are not LeanPlan anchors")
+        for term in BANNED_STACK:
+            if re.search(rf"\b{re.escape(term)}\b", text):
+                self._warn("spec.md", f"named stack in Spec: use a generic category (e.g. message queue, event stream) instead of {term}")
 
     def _check_design(self) -> None:
         text = self.texts.get("design", "")

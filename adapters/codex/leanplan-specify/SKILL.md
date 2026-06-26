@@ -9,7 +9,7 @@ LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployme
 
 Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/codex/<skill>/`. Later `references/...` and `scripts/...` paths are relative to `LP_ROOT`; when running a command, use the shell form `"$LP_ROOT/..."`.
 
-Load `references/specify.md` from `LP_ROOT` — it is authoritative for the procedure, generic-category tech guard, B/C split, and Research archive rule. Load these on demand, not up front (context-engineering: jit-loading):
+Load `references/specify.md` from `LP_ROOT` — it is authoritative for the procedure, generic-category tech guard, B/C split, Research archive rule, and opt-in contract-boundary probe. Load these on demand, not up front (context-engineering: jit-loading):
 
 - `references/artifact-contract.md` from `LP_ROOT` — before writing or editing an artifact's structure or anchors: feature layout, `B-<N>` / `C-<N>` anchors, drift guards, traceability.
 - `references/philosophy.md` from `LP_ROOT` — when a principle's intent or grounding is in question.
