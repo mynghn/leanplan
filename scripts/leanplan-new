@@ -444,7 +444,7 @@ cat > "$DIR/tasks.md" <<EOF
 <!-- Doc-level Guidelines section is conditional — include only when feature-wide
 work-stance rules genuinely apply (base branch, canary sequence, coordination). -->
 
-## DAG
+## Dependency DAG
 
 \`\`\`mermaid
 flowchart LR

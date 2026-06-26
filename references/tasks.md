@@ -1,4 +1,4 @@
-# LeanPlan Plan Stage
+# LeanPlan Tasks Stage
 
 This doc carries the procedure for the Tasks stage — sequencing Design into land-able task cards in `tasks.md`. Edge: Design → Tasks (`tasks.md`).
 

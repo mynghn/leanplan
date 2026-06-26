@@ -180,6 +180,10 @@ inject_req_drift() {
     printf '\nThe system uses Kafka for event streaming.\n' >> "$1/requirements.md"
 }
 
+inject_spec_drift() {
+    printf '\nBehavior is delivered over Kafka topics.\n' >> "$1/spec.md"
+}
+
 inject_task_step_drift() {
     local f
     f=$(task_file "$1")
@@ -430,6 +434,7 @@ assert_case "broken anchor"                   1 "broken citation"               
 assert_case "duplicate delta anchor"          1 "duplicate anchor: Delta-1"             inject_duplicate_delta
 assert_case "coverage hole"                   1 "is not covered by any task"            inject_coverage_hole
 assert_case "requirement drift (--strict)"    1 "implementation choice in Requirements"  inject_req_drift          "--strict"
+assert_case "spec stack drift (--strict)"     1 "named stack in Spec"                    inject_spec_drift         "--strict"
 assert_case "task step drift (--strict)"      1 "looks like line-level scripting"       inject_task_step_drift    "--strict"
 assert_case "surface bloat (--strict)"        1 "soft cap"                               inject_surface_bloat      "--strict"
 assert_case "behavior-only task reason"       0 "validation passed"                     inject_outcome_only_task  "--strict"

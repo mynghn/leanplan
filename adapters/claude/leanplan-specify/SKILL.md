@@ -11,7 +11,7 @@ LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployme
 
 Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the real path of this `SKILL.md` from the installed skill symlink when present, then walk up three directories from `adapters/claude/<skill>/`. Later `references/...` and `scripts/...` paths are relative to `LP_ROOT`; when running a command, use the shell form `"$LP_ROOT/..."`.
 
-Load `references/specify.md` from `LP_ROOT` — it is authoritative for the procedure ("what a Spec is NOT" test, generic-category tech guard, Research archive rule). Load these on demand, not up front (context-engineering: jit-loading):
+Load `references/specify.md` from `LP_ROOT` — it is authoritative for the procedure ("what a Spec is NOT" test, generic-category tech guard, Research archive rule, contract-boundary probe (inspect/research/ask, opt-in)). Load these on demand, not up front (context-engineering: jit-loading):
 
 - `references/artifact-contract.md` from `LP_ROOT` — **before writing or editing an artifact's structure or anchors**: feature layout, anchor patterns (`B-<N>: <slug>` / `C-<N>: <slug>`), drift guards, traceability rules including `**GAP**` semantics.
 - `references/philosophy.md` from `LP_ROOT` — **when a principle's intent or grounding is in question**: the framework principles shaping what "good" looks like.

@@ -35,7 +35,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
 7. **Coverage check** — walk each Spec `B-<N>` and `C-<N>`. Each must be realized by ≥ 1 of:
    - a Decision block,
    - an Architecture element,
-   - **or** (for trivial realization not worth a Decision block) a directly-cited Tasks Completion criterion that the downstream `plan` skill will add.
+   - **or** (for trivial realization not worth a Decision block) a directly-cited Tasks Completion criterion that the downstream `tasks` skill will add.
    Surface any uncovered items that *no* path realizes. Do not force-create a Decision for a trivial realization that the Tasks layer handles directly.
 8. **Fold a surfaced contract fact back into the Spec — inline, while warm.** Choosing realization can surface a contract fact the Spec didn't name. The Spec is still in this session's working set (not yet handed off to implementation), so updating it is continued authoring, not a cross-artifact move — fold it in place, **no `Delta`, no `leanplan-revise`**:
    - **Additive** (a new observable behavior / constraint that contradicts no existing item) → author it into the Spec as a new `B`/`C` (next free number) — the expected completion of a provisional contract; the anchor + its body *is* the record.
@@ -46,7 +46,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
 9. **Self-check** before exit:
    - No work ordering, cross-team request filing, or rollout text (those belong in Tasks).
    - No top-level `## Schemas` or `## Interfaces` section — schemas live inside their Decisions.
-   - Tech-realization specifics a downstream plan task will need (field mappings, response shapes, signatures, call sequences) are *captured here* — so the plan card can anchor in without restating. Skim each Decision: does it answer "what does the system look like in this slice?" completely?
+   - Tech-realization specifics a downstream task will need (field mappings, response shapes, signatures, call sequences) are *captured here* — so the task card can anchor in without restating. Skim each Decision: does it answer "what does the system look like in this slice?" completely?
    - Non-trivial decisions have resolvable rationale anchors in `design-rationale.md`.
    - Upstream Spec `B` / `C` are referenced, not re-stated; the Architecture caption doesn't restate a `Decision`.
    - Each Decision leads with its one-line WHAT (the choice), not preamble; past ~100 lines, order the highest-stakes Decisions at the edges, not buried mid-file (conclusion-first + edge-placement; `artifact-contract.md` → Prose Style).
@@ -55,7 +55,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
 
 - **Chosen realization only.** Design is the finished-system shape, not the work that builds it. No work ordering, PR stacking, cross-team request procedure, or migration sequence — those belong in Tasks.
 - **Park a genuine deferral; don't discard it.** A real cross-stage decision that surfaces here goes into `deferrals.md` as a `Defer-<N>` addressed to its owning stage, rather than being discarded — opt-in planner judgment; procedure in `references/deferral.md`.
-- **Tech-realization specifics live here, in full.** Field-by-field mappings, response/proto shapes, method signatures, controller/service call sequences, schemas — capture them inside the relevant `D-<N>` block at design time. Downstream plan tasks should be able to anchor in via `Design#D-<N>-<slug>` *without restating* the content. If a plan task ends up paraphrasing a Decision because it lacked detail here, the missing detail is a gap in **this** doc — fill it. Symmetric guard with the corresponding rule in `tasks.md`.
+- **Tech-realization specifics live here, in full.** Field-by-field mappings, response/proto shapes, method signatures, controller/service call sequences, schemas — capture them inside the relevant `D-<N>` block at design time. Downstream tasks should be able to anchor in via `Design#D-<N>-<slug>` *without restating* the content. If a task ends up paraphrasing a Decision because it lacked detail here, the missing detail is a gap in **this** doc — fill it. Symmetric guard with the corresponding rule in `tasks.md`.
 - **Architecture visual material is mandatory.** Even a trivial one-component feature gets at least one diagram or ASCII visual — it forces clarity about boundaries. Use Mermaid when graph semantics carry the shape cleanly; use fenced ASCII art when layout, alignment, or mixed annotations express the idea better. More than one visual is fine when each earns its place.
 - **Trivial vs. non-trivial.** Trivial decisions get a one-line inline why; non-trivial decisions (a real alternative was weighed, a tradeoff accepted, an invalidation trigger worth recording) anchor to Rationale.
   - ✅ trivial — "store the new flag on the existing `accounts` row — the repo's standard for per-account state" (no live alternative → one line, no Rationale).

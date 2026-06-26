@@ -43,7 +43,7 @@ How to work with it:
 - Tasks owns work ordering, completion criteria, and load-bearing citations.
 - Implementation owns the durable final rationale after the plan has served its purpose.
 
-When to challenge it: if a downstream artifact starts restating upstream content, replace the restatement with a citation or move the fact back to the artifact that owns it. If behavior changes, revise Spec before patching Design or Tasks around the change.
+When to challenge it: if a downstream artifact starts restating upstream content, replace the restatement with a citation or move the fact back to the artifact that owns it. If behavior changes, update the Spec — the owning layer — before patching Design or Tasks around the change: during the warm session this is an inline fold, while a change to an already-committed Spec routes through the revise move.
 
 ### No flat task scripts
 
@@ -92,6 +92,12 @@ How to work with it:
 - Prefer these moves over hand-editing downstream artifacts to make the current task easier.
 
 When to challenge it: if the agent reaches for `revise` without a clear drift reason, ask what changed and which artifact owns that change. If the answer is only "this wording could be nicer," normal editing may be enough.
+
+### Spec and Design co-discovery
+
+Canonical references: [`specify.md` → Probe the contract boundary](../../references/specify.md), [`design.md` → Procedure](../../references/design.md).
+
+During the warm planning session, the Spec and Design stages can discover contract facts in both directions. The Spec stage may run an opt-in multi-channel probe — inspect the current system, research the outer world, ask the planner — to surface observable behaviors and constraints the Requirements did not name. When the Design stage later uncovers a genuine contract fact, it folds that fact back into the Spec in place while warm, with no `Delta` or `revise`. Once the artifacts are committed, a later change routes through `revise` instead.
 
 ## Goal 2: Review surface brevity
 
