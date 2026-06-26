@@ -1,4 +1,4 @@
-# LeanPlan Requirement Stage
+# LeanPlan Requirements Framing Stage
 
 This doc carries the procedure for the Requirements stage — capturing the desired outcome before any implementation choice. Edge: standalone input → Requirements.
 
