@@ -4,9 +4,11 @@
 
 ```mermaid
 flowchart TD
-    RUN["maintainer runs leanplan-ce-grounding-link-check (on demand, after a Metacognition update)"]
-    RUN --> SKILL["SKILL.md — read-first, report-only; runs check.sh, shows verdict"]
-    SKILL --> CHECK["check.sh — read-only"]
+    RUN["maintainer runs leanplan-doctor (on demand)"]
+    RUN --> SKILL["SKILL.md — read-first, report-only; runs both checks, shows combined verdict"]
+    SKILL --> FRESH["freshness section — git-freshness + symlink parity (absorbed from leanplan-installation-freshness)"]
+    SKILL --> CHECK["grounding section — read-only CE grounding-link check"]
+    FRESH --> FFIX["stale/behind? maintainer runs git pull + install.sh after confirm"]
     CHECK --> ENUM["enumerate LeanPlan grounded slugs — context-engineering hooks + map links"]
     CHECK --> REACH{"live source INDEX reachable? (override env, else conventional vault path)"}
     REACH -->|no| ABSENT["report: source absent — expected gloss fallback — B-2, exit 0"]
@@ -15,11 +17,12 @@ flowchart TD
     REPORT --> FIX["dangling? maintainer repairs via /leanplan-revise — C-1 report-only, human-gated"]
 ```
 
-The inspection is a read-only utility skill: `check.sh` enumerates the slugs LeanPlan grounds in, compares them against the live source's INDEX slug-registry when reachable, and reports dangling references; the source's absence is a distinct, non-error outcome. It mutates nothing — repairs flow through `/leanplan-revise` (`Spec#C-1-report-only-no-mutation`).
+`leanplan-doctor` is a read-only health-check skill running two diagnostics as labeled sections. The **grounding section** enumerates the slugs LeanPlan grounds in, compares them against the live source's INDEX slug-registry when reachable, and reports dangling references; the source's absence is a distinct, non-error outcome. The **freshness section** is the absorbed `leanplan-installation-freshness` check (git-freshness + symlink parity). The grounding section mutates nothing — repairs flow through `/leanplan-revise` (`Spec#C-1-report-only-no-mutation`); the freshness section self-heals only after the maintainer confirms.
 
 ## D-1: realize-as-utility-skill-with-check-script
-Build it as a utility skill `leanplan-ce-grounding-link-check` under `utils/` — a `SKILL.md` (read-first, report-only) over a deterministic `check.sh` — mirroring `leanplan-installation-freshness`, and install it via `install.sh`'s `UTILITY_SKILLS` (both Claude and Codex registries). Realizes the on-demand, report-only shape of `Spec#C-1-report-only-no-mutation`. See rationale at [design-rationale.md#D-1-realize-as-utility-skill-with-check-script].
-- `SKILL.md` resolves `<LEANPLAN_ROOT>` from the installed symlink (walk up two from `utils/<name>/`), runs `check.sh`, shows the verdict, and — only when dangling is found — points the maintainer at `/leanplan-revise` to repair. It is not a planning-stage skill; it owns only grounding-link validity.
+Build it as one diagnostic inside a `leanplan-doctor` utility skill under `utils/` — a single `SKILL.md` (read-first, report-only) running two deterministic check scripts as labeled sections: **installation freshness** (git-freshness + symlink parity) and **CE grounding links** (the grounded-slug resolution check). `leanplan-doctor` absorbs the existing `leanplan-installation-freshness` skill, which retires — one "is my LeanPlan healthy?" command. Install via `install.sh`'s `UTILITY_SKILLS` (both Claude and Codex registries), which drops `leanplan-installation-freshness` and adds `leanplan-doctor`. Realizes the on-demand, report-only shape of `Spec#C-1-report-only-no-mutation`; reverses the original separate-skill choice per `UnderstandingShifts#Delta-1-package-as-doctor-umbrella-absorbing-freshness`. See rationale at [design-rationale.md#D-1-realize-as-utility-skill-with-check-script].
+- `SKILL.md` resolves `<LEANPLAN_ROOT>` from the installed symlink (walk up two from `utils/leanplan-doctor/`), runs both checks, and shows a combined verdict with one section per diagnostic. Each section keeps its own fix route: freshness → `git pull` + re-run `install.sh` after the maintainer confirms; grounding → `/leanplan-revise` when a reference dangles. It is not a planning-stage skill; it owns only installation + grounding health.
+- The two check scripts live under `utils/leanplan-doctor/` (`checks/freshness.sh`, `checks/grounding.sh`) — each independently runnable; the `SKILL.md` orchestrates them. `checks/freshness.sh` is the relocated `leanplan-installation-freshness` check; `checks/grounding.sh` is the grounding check (D-2 / D-3).
 
 ## D-2: check-algorithm-and-advisory-posture
 `check.sh` is read-only and deterministic: (1) enumerate LeanPlan's grounded slug set — the union of `(context-engineering: <slug>)` hook slugs across `references/`, `framework-design.md`, `adapters/`, and the map's `[[<slug>]]` links; (2) resolve the live source INDEX (D-3); (3) when reachable, report every grounded slug absent from the source as **dangling**, each with the files that reference it, and report clean when none; when unreachable, report the distinct source-absent outcome. Realizes `Spec#B-1-dangling-grounding-is-reported`, `Spec#B-2-source-absent-is-reported-distinctly`. See rationale at [design-rationale.md#D-2-check-algorithm-and-advisory-posture].
