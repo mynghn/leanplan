@@ -1,4 +1,4 @@
-# LeanPlan Requirements Framing Stage
+# LeanPlan Frame Stage
 
 This doc carries the procedure for the Requirements stage — capturing the desired outcome before any implementation choice. Edge: standalone input → Requirements.
 
@@ -42,7 +42,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
    - **Guarantee** (conditional) — cross-cutting domain rules that hold continuously (price parity, state-machine rules, regional constraints), kept out of user-story shape. State the *intent* (why the rule matters); its observable, testable form is Spec's to own, so don't pre-empt Spec vocabulary here (`artifact-contract.md` → One Prose Home Per Fact). Omit the section when no such policies exist.
    - **Non-goals** — only if scope edges are genuinely ambiguous.
    - **Upstream** — only if refs exist; short list.
-5. **Write** the artifact at the path `leanplan-new` printed in step 1 (e.g. `docs/features/0007-anomaly-publisher/requirements.md`). Do **not** `mkdir` — `leanplan-new` is the single directory allocator; the requirement skill never creates the dir itself.
+5. **Write** the artifact at the path `leanplan-new` printed in step 1 (e.g. `docs/features/0007-anomaly-publisher/requirements.md`). Do **not** `mkdir` — `leanplan-new` is the single directory allocator; the `frame` skill never creates the dir itself.
 6. **Self-check** before exiting:
    - Grep body for tech-stack nouns (Kafka, Redis, Kotlin, Spring, gRPC, Postgres, Flink, Kubernetes, Docker, etc.) — zero hits expected.
    - Outcome names a measurable success signal.
