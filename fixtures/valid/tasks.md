@@ -13,11 +13,14 @@ flowchart LR
     end
 ```
 
-Single track (`S` = script). Tiny feature.
+Single track (`S` = script).
+Tiny feature.
 
 ## T: S1
 
-**Goal**: Author `dot_local/share/leanplan/scripts/executable_sync-leanplan.sh` in chezmoi source per `Design#D-1-sync-as-shell-script-in-canonical-scripts`. Script hard-codes the in-repo path per `Design#D-2-in-repo-path-hard-coded`, re-inserts the runtime header note between title and body per `Design#D-3-header-note-reinsertion-between-title-and-body`, invokes `chezmoi apply ~/.local/share/leanplan/framework-design.md` at the end per `Design#D-4-chezmoi-apply-called-at-script-end`, and prints `already up-to-date <hash>` or `updated <prior> -> <new>` via `shasum -a 256` per `Design#D-5-hash-check-via-shasum`. Error-exit before writing anything when the in-repo source is absent, satisfying `Spec#B-3-missing-source-errors`.
+**Goal**: Author `dot_local/share/leanplan/scripts/executable_sync-leanplan.sh` in chezmoi source per `Design#D-1-sync-as-shell-script-in-canonical-scripts`.
+Script hard-codes the in-repo path per `Design#D-2-in-repo-path-hard-coded`, re-inserts the runtime header note between title and body per `Design#D-3-header-note-reinsertion-between-title-and-body`, invokes `chezmoi apply ~/.local/share/leanplan/framework-design.md` at the end per `Design#D-4-chezmoi-apply-called-at-script-end`, and prints `already up-to-date <hash>` or `updated <prior> -> <new>` via `shasum -a 256` per `Design#D-5-hash-check-via-shasum`.
+Error-exit before writing anything when the in-repo source is absent, satisfying `Spec#B-3-missing-source-errors`.
 
 **Repo**: `mynghn/dotfiles` (chezmoi source).
 
@@ -33,7 +36,9 @@ Single track (`S` = script). Tiny feature.
 
 ## T: S2
 
-**Goal**: Smoke-test the round trip. Evolve the in-repo source with a whitespace-only edit; run the sync; verify the runtime copy reflects it and the header note survives, per `Spec#B-1-single-invocation-sync` and `Spec#C-2-header-note-preservation`. Then rename the source temporarily; run the sync; verify non-zero exit + unchanged runtime per `Spec#B-3-missing-source-errors`.
+**Goal**: Smoke-test the round trip.
+Evolve the in-repo source with a whitespace-only edit; run the sync; verify the runtime copy reflects it and the header note survives, per `Spec#B-1-single-invocation-sync` and `Spec#C-2-header-note-preservation`.
+Then rename the source temporarily; run the sync; verify non-zero exit + unchanged runtime per `Spec#B-3-missing-source-errors`.
 
 **Repo**: local (no commit).
 

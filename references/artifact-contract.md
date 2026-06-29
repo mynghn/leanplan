@@ -158,10 +158,11 @@ Each stage doc carries its seam's operational instance; the per-artifact Drift G
 
 ## Prose Style
 
-Applies to every artifact, in any authoring language. Write-time guidance, not validator-enforced.
+Applies to every artifact, in any authoring language. Write-time guidance; `leanplan-validate` warns on obvious dense multi-sentence source lines.
 
 - **Conclusion first.** Open each section, decision, and task card with its conclusion — the claim, choice, or outcome — then the support, so it is graspable from headings and lead lines alone. The blob-prone free-prose fields — the Design `Decision` body and the Tasks `Goal` — carry a worked good/bad example in `design.md` / `tasks.md`; Requirements and Spec are list-shaped by construction and already conform.
 - **Lists over dense paragraphs.** When content enumerates parallel points, conditions, or steps, use bullet or ordered lists. Reserve flowing prose for a single causal chain.
+- **One sentence per source line.** Write each complete sentence on its own Markdown source line. When the thought shifts to a new paragraph, add one blank line before continuing. Use normal source newlines; rendered hard breaks are only for places that intentionally need visible line breaks.
 - **Short, declarative sentences.** Break run-ons; promote a buried qualifier to its own clause or bullet rather than nesting it in parentheses.
 - **Concise, not compressed.** Cut redundancy, not meaning: drop what's repeated or already implied, never a distinct piece of information the reader needs (`bypass-check save` ❌ drops *which* check; "save without the duplicate check" ✅ keeps it). The same loss hides in a separator-joined pile, or even in plain words ("the save" for the one that skips the duplicate check). Ask what answer went missing, not how long the line is — a term or `·` that drops nothing is fine. Spend the words. (context-engineering: literal-vs-latent-matching)
 

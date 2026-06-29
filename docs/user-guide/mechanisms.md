@@ -138,7 +138,7 @@ When to challenge it: if a citation is decorative and the task would mean the sa
 
 Canonical references: [`leanplan-validate`](../../scripts/leanplan-validate), [`artifact-contract.md` → Required Shapes](../../references/artifact-contract.md#required-shapes), [`artifact-contract.md` → Anchors](../../references/artifact-contract.md#anchors).
 
-What you see: `leanplan-validate` checks feature artifacts and reports missing sections, broken references, coverage gaps, and size guardrail warnings (see `reference.md` for the flags).
+What you see: `leanplan-validate` checks feature artifacts and reports missing sections, broken references, coverage gaps, source-format style warnings, and size guardrail warnings (see `reference.md` for the flags).
 
 Why it exists: LeanPlan's review surface depends on structure. Lightweight validation catches shape drift before an agent or reviewer relies on a plan that no longer has the required anchors, coverage, or dependency shape.
 

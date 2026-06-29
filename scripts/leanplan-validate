@@ -95,6 +95,15 @@ FRONTMATTER_RE = re.compile(r"^---\s*\n.*?\n---\s*\n", re.DOTALL)
 CODE_FENCE_RE = re.compile(r"```(?P<lang>[A-Za-z0-9_-]*)\n(?P<body>.*?)```", re.DOTALL)
 ASCII_VISUAL_FENCE_LANGS = {"", "ascii", "text", "txt", "plain"}
 ASCII_VISUAL_RE = re.compile(r"(-->|->|<-|<->|=>|<=|\+-[-+]+\+?|\|[^\n]*\|)")
+INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
+URL_RE = re.compile(r"\b(?:https?://|www\.)\S+")
+COMMON_ABBREVIATION_RE = re.compile(
+    r"\b(?:e\.g|i\.e|vs|etc|mr|mrs|ms|dr|prof|sr|jr|no|fig|st)\.",
+    re.IGNORECASE,
+)
+INITIALISM_RE = re.compile(r"\b(?:[A-Za-z]\.){2,}")
+LIST_MARKER_RE = re.compile(r"^\s*(?:[-*+]|\d+\.)\s+")
+SENTENCE_BOUNDARY_RE = re.compile(r"[.!?][\"')\]]*\s+(?=\S)")
 SCRIPTY_TASK_RE = re.compile(
     r"\b(edit|modify|change|replace)\s+(?:file\s+)?[`'\"]?[^`\n'\"]+[`'\"]?\s+"
     r"(?:at|on)\s+(?:line|L)\s*\d+",
@@ -164,6 +173,7 @@ class Validator:
             self._check_duplicate_anchors(filename, text)
             self._check_citations(filename, text)
             self._check_must_usage(filename, text)
+            self._check_sentence_linebreaks(filename, text)
 
     def _prose_line_count(self, text: str) -> int:
         # Review-surface prose only: exclude fenced code/visual blocks (Mermaid,
@@ -410,6 +420,58 @@ class Validator:
         for match in re.finditer(r"\bMUST(?:\s+NOT)?\b", text):
             self._warn(filename, "MUST/MUST NOT should be reserved for true invariants", self._line_for_offset(text, match.start()))
 
+    def _check_sentence_linebreaks(self, filename: str, text: str) -> None:
+        # Semantic line breaks are source-format guidance: one complete sentence
+        # per Markdown source line, with one blank line when the thought shifts to
+        # a new paragraph. Keep this intentionally conservative; it is a review
+        # aid, not a formatter or a grammar engine.
+        in_fence = False
+        in_html_comment = False
+        for line_number, line in enumerate(text.splitlines(), start=1):
+            if re.match(r"^\s*(```|~~~)", line):
+                in_fence = not in_fence
+                continue
+            if in_fence:
+                continue
+
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if in_html_comment:
+                if "-->" in stripped:
+                    in_html_comment = False
+                continue
+            if stripped.startswith("<!--"):
+                if "-->" not in stripped:
+                    in_html_comment = True
+                continue
+            if self._skip_sentence_linebreak_line(stripped):
+                continue
+            if self._has_multiple_sentence_sources(stripped):
+                self._warn(
+                    filename,
+                    "source prose style: place each complete sentence on its own source line; "
+                    "when this is a paragraph shift, add one blank line before continuing",
+                    line_number,
+                )
+
+    def _skip_sentence_linebreak_line(self, stripped: str) -> bool:
+        return bool(
+            re.match(r"^#{1,6}\s+", stripped)
+            or stripped.startswith("|")
+            or re.match(r"^[-:| ]+$", stripped)
+            or re.match(r"^\[[^\]]+\]:\s+", stripped)
+        )
+
+    def _has_multiple_sentence_sources(self, stripped: str) -> bool:
+        normalized = INLINE_CODE_RE.sub("CODE", stripped)
+        normalized = URL_RE.sub("URL", normalized)
+        normalized = COMMON_ABBREVIATION_RE.sub(lambda m: m.group(0).replace(".", ""), normalized)
+        normalized = INITIALISM_RE.sub(lambda m: m.group(0).replace(".", ""), normalized)
+        normalized = re.sub(r"(?<=\d)\.(?=\d)", "", normalized)
+        normalized = LIST_MARKER_RE.sub("", normalized)
+        return bool(SENTENCE_BOUNDARY_RE.search(normalized))
+
     def _check_design_rationale_consistency(self) -> None:
         design_anchors = {a["target"] for a in self._anchors("design", kind="D")}
         rationale_anchors = {a["target"] for a in self._anchors("rationale", kind="D")}
@@ -575,7 +637,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "--strict",
         action="store_true",
         help=(
-            "Strict mode: escalate the one-deployment guardrail breach (>16 tasks) to an error, "
+            "Strict mode: escalate warnings (including guardrails and source style) to errors, "
             "and exit non-zero if any warnings are present. Honors $LEANPLAN_STRICT=1 as well."
         ),
     )
