@@ -96,6 +96,7 @@ Utility scripts:
 | The agent needs many unrelated files loaded at once | Narrow the task or improve artifact ownership |
 | Completion criteria are subjective | Rewrite them around observable evidence |
 | A task only says "implement the design" | Add task-specific goal, constraints, and completion criteria |
+| A prose line carries multiple complete sentences | Put each sentence on its own source line, or add one blank line when the thought shifts paragraphs |
 | The guide and references seem to disagree | Treat `references/*.md` and adapters as canonical agent procedure, then fix the human-facing explanation |
 
 ## See also

@@ -197,6 +197,14 @@ inject_surface_bloat() {
     for i in $(seq 1 200); do printf '<!-- filler %d -->\n' "$i" >> "$1/spec.md"; done
 }
 
+inject_dense_sentence_line() {
+    printf '\nFirst generated sentence. Second generated sentence.\n' >> "$1/requirements.md"
+}
+
+inject_sentence_paragraph_break() {
+    printf '\nFirst generated sentence.\n\nSecond paragraph sentence.\n' >> "$1/requirements.md"
+}
+
 inject_outcome_only_task() {
     # Append a task whose ONLY reason citation is a Behavior anchor (no Constraint,
     # no Decision). Regression guard for the reverse-coverage matcher: it must accept
@@ -437,6 +445,9 @@ assert_case "requirement drift (--strict)"    1 "implementation choice in Requir
 assert_case "spec stack drift (--strict)"     1 "named stack in Spec"                    inject_spec_drift         "--strict"
 assert_case "task step drift (--strict)"      1 "looks like line-level scripting"       inject_task_step_drift    "--strict"
 assert_case "surface bloat (--strict)"        1 "soft cap"                               inject_surface_bloat      "--strict"
+assert_case "dense sentence line warns"       0 "complete sentence on its own source line" inject_dense_sentence_line
+assert_case "dense sentence line errors (--strict)" 1 "complete sentence on its own source line" inject_dense_sentence_line "--strict"
+assert_case "paragraph blank line ok"         0 "validation passed"                     inject_sentence_paragraph_break "--strict"
 assert_case "behavior-only task reason"       0 "validation passed"                     inject_outcome_only_task  "--strict"
 assert_case "understanding citation resolves"  0 "validation passed"                     inject_understanding_citation_ok
 assert_case "broken understanding citation"    1 "broken citation: Understanding#Delta-9-nonexistent" inject_understanding_citation_broken

@@ -3,7 +3,8 @@
 ## Behavior
 ### B-1: single-invocation-sync
 
-Running the sync command once copies the in-repo framework-doc body to the runtime location. After the command exits successfully, the runtime copy's body (excluding a preserved drift-marker header) hashes equal to the in-repo source byte-for-byte.
+Running the sync command once copies the in-repo framework-doc body to the runtime location.
+After the command exits successfully, the runtime copy's body (excluding a preserved drift-marker header) hashes equal to the in-repo source byte-for-byte.
 
 ### B-2: staleness-reporting
 
@@ -16,11 +17,13 @@ When the in-repo source does not exist at its expected path, the sync command ex
 ## Constraint
 ### C-1: directional
 
-Sync is in-repo source → runtime copy. The runtime copy is never written back to the in-repo source.
+Sync is in-repo source → runtime copy.
+The runtime copy is never written back to the in-repo source.
 
 ### C-2: header-note-preservation
 
-The runtime copy retains its drift-marker header across syncs. The header is not present in the in-repo source — it is a runtime-local annotation.
+The runtime copy retains its drift-marker header across syncs.
+The header is not present in the in-repo source — it is a runtime-local annotation.
 
 ### C-3: atomicity-under-failure
 

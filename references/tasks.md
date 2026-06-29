@@ -83,7 +83,8 @@ flowchart LR
 
 ## T: A1
 
-- **Goal**: <process-framed — what this task achieves + how (when non-obvious); inline anchors like `Spec#B-1-…` and `Design#D-1-…`. Anchor — don't restate the Decision's content.>
+- **Goal**: <process-framed — what this task achieves + how (when non-obvious); inline anchors like `Spec#B-1-…` and `Design#D-1-…`.
+  Anchor — don't restate the Decision's content.>
 - **Repo**: <repo/path>
 - **Completion**:
   - <observable proof, citing Spec#B-* or Spec#C-*; enumerate case scenarios when verification has branches>

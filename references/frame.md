@@ -74,7 +74,8 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
 
 User stories:
 
-- **<short title>** — <one-line user-observable behavior>. <follow-up detail if it sharpens the story; otherwise drop>.
+- **<short title>** — <one-line user-observable behavior>.
+  <Follow-up detail if it sharpens the story; otherwise drop>.
 - ...
 
 <observable success signal folded into a final sentence or two>
@@ -82,7 +83,8 @@ User stories:
 ## Guarantee
 <only when cross-cutting domain rules (system-policy intent) exist; otherwise drop this section>
 
-- **<short title>** — <the domain rule + why it matters; Spec owns its observable form>. <detail>.
+- **<short title>** — <the domain rule + why it matters; Spec owns its observable form>.
+  <Detail>.
 - ...
 
 ## Non-goals

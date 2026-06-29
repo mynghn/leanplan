@@ -369,13 +369,14 @@ cat > "$DIR/requirements.md" <<EOF
 
 ## Outcome
 
-<!-- future state + the signal that confirms it, folded into one paragraph. Don't split into a separate "Success metric" section. -->
+<!-- future state + the signal that confirms it, folded into one paragraph.
+Fold the success signal into this section. -->
 
 <!-- Delete sections below if not applicable. -->
 
 ## Guarantee
 
-<!-- Conditional — only when continuous domain properties (system-policy intent) exist:
+<!-- Conditional — only when continuous domain properties (system-policy intent) exist.
 why a cross-cutting property matters, stated as intent without an observable predicate
 (the observable form is Spec ## Constraint). Delete if none. -->
 
@@ -400,7 +401,8 @@ followed by "when X, Y happens" prose. One item per behavior. -->
 
 ## Constraint
 
-<!-- Conditional — delete this section if no continuous constraints exist.
+<!-- Conditional.
+Delete this section if no continuous constraints exist.
 Add items as:
 ###   C-<N>: <kebab-slug>
 for SLA, non-blocking, idempotency, integrity, environmental bindings. -->
@@ -417,7 +419,8 @@ cat > "$DIR/design.md" <<EOF
 
 ## Architecture
 
-<!-- brief caption: what this visual shows; Mermaid or fenced ASCII art are valid -->
+<!-- brief caption: what this visual shows.
+Mermaid or fenced ASCII art are valid. -->
 
 \`\`\`mermaid
 flowchart LR
@@ -426,14 +429,15 @@ flowchart LR
 
 <!-- Add Decision blocks below, each as:
 ##   D-<N>: <kebab-slug>
-with a one-line WHAT and a one-line WHY (trivial) or a rationale anchor (non-trivial):
+with a one-line WHAT and a one-line WHY (trivial) or a rationale anchor (non-trivial).
 See rationale at [design-rationale.md#D-<N>-<slug>]. -->
 EOF
 
 cat > "$DIR/design-rationale.md" <<EOF
 # $FEATURE_ID — Design Rationale
 
-<!-- One ## D-<N>: <slug> per non-trivial decision only. Free-form prose body;
+<!-- One ## D-<N>: <slug> per non-trivial decision only.
+Free-form prose body;
 typical content: forces at play, alternatives considered, chosen path, invalidation
 hints. No prescribed schema — capture reasoning, don't fill a form. -->
 EOF
@@ -455,7 +459,8 @@ flowchart LR
 
 <!-- Add task cards below, each as:
 ##   T: <track-prefix><N>
-- **Goal**: <WHAT + HOW; inline Spec#B-<N>-<slug> / Spec#C-<N>-<slug> / Design#D-<N>-<slug> anchors>
+- **Goal**: <WHAT + HOW; inline Spec#B-<N>-<slug> / Spec#C-<N>-<slug> / Design#D-<N>-<slug> anchors.
+  Place the task outcome on its own source line when adding more detail.>
 - **Repo**: <path or repo name>
 - **Completion**: <observable verification, cites Spec anchors>
 - **Dependencies**: <prior task IDs as enablers | none>
