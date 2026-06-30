@@ -1,6 +1,6 @@
 # 260630-item-orthogonality — Deferrals
 
-### Defer-1: existing-artifact-reconciliation-scope
+### Defer-1: existing-artifact-reconciliation-scope (resolved -> Tasks#T:R1)
 
 **Owning stage:** Tasks.
 
