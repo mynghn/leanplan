@@ -42,6 +42,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
    - Conditional sections (Constraint, Non-goals) omitted when empty.
    - Each item leads with its observable behavior, not preamble — the Spec is graspable from headings + lead lines (conclusion-first; `artifact-contract.md` → Prose Style).
    - If the boundary probe ran, every accepted fact became a `B`/`C` and declined candidates left no surface trace — the probe fed dialogue / research, not `spec.md`.
+   - Orthogonality pass — each `B` / `C` item asserts one concern no sibling does; resolve any pair across the round that shares one (*One Concern Per Item*, `artifact-contract.md`).
 
 ## Guardrails
 
