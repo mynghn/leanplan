@@ -13,7 +13,7 @@ Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the r
 
 Load `references/rethink.md` from `LP_ROOT` — it is authoritative for the procedure (reflect → verify → re-derive → decide → emit), the two honest stances (adversarial claim-verification, legitimate no-op), and the read-never-edit boundary. Load these on demand, not up front (context-engineering: jit-loading):
 
-- `references/artifact-contract.md` from `LP_ROOT` — **before writing the understanding delta**: the `understanding-shifts.md` archive shape and `Delta-<N>: <slug>` anchor.
+- `references/artifact-contract.md` from `LP_ROOT` — **before writing the understanding delta**: the `Delta-<N>: <slug>` anchor pattern (the delta block shape now lives in `references/rethink.md`).
 - `references/philosophy.md` from `LP_ROOT` — **when a principle's intent or grounding is in question**: the framework principles shaping what "good" looks like.
 
 Runtime glue:

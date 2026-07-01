@@ -11,7 +11,7 @@ Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the r
 
 Load `references/design.md` from `LP_ROOT` — it is authoritative for the procedure, architecture rule, decision blocks, rationale anchoring, Spec coverage check, and warm in-session backward fold into the Spec. Load these on demand, not up front (context-engineering: jit-loading):
 
-- `references/artifact-contract.md` from `LP_ROOT` — before writing or editing an artifact's structure or anchors: Design shape, `D-<N>` anchors, rationale shape, Research-as-evidence rule.
+- `references/artifact-contract.md` from `LP_ROOT` — before writing or editing an artifact's structure or anchors: `D-<N>` anchor pattern (the Design / Rationale / Research shapes now live in `references/design.md`).
 - `references/philosophy.md` from `LP_ROOT` — when a principle's intent or grounding is in question.
 
 Runtime glue:

@@ -93,6 +93,8 @@ flowchart LR
 - **Guidelines**: <only task-local stance rules when needed>
 ````
 
+The Dependency DAG stays in Mermaid; `leanplan-validate` flags an ASCII DAG.
+
 ## Hand-off
 
 For each independently startable task: `leanplan-implement <KEY> <task-id>`.

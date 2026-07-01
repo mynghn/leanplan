@@ -12,7 +12,7 @@ Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the r
 
 Load `references/frame.md` from `LP_ROOT` — it is authoritative for the procedure, guardrails, and template. Load these on demand, not up front (context-engineering: jit-loading):
 
-- `references/artifact-contract.md` from `LP_ROOT` — **before writing or editing an artifact's structure or anchors**: feature layout, anchor patterns, drift guards, traceability rules.
+- `references/artifact-contract.md` from `LP_ROOT` — **before writing or editing an artifact's structure or anchors**: feature layout, anchor patterns, and the cross-cutting authoring principles (the Requirements shape + drift guard live in `references/frame.md`).
 - `references/philosophy.md` from `LP_ROOT` — **when a principle's intent or grounding is in question**: the framework principles shaping what "good" looks like.
 
 Runtime glue:
