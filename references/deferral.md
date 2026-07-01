@@ -1,15 +1,28 @@
 # LeanPlan Deferral Lane
 
-This doc carries the capture and drain procedures for the forward-deferral lane — the on-demand companion behind the one-line hooks in the stage docs. It loads JIT at two moments: when a stage *captures* a deferred decision, and when a stage *drains* the deferrals addressed to it. The structural shape (anchor, citation, layering) is owned by `artifact-contract.md` → Deferrals; this doc is the procedure.
+This doc carries the block shape plus the capture and drain procedures for the forward-deferral lane — the on-demand companion behind the one-line hooks in the stage docs. It loads JIT at two moments: when a stage *captures* a deferred decision, and when a stage *drains* the deferrals addressed to it. The `Defer-<N>` anchor grammar stays in `artifact-contract.md` → Anchors; the block shape (below) and both procedures live here.
 
 A deferral is a deliberately-deferred cross-stage decision — a genuine decision that surfaces too early, at a stage that doesn't own it. Park it off the review surface so the spark is not lost, the review surface is not bloated, and the owning stage is not pinned. The lane lives in `deferrals.md` as append-only `Defer-<N>` blocks, each addressed **forward** to the later stage that owns the decision (a decision owned by an *earlier*, already-run stage is a drift — that is `revise`/stop-the-line, not a deferral).
+
+## Deferral block shape
+
+A deferral is a *sibling* to the understanding-shift archive, never a blend: an understanding delta is a *committed* change to propagate; a deferral is an *open* question to re-decide.
+
+Each `Defer-<N>: <slug>` block is shaped so it cannot read as a settled decision (conclusion-first):
+
+- **Owning stage** — one of Spec / Design / Tasks; the stage the deferral is addressed to.
+- the open **question** + why it surfaced now.
+- **forces** glimpsed.
+- at most an **option seen** — explicitly marked *not chosen*. There is no "decision" field.
+
+IDs are stable; append, never renumber — duplicate `Defer-<N>` anchors are validator-caught.
 
 ## Capture — park it, don't discard it
 
 Each stage that has a *later* stage already has a disposal point where it sets off-altitude content aside for it: Requirements strips upstream solution suggestions; Spec pushes specifics to Design; Design pushes work-ordering to Tasks. (Tasks, the last planning stage, has no forward target — what it would "push back to Design" is a drift for `revise`, not a deferral.) At that point, judge what you are setting aside:
 
 - **Noise** — discard it as before. Most set-aside content is noise; capture is the exception, not the rule.
-- **A genuine decision another stage owns** — append a `Defer-<N>` block, in the shape `artifact-contract.md` → Deferrals defines, addressed to that stage, instead of discarding it.
+- **A genuine decision another stage owns** — append a `Defer-<N>` block, in the **Deferral block shape** above, addressed to that stage, instead of discarding it.
 
 Capture is opt-in planner judgment — never auto-detected, never required, never a gate on proceeding. It is a lightweight aside during ordinary stage work, not a ceremony.
 
