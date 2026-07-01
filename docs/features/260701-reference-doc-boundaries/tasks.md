@@ -7,6 +7,8 @@
 - **Relocate, don't rewrite.** Move each concern verbatim to its new home, and do not reword a rule (`Spec#C-3-content-preserved-losslessly`).
   A fold places content in the new home, and `C1` removes it from the contract only after it is placed.
 - **Scope.** Re-boundarying stays in `references/`; `framework-design.md` gets citation-repair only (`Design#D-7-framework-design-citation-repair`), and `README.md` is untouched (`Spec#C-4-scope-stays-in-workflow-refs`).
+- **Base branch — stacked on `feat/item-orthogonality`, not `main`.** This work re-touches the same `references/` docs that feature 260630 edited (One Concern Per Item in the contract; the B/C discriminator and the orthogonality-pass self-check bullets in the stage docs), so basing on `main` would miss or collide with them.
+  Merge order follows: 260630 (PR #65) lands first, then this feature stacks onto it or retargets `main` once #65 is merged.
 - **Dogfood.** Each edited doc must itself stay occasion-aligned and orthogonal — the framework obeying its own re-drawn rule.
 
 ## Dependency DAG
