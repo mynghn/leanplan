@@ -1,8 +1,8 @@
 # LeanPlan Artifact Contract
 
-LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This doc carries the structural rules — feature layout, anchor patterns (`B-<N>`, `C-<N>`, `D-<N>`, `T: <id>`), traceability, drift guards.
+LeanPlan is a lean, LLM-aware spec-driven-development framework for one-deployment-sized feature work. This doc carries the cross-stage structural core — feature layout, anchor patterns (`B-<N>`, `C-<N>`, `D-<N>`, `T: <id>`), and the cross-cutting authoring principles (One Prose Home Per Fact, One Concern Per Item, Prose Style, Surface Budget). Each artifact's own required shape and drift guard live in its authoring stage's reference; this core holds only what every stage-run needs.
 
-Companion: `philosophy.md` (principles), `<stage>.md` (per-stage procedure).
+Companion: `philosophy.md` (principles), `<stage>.md` (per-stage procedure + artifact shape + drift guard).
 
 ## Feature Layout
 
@@ -21,6 +21,8 @@ Archive artifacts, created when useful:
 - `research.md`
 - `understanding-shifts.md`
 - `deferrals.md`
+
+Frontmatter is discouraged on these plan artifacts; the artifact type is implied by filename.
 
 ## Surface / Archive layering
 
@@ -69,80 +71,6 @@ Citation forms:
 - `Understanding#Delta-1-premise-falsified`
 - `Deferrals#Defer-1-cache-strategy`
 
-## Required Shapes
-
-### Requirements
-
-- `## Problem`
-- `## Outcome`
-- `## Guarantee` only when continuous domain properties (system-policy intent) exist
-- `## Non-goals` only when the Requirements scope is ambiguous
-- `## Upstream` only when Jira, PRD, Slack, or similar sources exist — the external tracker key (e.g. Jira `PROJ-123`) is recorded here as metadata, never as the directory identity
-
-### Spec
-
-- `## Behavior` containing one or more `B-<N>: <slug>` items (episode-verifiable behaviors)
-- `## Constraint` containing one or more `C-<N>: <slug>` items, only when continuous properties exist
-- `## Non-goals` only when the Spec's scope is ambiguous
-
-Episode-triggered behavior belongs in B. Continuous properties belong in C.
-
-### Design
-
-- `## Architecture` with at least one visual block: Mermaid diagram or fenced ASCII art
-- One `D-<N>: <slug>` block per material choice
-- Non-trivial decisions link to a matching block in `design-rationale.md`
-
-### Design Rationale
-
-Use matching `D-<N>: <slug>` anchors. Body is **free-form prose** — typically forces, alternatives considered, chosen path, invalidation triggers. **No prescribed inner-section schema**: capture reasoning, don't fill a form.
-
-### Research
-
-Use descriptive topic headings. Store evidence only. Interpretation belongs in rationale.
-
-### Understanding Shifts
-
-Append-only archive of understanding deltas — one `Delta-<N>: <slug>` block per mid-round shift, conclusion-first. Each block leads with what the understanding now is, then the prior assumption it kills, why (the disturbance + any verification verdict), and scope-of-impact as bare `Spec#…` / `Design#…` / `Tasks#…` citations to the committed work it bears on — no restatement. IDs are stable; append, never renumber — duplicate `Delta-<N>` anchors are validator-caught. A delta's *outbound* `Spec#` / `Design#` / `Tasks#` citations are resolution-checked, and *inbound* `Understanding#Delta-N-slug` citations now resolve against these `Delta-<N>` anchors too — a revised artifact cites the Delta that justified it. Research# citations stay recorded-for-retrieval only: Research carries descriptive headings, not a resolvable anchor set.
-
-### Deferrals
-
-Off-review-surface archive of deliberately-deferred cross-stage decisions, created when useful. One `Defer-<N>: <slug>` block per deferral, each addressed forward to the later stage that owns the decision. A sibling to the understanding-shift archive — never a blend: an understanding delta is a *committed* change to propagate; a deferral is an *open* question to re-decide. Not loaded at default review/implement time; JIT-loaded only by its owning stage's drain.
-
-Each block is shaped so it cannot read as a settled decision (conclusion-first):
-
-- **Owning stage** — one of Spec / Design / Tasks; the stage the deferral is addressed to.
-- the open **question** + why it surfaced now
-- **forces** glimpsed
-- at most an **option seen** — explicitly marked *not chosen*. There is no "decision" field.
-
-Resolution is retire-in-place: when the owning stage drains it, append `(resolved -> <Spec#… | Design#… | Tasks#…>)` to the block heading, citing where the decision landed — the same convention as ` (retired)`, so the `Defer-<N>` ID keeps resolving. Append-only; IDs stable; duplicate `Defer-<N>` anchors are validator-caught. An unresolved deferral whose owning stage's artifact already exists is surfaced by `leanplan-validate` (advisory) — never silently dropped; once drained, the resolve-in-place marker cites where the decision landed and that anchor's normal coverage tracks it. The capture and drain procedures live in `references/deferral.md`.
-
-### Tasks (`tasks.md`)
-
-- Optional `## Guidelines` for feature-wide work-stance rules
-- `## Dependency DAG` (or `## DAG`) with Mermaid; track subgraphs and prefixed task IDs (e.g. `P1`, `A1`, `D1`, `I1`) when coordination matters
-- One `T: <id>` block per land-able work item
-
-A well-formed task card carries:
-
-- **Goal** — *process-framed* statement of WHAT outcome this task achieves + HOW (when the work approach is non-obvious), with inline `Spec#…` and `Design#…` anchors colocated with the supported sentence. **Anchor — don't restate.** Tech-realization specifics (field mappings, response shapes, signatures, call sequences) belong in the cited Design Decision; the Goal points to them.
-- **Repo** — where the work lives
-- **Completion** — observable verification + method (test / monitor / SLO / one-shot observation). Enumerated scenarios/cases are healthy here — this is process-specific.
-- **Dependencies** — prior task IDs as enablers (not gates)
-- **Guidelines** — only when task-local stance matters
-
-## Traceability
-
-- Every Spec B and C maps to at least one task completion criterion or task body citation.
-- Every task cites at least one Spec B, Spec C, Design decision, or explicit guideline reason.
-- Tasks dependencies are enablers, not rigid gates. Implementation agents re-evaluate them at task entry.
-- At implement close-out **and on the review path**, run **Close-Out Reconciliation** (`implement-closeout.md`) on a task's load-bearing citations — a reviewer runs it independently, not only the implementing agent, which keeps a self-skipped consultation catchable.
-
-### `**GAP**` acknowledgment
-
-A Spec B or C item may be deliberately uncovered (no task verifies it directly) when the team has accepted the gap. Annotate it on a line containing `**GAP**` inside `tasks.md` (typically in a forward-coverage table). The validator treats such items as acknowledged — not coverage errors. Use sparingly and document the acceptance rationale next to the marker.
-
 ## One Prose Home Per Fact
 
 A fact is authored as prose **once**, in its owning artifact; every other occurrence is an anchor reference, never a re-paraphrase. A search for any cross-cutting fact then returns one prose statement plus bare `…#…` anchors — zero restatements.
@@ -154,7 +82,7 @@ The rule binds **every seam**, not only Design→Spec:
 - **Within Design.** The Architecture caption owns boundaries and flow; `Decision` blocks own realization claims — the caption doesn't restate a Decision.
 - **Within Tasks.** Inline `Completion` citations are the canonical forward-coverage home; a forward-coverage table, if kept, is a derived view of them, not a re-authored mapping — and only the deliberately-uncovered subset carries the reserved `**GAP**` marker.
 
-Each stage doc carries its seam's operational instance; the per-artifact Drift Guards below are instances of this rule, not separate ones. Each avoided restatement removes a near-miss distractor; the surviving bare anchor is a literal lexical handle, not a latent lookup. (context-engineering: distractor-sensitivity, literal-vs-latent-matching)
+Each stage doc carries its seam's operational instance; the per-artifact drift guards now folded into each stage doc's Guardrails are instances of this rule, not separate ones. Each avoided restatement removes a near-miss distractor; the surviving bare anchor is a literal lexical handle, not a latent lookup. (context-engineering: distractor-sensitivity, literal-vs-latent-matching)
 
 ## One Concern Per Item
 
@@ -185,6 +113,7 @@ Applies to every artifact, in any authoring language. Write-time guidance; `lean
 - **Lists over dense paragraphs.** When content enumerates parallel points, conditions, or steps, use bullet or ordered lists. Reserve flowing prose for a single causal chain.
 - **One sentence per source line.** Write each complete sentence on its own Markdown source line. When the thought shifts to a new paragraph, add one blank line before continuing. Use normal source newlines; rendered hard breaks are only for places that intentionally need visible line breaks.
 - **Short, declarative sentences.** Break run-ons; promote a buried qualifier to its own clause or bullet rather than nesting it in parentheses.
+- **MUST / MUST NOT are reserved for true invariants.** Don't decorate an ordinary rule with an imperative keyword.
 - **Concise, not compressed.** Cut redundancy, not meaning: drop what's repeated or already implied, never a distinct piece of information the reader needs (`bypass-check save` ❌ drops *which* check; "save without the duplicate check" ✅ keeps it). The same loss hides in a separator-joined pile, or even in plain words ("the save" for the one that skips the duplicate check). Ask what answer went missing, not how long the line is — a term or `·` that drops nothing is fine. Spend the words. (context-engineering: literal-vs-latent-matching)
 
 Why: this serves the small-surface and LLM-aware principles — buried ledes and dense blocks get rubber-stamped and dilute agent attention. Stage-specific shapes (e.g. Requirements user-story bullets) are instances of this rule, not exceptions.
@@ -199,14 +128,3 @@ The surface artifacts (Requirements, Spec, Design, Tasks) are designed for **rev
 - **The framework's own references apply this reflexively.** This budget caps user surface artifacts; the stage references themselves (`frame.md` … `implement.md`) follow the same surface/tier discipline — stance, procedure, guardrails, and author-time calibration (worked examples, templates) stay always-loaded, while step-scoped lookup detail defers to an on-demand companion loaded at its consuming step. Advisory, not a validator-enforced gate.
 
 Grounded in the small-surface and LLM-aware principles (`philosophy.md` P3). The "lean surface is reviewed better" claim rests on the well-established code-review finding that defect detection drops sharply past a few hundred lines; that lean LeanPlan surfaces specifically review better is a deliberate, not-yet-measured bet. (context-engineering: context-rot, effective-vs-advertised-context, distractor-sensitivity)
-
-## Drift Guards
-
-- Requirements has no implementation choices — no tech at all, generic or named. (`leanplan-validate` warns on named-product terms; generic-category leakage is a review catch.)
-- Spec has no chosen stack or internal realization. Generic categories (message queue, event stream, HTTP API) are *expected* here; only a named stack is drift — a different policy from Requirements. (`leanplan-validate` warns on named-product terms in the Spec, leaving the generic categories it legitimately uses untouched.)
-- Design has no work ordering, no infrastructure / database request procedure, no PR stacking — those belong in Tasks. Design **does** carry tech-realization specifics (field mappings, response shapes, signatures, call sequences, schemas) so tasks can anchor in.
-- Tasks has no line-by-line edit script. Implementation agents re-derive against current code at task entry.
-- **Tasks fields carry process specifics, not tech-realization specifics (the Product↔Process cut, `framework-design.md` §2).** Task cards describe the *work* (Goal: what outcome / Completion: how to verify / Guidelines: work-stance). Tech-realization details — proto/response field mappings, controller orchestration sequences, method signatures, code paths, schemas — belong in a Design `D-<N>` block. The task card anchors via `Design#D-<N>-<slug>`; it does not restate the Decision's content. Symmetric guard with the Design row above. Detection cue: a Goal bullet that answers "after the work lands, the system looks like X" is drift — push X to Design; keep "this task achieves Y, verified by Z" in the card.
-- MUST and MUST NOT are reserved for true invariants.
-- Design visuals may be Mermaid diagrams or fenced ASCII art. Prefer a visual companion when prose would otherwise blur relationships, boundaries, sequences, state, or mappings; use as many visuals as clarify distinct structures. Tasks DAGs stay Mermaid unless the Tasks contract changes.
-- Frontmatter is discouraged on plan artifacts; the artifact type is implied by filename.
