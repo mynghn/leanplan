@@ -43,9 +43,12 @@ Continuous integrity property of the change as a whole.
 
 ### C-4: scope-stays-in-workflow-refs
 
-Only the `references/` workflow docs change.
-`framework-design.md` (the challenge-time archive) and `README.md` (the human entry point) are untouched, because their load-occasions differ from the workflow docs.
+The re-boundarying happens only in the `references/` workflow docs; no other doc is restructured or re-boundaried.
+`framework-design.md` (the challenge-time archive) keeps its design content, role, and boundaries unchanged, but its citations to relocated `references/` sections are repaired to the new homes so no reference dangles — meaning-preserving follow-through, licensed by the Requirements' pointer-repair non-goal, not a re-boundarying.
+`README.md` (the human entry point) is fully untouched.
 Continuous scope boundary.
+
+Refined during Design (warm fold): the original wording said `framework-design.md` was "untouched", but it cites the relocated sections, so leaving its pointers to dangle would break C-2; the intent (do not re-boundary it) is preserved, its pointers are repaired.
 
 ## Non-goals
 
