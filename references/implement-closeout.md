@@ -42,7 +42,7 @@ PR body is particularly durable — visible in GitHub history post-squash, linka
 
 The distillation above leaves the consultation proof; this step checks it. Run it at close-out as an implementation self-check, and re-run it on the review path. It is **review-tier, not a `leanplan-validate` gate** — the validator reads artifacts, not the code / commits / PR where substance lands, so it cannot judge whether a migrated reason is genuine.
 
-Reconcile the task card's **load-bearing citations** against the delivered work:
+Reconcile the task card's **load-bearing citations** — the traceability the task cards establish in `tasks.md` — against the delivered work:
 
 - **Obligation set.** Exactly the citations the card makes from the load-bearing prefixes — the Spec `B` / `C` a task realizes and the Design `Decision` it builds on. The card already enumerates them; no separate ledger is kept.
 - **Check.** Each one's constraint must appear as substance in the delivered work — a type, test, annotation, commit body, PR body, or comment from the hierarchy above, carried *in words*. Substance means the anchor's **actual content** — the condition or reason it states — not a paraphrase of the slug name, which only re-says what naming the anchor already said; reproducing the content is what reading yields, and a self-describing slug does not. A reviewer who has opened the anchor judges the match. A load-bearing citation with no such substance, or only slug-deep substance, is a **surfaced skip**: its anchor was named but never consulted. Flag it; do not accept it as conforming.
