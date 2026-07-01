@@ -51,6 +51,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
    - Upstream Spec `B` / `C` are referenced, not re-stated; the Architecture caption doesn't restate a `Decision`.
    - Each Decision leads with its one-line WHAT (the choice), not preamble; past ~100 lines, order the highest-stakes Decisions at the edges, not buried mid-file (conclusion-first + edge-placement; `artifact-contract.md` → Prose Style).
    - Orthogonality pass — each Decision asserts one concern no sibling Decision does; resolve any pair across the round that shares one (*One Concern Per Item*, `artifact-contract.md`).
+   - Atomicity pass — each Decision is one separable choice; a block fusing two choices, each with its own alternative, is split, while a single choice keeps its facets folded (inner-item atomicity, `artifact-contract.md`).
 
 ## Guardrails
 
@@ -64,6 +65,9 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
   - ❌ a Rationale entry for the trivial one — forces a form where one line suffices.
   - ❌ burying the non-trivial tradeoff as a one-liner — the road-not-taken is the highest-loss-risk WHY under eviction; it needs Rationale → PR body, not a clause.
 - **No fake decisions.** A choice with no real alternative isn't a decision — fold its content into the diagram or reference the Spec Constraint it satisfies.
+- **One Decision per separable choice.** Give each separable choice its own `D-<N>` block; don't fuse two into one — the Decision instance of inner-item atomicity (`artifact-contract.md` → One Concern Per Item). Two choices are separable when each carries its *own* alternative or tradeoff a reviewer would weigh apart; the facets of a *single* choice — its schema, its rejected alternative, its invalidation cue — stay folded in that one block (the "schemas fold inline within the relevant Decision" rule above), so the guard splits fused choices without over-splitting one choice into many.
+  - ❌ fused: one `D-3: cache` block deciding cache-vs-direct-read *and* the invalidation strategy *and* the key schema — two separable choices, each with its own alternative (staleness-window vs. DB-load; TTL vs. event-driven), buried where a reviewer can't weigh either apart.
+  - ✅ split: `D-3: read-through-cache` (cache-vs-direct-read; key schema folded in as a facet of *this* choice) and a separate `D-4: cache-invalidation` (TTL-vs-event-driven, its own alternative) — the separability line falls *between* the two choices, not between a choice and its own schema, so the schema stays folded while the second choice earns its own block.
 - **Conclusion-first Decision body.** Line 1 is the choice itself; parallel facets (schema, rejected alternatives, invalidation cue) follow as a list below it — the body is graspable from its lead line alone (`artifact-contract.md` → Prose Style).
   - ✅ choice first: *"Store the session token as a salted hash, not plaintext — satisfies `Spec#C-2-tokens-never-stored-in-clear`; schema and the rejected encrypt-at-rest alternative follow as list items."*
   - ❌ choice buried: *"Because we already hash passwords and a second reversible secret widens the blast radius while `Spec#C-2-tokens-never-stored-in-clear` must still hold, we store the token as a salted hash…"* — the choice lands only after three clauses of preamble.
