@@ -50,6 +50,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
    - Conditional sections are omitted when empty (don't ship empty Non-goals or Upstream sections).
    - Problem leads with the pain itself (who feels it, what's broken), not background — a PM grasps it from the first line (conclusion-first; `artifact-contract.md` → Prose Style).
    - Problem reflects a formed understanding, not a sparse guess — a sparse arrival was drawn out (problem elicited, framings weighed, gaps resolved) before distillation, and the draw-out wrote no file of its own.
+   - Orthogonality pass — each Outcome and Guarantee item asserts one concern no sibling does; resolve any pair across the round that shares one (*One Concern Per Item*, `artifact-contract.md`).
 
 ## Guardrails
 

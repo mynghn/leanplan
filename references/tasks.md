@@ -45,6 +45,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
    - **No deferral is stranded.** Every `Defer-N` in `deferrals.md` is resolved (drained) before handing off to implement — Tasks is the last planning stage, so an unresolved one here is a lost decision, not a not-yet-reached one (`leanplan-validate` flags it; `--strict` escalates).
    - DAG renders.
    - For a plan past ~100 lines, high-stakes / blocking cards sit at the edges (top and tail), not buried mid-file, and critical feature-level Guidelines are re-anchored near the tail (edge-placement; `framework-design.md` §6, `artifact-contract.md` → Prose Style).
+   - Orthogonality pass — each task card carries one concern no sibling task does; resolve any pair across the round that shares one (*One Concern Per Item*, `artifact-contract.md`).
 
 ## Guardrails
 

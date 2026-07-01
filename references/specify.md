@@ -42,6 +42,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
    - Conditional sections (Constraint, Non-goals) omitted when empty.
    - Each item leads with its observable behavior, not preamble — the Spec is graspable from headings + lead lines (conclusion-first; `artifact-contract.md` → Prose Style).
    - If the boundary probe ran, every accepted fact became a `B`/`C` and declined candidates left no surface trace — the probe fed dialogue / research, not `spec.md`.
+   - Orthogonality pass — each `B` / `C` item asserts one concern no sibling does; resolve any pair across the round that shares one (*One Concern Per Item*, `artifact-contract.md`).
 
 ## Guardrails
 
@@ -53,6 +54,8 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
     - ✅ `C-1: publish-latency-p99-under-5s` — continuous; SLO-verified.
     - ✅ `C-2: every-detected-anomaly-eventually-published` — continuous integrity; monitor-verified.
     - ❌ folding latency/no-loss *into* the B ("published within 5s and never dropped") — buries two continuous properties in an episodic item; they lose their SLO/monitor home.
+    - ❌ `C-3: anomaly-event-is-published` — a Constraint that only re-asserts B-1's occurrence as a standing claim: same subject *and* same predicate as B-1, no new property → **overlap**, not a third C → merge into B-1 or cut.
+  - *Subject-vs-predicate discriminator* — a shared subject is not overlap; test the **predicate**. A Behavior asserts the *occurrence*, and a legitimate Constraint asserts a *standing property* over that subject (C-1's latency bound, C-2's eventual delivery) — a distinct concern each. A Constraint that only re-states the occurrence (C-3) adds no predicate and collapses into the Behavior; the B/C *type* split feels like it already separated the items, but type-disjoint ≠ concern-disjoint. This applies *One Concern Per Item* (`artifact-contract.md`) at the B↔C seam — the converse of the conflation ❌ above.
 - **What a Spec is NOT** test: implementation can change without observable change → cut or push to Design.
 - **Generic-category tech only.** Specific stack names → Design.
 - **Probe the boundary — opt-in, generative.** The convergent steps project the Requirements; the probe reaches for contract facts the outcome-level Requirements could not name (failure modes, concurrency, observable error behavior, environmental couplings) — by inspecting the as-is, researching the outer world (the generative reach past the status quo), and asking the planner for the human-held slice. Never a gate; candidates feed dialogue / research, only accepted ones reach the surface.

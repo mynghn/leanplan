@@ -156,6 +156,27 @@ The rule binds **every seam**, not only Design→Spec:
 
 Each stage doc carries its seam's operational instance; the per-artifact Drift Guards below are instances of this rule, not separate ones. Each avoided restatement removes a near-miss distractor; the surviving bare anchor is a literal lexical handle, not a latent lookup. (context-engineering: distractor-sensitivity, literal-vs-latent-matching)
 
+## One Concern Per Item
+
+Each item asserts **exactly one concern that no sibling item asserts** — the item-level dual of *One Prose Home Per Fact*.
+One Prose Home keeps each *fact* to a single home, so no fact is restated across homes; this keeps each *item* to a single concern, so no concern is spread across items.
+Together the two make a round's item set a partition: every fact placed once, every concern asserted once.
+
+The rule binds **every item pair**, not only the Behavior↔Constraint boundary where overlap was first noticed:
+
+- **Every item kind** — Behavior (`B`), Constraint (`C`), Design decision (`D`), and Task (`T:`).
+- **Every section pair** — within a section (B↔B, C↔C, D↔D, T↔T), across the Behavior↔Constraint seam, and across the whole round.
+
+Apply it as a goal you reason toward, never a rote N×N pairwise sweep: name each item's one concern, and resolve any pair that shares one — by merge, cut, or re-scope — so each surviving item names a concern no sibling does.
+
+Two structures *look* like overlap but are legitimate, and the rule never fires on them:
+
+- **An altitude pair.** A Requirements *intent* and its Spec *observable* form are co-referential across the World↔Machine altitude by design, governed by One Prose Home's altitude split (cite-don't-restate), not by this rule.
+- **A Behavior + Constraint split over one subject.** A Behavior asserting an occurrence and a Constraint asserting a standing property over the same subject share a subject but not a predicate, so each names a distinct concern; the subject-vs-predicate discriminator is worked in `specify.md`, alongside the B/C example.
+
+This is the converse the anti-conflation rule (`specify.md`'s "one item per behavior; don't fold two into one") was missing, not a reversal of it: that rule forbids one item carrying two concerns, this forbids two items carrying one.
+Each merged-away overlap removes a near-miss distractor from the artifact a reviewer or agent reasons from. (context-engineering: distractor-sensitivity)
+
 ## Prose Style
 
 Applies to every artifact, in any authoring language. Write-time guidance; `leanplan-validate` warns on obvious dense multi-sentence source lines.

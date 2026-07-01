@@ -50,6 +50,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
    - Non-trivial decisions have resolvable rationale anchors in `design-rationale.md`.
    - Upstream Spec `B` / `C` are referenced, not re-stated; the Architecture caption doesn't restate a `Decision`.
    - Each Decision leads with its one-line WHAT (the choice), not preamble; past ~100 lines, order the highest-stakes Decisions at the edges, not buried mid-file (conclusion-first + edge-placement; `artifact-contract.md` → Prose Style).
+   - Orthogonality pass — each Decision asserts one concern no sibling Decision does; resolve any pair across the round that shares one (*One Concern Per Item*, `artifact-contract.md`).
 
 ## Guardrails
 
