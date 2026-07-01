@@ -102,7 +102,9 @@ Two structures *look* like overlap but are legitimate, and the rule never fires 
 - **An altitude pair.** A Requirements *intent* and its Spec *observable* form are co-referential across the World↔Machine altitude by design, governed by One Prose Home's altitude split (cite-don't-restate), not by this rule.
 - **A Behavior + Constraint split over one subject.** A Behavior asserting an occurrence and a Constraint asserting a standing property over the same subject share a subject but not a predicate, so each names a distinct concern; the subject-vs-predicate discriminator is worked in `specify.md`, alongside the B/C example.
 
-This is the converse the anti-conflation rule (`specify.md`'s "one item per behavior; don't fold two into one") was missing, not a reversal of it: that rule forbids one item carrying two concerns, this forbids two items carrying one.
+**Inner-item atomicity** is the converse direction this section also owns — a cross-cutting rule over every item kind (`B` / `C` / `D` / `T:`), not one homed in a single stage: an item asserts **exactly one concern; don't fold two into one**.
+It is the converse of One Concern Per Item, not a reversal of it: the cross-item direction forbids two items carrying one concern, inner-item atomicity forbids one item carrying two.
+`specify.md`'s "one item per behavior; don't fold two into one" is its **Behavior** instance, and `design.md`'s "one Decision per separable choice" its **Decision** instance — each a per-stage instance that cites this rule, not its home.
 Each merged-away overlap removes a near-miss distractor from the artifact a reviewer or agent reasons from. (context-engineering: distractor-sensitivity)
 
 ## Prose Style
