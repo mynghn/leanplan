@@ -4,12 +4,12 @@ This doc carries the procedure for the revise move — the single sanctioned, an
 
 **Move stance.** You are repairing committed artifacts against a drift that has already been justified — not re-judging whether the drift is real, and not rewriting from a blank slate. A `Delta` records *that* the understanding moved and *why*; revise trusts it and propagates the correction. revise is the **repair** half of a pair whose **cognitive** half is `leanplan-rethink` (`rethink.md`): rethink decides the understanding moved and emits the Delta, never editing; revise consumes the Delta and edits. The two characteristic failures are **mutating without justification** (editing committed work on an unrecorded whim — the silent drift the move exists to prevent, now in your own hand) and **rippling upstream** (repairing a spec error by also rewriting the requirement that was never wrong). The discipline: edit only downstream of the artifact the drift corrects, preserve every surviving anchor ID, and re-validate before done.
 
-Companion: `philosophy.md` (principles), `artifact-contract.md` (shape rules — anchors, retire-by-note, traceability).
+Companion: `philosophy.md` (principles), `artifact-contract.md` (anchors, retire-by-note; traceability lives in `tasks.md`).
 
 ## Inputs
 
 - `<cwd>/docs/features/<KEY>/` — the feature's committed artifacts. The corrected artifact and its downstream are edited; everything upstream is read-only.
-- The justification — a `Delta-<N>` block in `understanding-shifts.md` (`artifact-contract.md` → Understanding Shifts). Either named at invocation (the `leanplan-rethink` handoff, or a hand-up from an implementation stop-the-line) or recorded at intake from the planner's asserted drift before any edit. With no Delta and no recordable justification, stop without mutating.
+- The justification — a `Delta-<N>` block in `understanding-shifts.md` (`rethink.md` → Delta block shape). Either named at invocation (the `leanplan-rethink` handoff, or a hand-up from an implementation stop-the-line) or recorded at intake from the planner's asserted drift before any edit. With no Delta and no recordable justification, stop without mutating.
 - The Delta's scope-of-impact — its bare `Spec#` / `Design#` / `Tasks#` citations name the committed work the drift bears on. JIT-load only those anchors. (context-engineering: jit-loading)
 
 ## Output

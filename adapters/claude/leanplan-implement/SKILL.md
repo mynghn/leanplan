@@ -12,7 +12,7 @@ Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the r
 
 Load `references/implement.md` from `LP_ROOT` — it is authoritative for the procedure (the 6 stop-the-line triggers, artifact update loop walk-up, distillation hierarchy types → tests → annotations → commit → PR body → inline, squash-safe PR-body promotion rule). Load these on demand, not up front (context-engineering: jit-loading):
 
-- `references/artifact-contract.md` from `LP_ROOT` — **before writing or editing an artifact's structure or anchors** (e.g. in the artifact update loop): anchor patterns, traceability rules.
+- `references/artifact-contract.md` from `LP_ROOT` — **before writing or editing an artifact's structure or anchors** (e.g. in the artifact update loop): anchor patterns and the cross-cutting authoring principles (traceability lives in `references/tasks.md`).
 - `references/philosophy.md` from `LP_ROOT` — **when a principle's intent or grounding is in question**: framework principles shaping what "good" looks like.
 
 Runtime glue:

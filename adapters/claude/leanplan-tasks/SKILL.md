@@ -12,7 +12,7 @@ Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the r
 
 Load `references/tasks.md` from `LP_ROOT` — it is authoritative for the procedure + template (track-prefixed task IDs P/A/D/I, enabler-not-gate dependency wording, bidirectional verification, advisory one-deployment guardrail). Load these on demand, not up front (context-engineering: jit-loading):
 
-- `references/artifact-contract.md` from `LP_ROOT` — **before writing or editing an artifact's structure or anchors**: Tasks shape (Guidelines, Dependency DAG, task cards), `T: <id>` anchor pattern, traceability rules with `**GAP**` ack semantics.
+- `references/artifact-contract.md` from `LP_ROOT` — **before writing or editing an artifact's structure or anchors**: the `T: <id>` anchor pattern (the Tasks shape, traceability, and `**GAP**` semantics now live in `references/tasks.md`).
 - `references/philosophy.md` from `LP_ROOT` — **when a principle's intent or grounding is in question**: the framework principles shaping what "good" looks like.
 
 Runtime glue:

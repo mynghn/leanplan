@@ -7,7 +7,7 @@
 **This document is the framework's design + rationale archive** — the coordinate model, role segregation, design resolutions, naming rationale, research inputs, and roadmap. It is the *challenge-time* home: loaded only when the framework's **shape** is questioned, not during normal stage runs. The runtime homes own their content; this doc cites them rather than restating them (one prose home per fact):
 
 - **`philosophy.md`** — the behavior-shaping principles (the WHY) and the stage map. Loaded when a principle's intent or grounding is in question.
-- **`artifact-contract.md`** — the structural contract: feature layout, required shapes, anchors, drift guards, surface/archive layering, surface budget. Loaded before writing or editing artifact structure.
+- **`artifact-contract.md`** — the cross-stage structural core: feature layout, anchors, the cross-cutting authoring principles, and surface/archive layering (each artifact's own required shape and drift guard now live in its authoring stage's reference). Loaded before writing or editing artifact structure.
 - **`README.md`** — the front door: what LeanPlan is, install, quick start, contributing.
 
 This doc's `(context-engineering: <slug>)` grounding hooks resolve via `context-engineering.md` (the name→concept map; load only when a hook is challenged) — the concept's full node lives in the live context-engineering knowledge base, with the map's one-line gloss as the local floor.
@@ -106,29 +106,29 @@ Each level loads only via explicit trigger (anchor link from the layer above). J
 
 The runtime-loadable form — which artifact loads when — is owned by `artifact-contract.md` → Surface / Archive layering; the table above is the design-level detail.
 
-Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The `understanding-shifts.md` archive is written by `rethink` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Structural shape and what-loads-when are owned by `artifact-contract.md`.
+Two off-pipeline records sit outside this challenge ladder — neither is challenge-loaded; each is JIT-loaded only by its owning move. The `understanding-shifts.md` archive is written by `rethink` and consumed by `revise`. The deferrals lane (`deferrals.md`, `Defer-<N>` blocks) is the forward-deferral capture: a deliberately-deferred cross-stage decision parked off the review surface and re-derived when its owning stage drains it. Each block's structural shape is owned by its move reference (`rethink.md` for the delta, `deferral.md` for the deferral); what-loads-when is owned by `artifact-contract.md` → Surface / Archive layering.
 
 ## 5. Artifact shapes
 
-The required sections, anchor patterns, and per-stage shapes for every artifact are the **structural contract**, owned by `artifact-contract.md` → Feature Layout / Required Shapes / Anchors (the runtime home — loaded before writing or editing artifact structure). This doc does not restate them; the *naming rationale* is §8 and the *design resolutions* that produced them are §9.
+The required sections, anchor patterns, and per-stage shapes for every artifact are the **structural contract**: `artifact-contract.md` → Feature Layout / Anchors owns the layout and anchor grammar, and each artifact's own required shape lives in its authoring stage's reference (the runtime home — loaded before writing or editing artifact structure). This doc does not restate them; the *naming rationale* is §8 and the *design resolutions* that produced them are §9.
 
-The seven per-artifact shapes — 5.1 Requirements, 5.2 Spec, 5.3 Design, 5.4 Design Rationale, 5.5 Research, 5.6 Tasks, 5.7 Understanding Shifts — all resolve to `artifact-contract.md` → Required Shapes. The three feature-id forms (sequence / tracker-key / date) and the `## Upstream` rule live in `artifact-contract.md` → Feature Layout; their rationale is §9 ("Three feature-key forms").
+The seven per-artifact shapes — 5.1 Requirements, 5.2 Spec, 5.3 Design, 5.4 Design Rationale, 5.5 Research, 5.6 Tasks, 5.7 Understanding Shifts — each resolve to their authoring stage's reference: Requirements → `frame.md`, Spec → `specify.md`, Design / Rationale / Research → `design.md`, Tasks → `tasks.md`, Understanding Shifts → `rethink.md`. The three feature-id forms (sequence / tracker-key / date) and the `## Upstream` rule live in `artifact-contract.md` → Feature Layout; their rationale is §9 ("Three feature-key forms").
 
 ## 6. Cross-cutting structural rules
 
 ### Operational — in-artifact
 
-These in-artifact rules are the **structural contract**, owned by `artifact-contract.md`; this doc cites their canonical home, it does not restate them (grounding hooks kept where a rule rests on a context-engineering concept):
+These in-artifact rules are the **structural contract**; this doc cites each rule's canonical home — the always-loaded `artifact-contract.md` core or the stage reference that now owns it — and does not restate them (grounding hooks kept where a rule rests on a context-engineering concept):
 
 | Rule | Canonical home |
 |---|---|
 | Grep-friendly anchored heading patterns (`B-<N>` / `C-<N>` / `D-<N>` / `Task: <id>` / `Delta-<N>`) | `artifact-contract.md` → Anchors (context-engineering: jit-loading, literal-vs-latent-matching) |
 | Sibling layout at `docs/features/<KEY>/`, one-level link depth | `artifact-contract.md` → Feature Layout |
-| Declarative present tense; MUST / MUST NOT reserved for true invariants | `artifact-contract.md` → Drift Guards |
+| Declarative present tense; MUST / MUST NOT reserved for true invariants | `artifact-contract.md` → Prose Style |
 | Conclusion-first prose; lists over dense paragraphs | `artifact-contract.md` → Prose Style (context-engineering: lost-in-the-middle, distractor-sensitivity) |
 | Surface budget (advisory prose caps; lossless archive) | `artifact-contract.md` → Surface Budget (context-engineering: context-rot, effective-vs-advertised-context, distractor-sensitivity) |
-| Design visuals use Mermaid or fenced ASCII art; Tasks DAGs stay Mermaid | `artifact-contract.md` → Drift Guards |
-| Bidirectional verification mapping (Spec B/C ↔ Tasks) | `artifact-contract.md` → Traceability |
+| Design visuals use Mermaid or fenced ASCII art; Tasks DAGs stay Mermaid | `design.md` → Guardrails (visuals) / `tasks.md` → Template (Mermaid DAG) |
+| Bidirectional verification mapping (Spec B/C ↔ Tasks) | `tasks.md` → Procedure (bidirectional verification) |
 
 Native to this doc — design-level authoring guidance not in the contract:
 
@@ -151,7 +151,7 @@ Documents carry durable state. Skills and prompts carry stage behavior.
 
 ## 7. Drift guards
 
-The per-artifact drift guards are part of the **structural contract**, owned by `artifact-contract.md` → Drift Guards (skill-prompt-enforced at write time; `leanplan-validate`-checked where regex-detectable). This doc does not restate them; the reasoning for what is enforced versus deliberately dropped is §6 (Ceremonial) and §9 (resolutions).
+The per-artifact drift guards are part of the **structural contract**, owned by each authoring stage's reference Guardrails (skill-prompt-enforced at write time; `leanplan-validate`-checked where regex-detectable). This doc does not restate them; the reasoning for what is enforced versus deliberately dropped is §6 (Ceremonial) and §9 (resolutions).
 
 ## 8. Naming decisions
 

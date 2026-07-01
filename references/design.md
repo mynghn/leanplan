@@ -54,7 +54,7 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
 
 ## Guardrails
 
-- **Chosen realization only.** Design is the finished-system shape, not the work that builds it. No work ordering, PR stacking, cross-team request procedure, or migration sequence — those belong in Tasks.
+- **Chosen realization only.** Design is the finished-system shape, not the work that builds it. No work ordering, PR stacking, infrastructure / database or other cross-team request procedure, or migration sequence — those belong in Tasks.
 - **Park a genuine deferral; don't discard it.** A real cross-stage decision that surfaces here goes into `deferrals.md` as a `Defer-<N>` addressed to its owning stage, rather than being discarded — opt-in planner judgment; procedure in `references/deferral.md`.
 - **Tech-realization specifics live here, in full.** Field-by-field mappings, response/proto shapes, method signatures, controller/service call sequences, schemas — capture them inside the relevant `D-<N>` block at design time. Downstream tasks should be able to anchor in via `Design#D-<N>-<slug>` *without restating* the content. If a task ends up paraphrasing a Decision because it lacked detail here, the missing detail is a gap in **this** doc — fill it. Symmetric guard with the corresponding rule in `tasks.md`.
 - **Architecture visual material is mandatory.** Even a trivial one-component feature gets at least one diagram or ASCII visual — it forces clarity about boundaries. Use Mermaid when graph semantics carry the shape cleanly; use fenced ASCII art when layout, alignment, or mixed annotations express the idea better. More than one visual is fine when each earns its place.
@@ -71,6 +71,24 @@ Mid-stage, if a disturbance shifts the understanding, `leanplan-rethink` is the 
 - **Rationale is free-form.** No prescribed inner sections. Capture reasoning, don't fill a form.
 - **Research is evidence-only.** Interpretations belong in Rationale.
 - **Isolate breadth-heavy investigation.** When code investigation (a wide cross-module / SOTA scan) would swamp the working window, run it in a sub-agent that returns only the distilled findings — a Research entry or the conclusions — keeping the raw trail out. Guidance, not mandate — when breadth exceeds the window. (context-engineering: context-isolation, explore-then-compact-handoff)
+
+## Template
+
+```markdown
+# <KEY> — Design
+
+## Architecture
+
+<one or more visual blocks — Mermaid or fenced ASCII art — with a brief caption:
+chosen components, boundaries, data / control flow; external systems as labeled nodes>
+
+### D-1: <slug>
+<one-line WHAT — the choice made; schemas / interfaces / signatures fold inline.
+WHY — one line if trivial, else anchor to a matching `design-rationale.md` block>
+```
+
+One `D-<N>: <slug>` block per realization choice; heading levels are flexible (H2 / H3 / H4) per the artifact contract, as long as each `D-<N>: <slug>` heading text matches exactly.
+The same design-run also authors `design-rationale.md` (matching `D-<N>` blocks, free-form) and `research.md` (`## <topic>` evidence); their shapes are set by the Procedure and Guardrails above.
 
 ## Hand-off
 

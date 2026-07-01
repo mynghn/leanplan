@@ -13,7 +13,7 @@ Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the r
 
 Load `references/revise.md` from `LP_ROOT` — it is authoritative for the procedure (intake-Delta → identify corrected artifact → edit in place / re-derive on structural change → propagate downstream-only → re-validate), the justified-or-nothing and downstream-only boundaries, and the repair-vs-cognitive split with `/leanplan-rethink`. Load these on demand, not up front (context-engineering: jit-loading):
 
-- `references/artifact-contract.md` from `LP_ROOT` — **before editing an artifact's structure or anchors**: anchor patterns, the `(retired)` retire-by-note form, traceability, and the `understanding-shifts.md` / `Delta-<N>: <slug>` shape.
+- `references/artifact-contract.md` from `LP_ROOT` — **before editing an artifact's structure or anchors**: anchor patterns and the `(retired)` retire-by-note form (traceability lives in `references/tasks.md`; the `Delta-<N>: <slug>` shape in `references/rethink.md`).
 - `references/philosophy.md` from `LP_ROOT` — **when a principle's intent or grounding is in question**: the framework principles shaping what "good" looks like.
 
 Runtime glue:

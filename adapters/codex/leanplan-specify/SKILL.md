@@ -11,7 +11,7 @@ Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the r
 
 Load `references/specify.md` from `LP_ROOT` — it is authoritative for the procedure, generic-category tech guard, B/C split, Research archive rule, and opt-in contract-boundary probe. Load these on demand, not up front (context-engineering: jit-loading):
 
-- `references/artifact-contract.md` from `LP_ROOT` — before writing or editing an artifact's structure or anchors: feature layout, `B-<N>` / `C-<N>` anchors, drift guards, traceability.
+- `references/artifact-contract.md` from `LP_ROOT` — before writing or editing an artifact's structure or anchors: feature layout, `B-<N>` / `C-<N>` anchors, and the cross-cutting authoring principles (the Spec shape + drift guard live in `references/specify.md`).
 - `references/philosophy.md` from `LP_ROOT` — when a principle's intent or grounding is in question.
 
 Runtime glue:

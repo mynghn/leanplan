@@ -11,7 +11,7 @@ Resolve `LP_ROOT` as the LeanPlan checkout containing this adapter: follow the r
 
 Load `references/revise.md` from `LP_ROOT` — it is authoritative for intake, justified mutation, highest-affected-layer selection, downstream-only propagation, and validation. Load these on demand, not up front (context-engineering: jit-loading):
 
-- `references/artifact-contract.md` from `LP_ROOT` — before editing artifact structure or anchors: anchor patterns, retire-by-note, traceability, and `Delta-<N>` shape.
+- `references/artifact-contract.md` from `LP_ROOT` — before editing artifact structure or anchors: anchor patterns and retire-by-note (traceability lives in `references/tasks.md`; the `Delta-<N>` shape in `references/rethink.md`).
 - `references/philosophy.md` from `LP_ROOT` — when a principle's intent or grounding is in question.
 
 Runtime glue:
